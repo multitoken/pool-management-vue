@@ -15,7 +15,7 @@
     "generate-icons": "icon-font-generator src/assets/fonts/icons/*.svg -o src/assets/fonts --name iconfont --html false"
   },
   "dependencies": {
-    "@balancer-labs/assets": "github:balancer-labs/assets#master",
+    "@balancer-labs/assets": "git+https://git@github.com/balancer-labs/assets.git#master",
     "@ethersproject/abi": "^5.0.1",
     "@ethersproject/address": "^5.0.1",
     "@ethersproject/constants": "^5.0.1",
@@ -25,7 +25,7 @@
     "@ethersproject/wallet": "^5.0.1",
     "@portis/web3": "^3.0.8",
     "@primer/css": "^14.4.0",
-    "@snapshot-labs/lock": "github:snapshot-labs/lock#c938fc06389cd7948870c87c7c19b338774a64ea",
+    "@snapshot-labs/lock": "git+https://git@github.com/snapshot-labs/lock.git#c938fc06389cd7948870c87c7c19b338774a64ea",
     "@vue/cli-plugin-babel": "^4.4.0",
     "@vue/cli-plugin-eslint": "^4.4.0",
     "@vue/cli-plugin-typescript": "^4.4.0",
