@@ -1,7 +1,6 @@
 {
   "name": "pool-management-vue",
   "version": "0.1.0",
-  "repository": "balancer-labs/pool-management-vue",
   "license": "GPL-3.0",
   "engines": {
     "node": "14.x"
