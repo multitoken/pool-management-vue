@@ -6,7 +6,7 @@
   "wsUrl": "wss://mainnet.infura.io/ws/v3/03f1a9a53dee4bd5a7d3dde58ce26442",
   "subgraphUrl": "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-beta",
   "explorer": "https://etherscan.io",
-  "exchangeUrl": "https://balancer.exchange",
+  "exchangeUrl": "https://exchange.multitoken.finance",
   "addresses": {
     "bFactory": "0x9424B1412450D0f8Fc2255FAf6046b98213B76Bd",
     "bActions": "0x2FCc6f96418764439f8Dc26aF559Ed5CdDAeefaC",
@@ -42,7 +42,7 @@
       "id": "walletlink",
       "name": "Coinbase",
       "options": {
-        "appName": "Pool management - Balancer",
+        "appName": "Pool management - Multitoken",
         "darkMode": true,
         "chainId": 1,
         "ethJsonrpcUrl": "https://cloudflare-eth.com"
