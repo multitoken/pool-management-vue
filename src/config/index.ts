@@ -27,7 +27,7 @@ const configs = { homestead, kovan, rinkeby };
 configs.homestead = merge(registry, configs.homestead);
 configs.kovan = merge(registryKovan, configs.kovan);
 configs.rinkeby = merge(registryRinkeby, configs.rinkeby);
-const network = process.env.VUE_APP_NETWORK || 'homestead';
+const network = process.env.VUE_APP_NETWORK || 'kovan';
 const config = configs[network];
 config.env = process.env.VUE_APP_ENV || 'staging';
 
