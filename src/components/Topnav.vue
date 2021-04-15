@@ -19,19 +19,11 @@
           <span
             class="d-inline-block text-white"
             style="letter-spacing: 1px; font-size: 16px;"
-            v-text="'Balancer'"
+            v-text="'Multitoken'"
           />
         </router-link>
       </div>
       <div :key="web3.account">
-        <a
-          v-if="$auth.isAuthenticated && totalPendingClaims > 0"
-          href="https://claim.balancer.finance"
-          target="_blank"
-          class="mr-2"
-        >
-          <UiButton>✨ {{ _num(totalPendingClaims) }} BAL</UiButton>
-        </a>
         <UiButton
           v-if="$auth.isAuthenticated && !wrongNetwork"
           @click="modalOpen.account = true"
