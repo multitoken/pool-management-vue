@@ -4,7 +4,7 @@
   "defaultPrecision": 2,
   "rpcUrl": "https://kovan.infura.io/v3/8dd19a9306014b30bb8e994bbf21211c",
   "wsUrl": "wss://kovan.infura.io/ws/v3/8dd19a9306014b30bb8e994bbf21211c",
-  "subgraphUrl": "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-kovan",
+  "subgraphUrl": "https://api.thegraph.com/subgraphs/name/cron-md/multitoken",
   "explorer": "https://kovan.etherscan.io",
   "exchangeUrl": "https://kovan.balancer.exchange",
   "addresses": {
