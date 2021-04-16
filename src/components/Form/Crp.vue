@@ -19,7 +19,7 @@
         class="input pool-input text-right text-white"
         :value="tokenName"
         @change="$emit('change-name', $event.target.value)"
-        placeholder="Balancer Smart Pool"
+        placeholder="Multitoken Smart Pool"
       />
     </div>
     <div class="d-flex flex-items-center px-4 px-md-0 mb-3">
