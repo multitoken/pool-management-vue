@@ -23,6 +23,10 @@
           />
         </router-link>
       </div>
+      <div class="header-middle">
+        <span>Alpha version</span>
+        <span>Kovan network</span>
+      </div>
       <div :key="web3.account">
         <a
           v-if="$auth.isAuthenticated && totalPendingClaims > 0"
@@ -152,5 +156,35 @@ export default {
 #topnav {
   z-index: 10;
   background-color: $panel-background;
+}
+
+.header-middle {
+  position: absolute;
+  left: calc(50% - 60px);
+
+  width: 120px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  color: #ffa600;
+}
+
+@media (max-width: 624px) {
+  .header-middle {
+    left: 195px;
+  }
+}
+
+@media (max-width: 565px) {
+  .header-middle {
+    left: calc(50% - 150px);
+    flex-direction: row;
+    width: 300px;
+    bottom: 0;
+    justify-content: space-around;
+  }
 }
 </style>
