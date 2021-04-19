@@ -23,7 +23,7 @@
     "@ethersproject/providers": "^5.0.4",
     "@ethersproject/units": "^5.0.1",
     "@ethersproject/wallet": "^5.0.1",
-    "@multitoken/assets": "git+https://git@github.com/multitoken/assets.git#4bd92a947517b7024811169e4deebc4cdaac94a8",
+    "@multitoken/assets": "git+https://git@github.com/multitoken/assets.git#master",
     "@portis/web3": "^3.0.8",
     "@primer/css": "^14.4.0",
     "@snapshot-labs/lock": "git+https://git@github.com/snapshot-labs/lock.git#c938fc06389cd7948870c87c7c19b338774a64ea",
