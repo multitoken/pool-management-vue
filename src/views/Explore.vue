@@ -15,6 +15,7 @@ import {
   formatFilters,
   validAmplPools
 } from '@/helpers/utils';
+import config from '@/config';
 
 export default {
   data() {
@@ -49,6 +50,7 @@ export default {
     querySharedPools() {
       return {
         where: {
+          id_not_in: config.excludedPoolsIds,
           finalized: true
         }
       };
@@ -59,7 +61,8 @@ export default {
           where: {
             id_in: Object.entries(pools)
               .filter(crp => crp[1].is_compatible)
-              .map(crp => crp[0].toLowerCase())
+              .map(crp => crp[0].toLowerCase()),
+            id_not_in: config.excludedPoolsIds,
           }
         };
       return {
@@ -72,7 +75,8 @@ export default {
       return {
         where: {
           finalized: false,
-          crp: false
+          crp: false,
+          id_not_in: config.excludedPoolsIds,
         }
       };
     }
