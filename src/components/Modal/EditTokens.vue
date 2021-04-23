@@ -30,7 +30,7 @@
       <!-- disabled for now -->
       <div class="text-center mb-4">
         <UiButton
-          v-if="pool.metadata.tokens.length < 8 && step === 0"
+          v-if="pool.metadata.tokens.length < 255 && step === 0"
           :disabled="true"
         >
           {{ $t('addToken') }}
