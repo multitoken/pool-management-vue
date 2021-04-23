@@ -115,7 +115,7 @@
 </template>
 
 <script>
-import { formatUnits } from '@ethersproject/units';
+import { formatUnits, parseUnits } from '@ethersproject/units';
 import {
   getTokenBySymbol,
   bnum,
@@ -125,7 +125,7 @@ import {
 import { getAddress } from '@ethersproject/address';
 import { Contract } from '@ethersproject/contracts';
 import minter from '../helpers/abi/Minter.json';
-import BigNumber from '@/helpers/bignumber';
+import { getInstance } from '@snapshot-labs/lock/plugins/vue';
 
 export default {
   data() {
@@ -136,7 +136,11 @@ export default {
       token: getTokenBySymbol('DAI').address,
       tokenModalOpen: false,
       query: '',
-      contract: new Contract(contractAddress, minter['abi'])
+      contract: new Contract(
+        contractAddress,
+        minter['abi'],
+        getInstance().web3?.getSigner()
+      )
     };
   },
   computed: {
@@ -161,7 +165,7 @@ export default {
           };
         })
         .filter(({ value }) => value > 0.001);
-      const ethPrice = this.price.values[this.config.addresses.weth];
+      const ethPrice = this.price.values[this.config?.addresses.weth];
       const ethBalance = formatUnits(this.web3.balances['ether'] || 0, 18);
       return [
         {
@@ -176,7 +180,7 @@ export default {
       ];
     },
     balancesTotalValue() {
-      return this.balances.reduce((a, b) => a + b.value, 0);
+      return this.balances.reduce((a, b) => a + b.value || 0, 0);
     },
     tokens() {
       return Object.fromEntries(
@@ -228,39 +232,20 @@ export default {
       const tokenAddress = getAddress(selectedToken);
       this.token = tokenAddress;
     },
-    async mintToken(amount) {
-      if (!amount) {
-        amount = 1;
-      }
-      console.log(this.contract);
+    async mintToken() {
+      const amount = 1000 / this.tokens[this.token].price;
       const contract = this.contract;
       const name = await contract.name();
       const symbol = await contract.symbol();
 
       const decimals = await contract.decimals();
-      // const scaledAmount = this._scale(amount, decimals);
+      const parsedUnits = parseUnits(amount.toString(), decimals);
 
-      // const method = this.contract.mint(this.wallet.address, scaledAmount);
+      await contract.mint(this.web3.account, parsedUnits);
 
-      // const gasPrice = await this.web3.eth.getGasPrice();
-      // const gasEstimate = await method.estimateGas({
-      //   from: this.wallet.address
-      // });
-      // await method.send({
-      //   from: this.wallet.address,
-      //   gasPrice: gasPrice,
-      //   gas: gasEstimate
-      // });
-
-      // console.log(
-      //   `${name} minted: ${amount} ${symbol} to ${this.wallet.address}`
-      // );
-    },
-    scale(input, decimalPlaces) {
-      const scalePow = new BigNumber(decimalPlaces.toString());
-      const scaleMul = new BigNumber(10).pow(scalePow);
-      input = new BigNumber(input)
-      return input.times(scaleMul);
+      console.log(
+        `${name} minted: ${amount} ${symbol} to ${this.web3.account}`
+      );
     }
   }
 };
