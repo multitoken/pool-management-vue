@@ -64,11 +64,51 @@
       </div>
       <h4 v-else v-text="$t('noProxy')" />
     </Container>
+    <Container class="d-flex mb-3">
+      <div class="flex-auto">
+        <h3 v-text="`${$t('get')} ${$t('testTokens')}`" />
+      </div>
+    </Container>
+    <UiTable class="d-flex mb-3 float-left">
+      <div
+        class="d-flex"
+        @click="tokenModalOpen = true"
+        style="cursor: pointer"
+      >
+        <UiTableTh
+          class="d-flex flex-auto flex-items-center text-left p-0 mx-3"
+        >
+          <Token :address="token" :symbol="token" class="mr-3" />
+          {{ _ticker(token) }}
+          <a class="d-block text-white pb-2">
+            <Icon name="arrow-down" />
+          </a>
+        </UiTableTh>
+      </div>
+      <UiTableTh class="flex-auto">
+        <UiButton
+          @click="mintToken"
+          type="button"
+          class="button-primary button-sm"
+          v-text="
+            `${$t('get')} ${1000 / this.tokens[this.token].price} ${
+              tokens[token].symbol
+            }`
+          "
+        >
+        </UiButton>
+      </UiTableTh>
+    </UiTable>
     <portal to="modal">
       <ModalWrapper
         :open="modalWrapperOpen"
         @close="modalWrapperOpen = false"
         :side="side"
+      />
+      <ModalSelectToken
+        :open="tokenModalOpen"
+        @close="tokenModalOpen = false"
+        @input="changeToken"
       />
     </portal>
   </Page>
@@ -76,12 +116,27 @@
 
 <script>
 import { formatUnits } from '@ethersproject/units';
+import {
+  getTokenBySymbol,
+  bnum,
+  isValidAddress,
+  normalizeBalance
+} from '@/helpers/utils';
+import { getAddress } from '@ethersproject/address';
+import { Contract } from '@ethersproject/contracts';
+import minter from '../helpers/abi/Minter.json';
+import BigNumber from '@/helpers/bignumber';
 
 export default {
   data() {
+    const contractAddress = '0x7f0af1a00aa20dd127019ddb79957c6270068b64';
     return {
       modalWrapperOpen: false,
-      side: 0
+      side: 0,
+      token: getTokenBySymbol('DAI').address,
+      tokenModalOpen: false,
+      query: '',
+      contract: new Contract(contractAddress, minter['abi'])
     };
   },
   computed: {
@@ -122,6 +177,90 @@ export default {
     },
     balancesTotalValue() {
       return this.balances.reduce((a, b) => a + b.value, 0);
+    },
+    tokens() {
+      return Object.fromEntries(
+        Object.entries(this.web3.tokenMetadata)
+          .map(token => {
+            const address = token[0];
+            const decimals = token[1].decimals;
+            const price = bnum(this.price.values[address] || 0);
+            const balance = normalizeBalance(
+              this.web3.balances[address] || 0,
+              decimals
+            );
+            const value = price.times(balance);
+            return [
+              address,
+              {
+                decimals,
+                balance: balance.toNumber(),
+                price: price.toNumber(),
+                value: value.toNumber(),
+                symbol: token[1].symbol,
+                name: token[1].name
+              }
+            ];
+          })
+          .filter(token => {
+            if (this.not?.includes(token[0])) return false;
+            const address = token[0];
+            const query = this.query.toLowerCase();
+            if (isValidAddress(query)) {
+              return address.toLowerCase() === query;
+            } else {
+              const symbol = token[1].symbol.toLowerCase();
+              const name = token[1].name.toLowerCase();
+              return symbol.includes(query) || name.includes(query);
+            }
+          })
+          .sort((a, b) => {
+            if (a[1].value && b[1].value) return b[1].value - a[1].value;
+            if (a[1].value) return -1;
+            if (b[1].value) return 1;
+            return b[1].balance - a[1].balance;
+          })
+      );
+    }
+  },
+  methods: {
+    changeToken(selectedToken) {
+      const tokenAddress = getAddress(selectedToken);
+      this.token = tokenAddress;
+    },
+    async mintToken(amount) {
+      if (!amount) {
+        amount = 1;
+      }
+      console.log(this.contract);
+      const contract = this.contract;
+      const name = await contract.name();
+      const symbol = await contract.symbol();
+
+      const decimals = await contract.decimals();
+      // const scaledAmount = this._scale(amount, decimals);
+
+      // const method = this.contract.mint(this.wallet.address, scaledAmount);
+
+      // const gasPrice = await this.web3.eth.getGasPrice();
+      // const gasEstimate = await method.estimateGas({
+      //   from: this.wallet.address
+      // });
+      // await method.send({
+      //   from: this.wallet.address,
+      //   gasPrice: gasPrice,
+      //   gas: gasEstimate
+      // });
+
+      // console.log(
+      //   `${name} minted: ${amount} ${symbol} to ${this.wallet.address}`
+      // );
+    },
+    scale(input, decimalPlaces) {
+      const scalePow = new BigNumber(decimalPlaces.toString());
+      const scaleMul = new BigNumber(10).pow(scalePow);
+      input = new BigNumber(input)
+      return input.times(scaleMul);
     }
   }
 };

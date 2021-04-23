@@ -89,7 +89,7 @@ export default {
             ];
           })
           .filter(token => {
-            if (this.not.includes(token[0])) return false;
+            if (this.not?.includes(token[0])) return false;
             const address = token[0];
             const query = this.query.toLowerCase();
             if (isValidAddress(query)) {
