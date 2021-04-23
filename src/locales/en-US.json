@@ -103,6 +103,8 @@
     "feeReturns": "Fee returns",
     "filterByAsset": "Filter by asset",
     "fromPool": "from the pool?",
+    "get": "Get",
+    "getTestTokens": "Get test tokens",
     "gradualWeightUpdate": "Gradual weight update",
     "highRiskPool": "This is a higher-risk pool that contains one or more unlisted tokens. A liquidity pool is only as good as its weakest token! If a token were blacklisted, infinitely minted, frozen, or exploited in any other way, <b>the value of this pool could go to 0</b>. Multitoken Labs is never liable for losses incurred through using our UI or the Multitoken protocol. Be careful, and do your own research!",
     "holder": "Holder",
