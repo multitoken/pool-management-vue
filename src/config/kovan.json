@@ -8,10 +8,10 @@
   "explorer": "https://kovan.etherscan.io",
   "exchangeUrl": "https://exchange.multitoken.finance",
   "addresses": {
-    "bFactory": "0x0728eA2885818759c4adD023C4B234D3e3fDf209",
-    "bActions": "0xDE56cBc4E6eDBa47Fe6cfa179B6f185CCfa4C47f",
-    "dsProxyRegistry": "0x130767E0cf05469CF11Fa3fcf270dfC1f52b9072",
-    "proxy": "0x168e49ea0B3DacE3E919461bb8B23c4b2822D1b6",
+    "bFactory": "0x418a1cEe2715594b8730a5adFeA75ecAF02b7b31",
+    "bActions": "0x4e913Bb6fEedCA8500cC4F70628b61219DC5C02a",
+    "dsProxyRegistry": "0xbF1f7a145ADfF7ef6C1cfCD731bd5b3fB630acdC",
+    "proxy": "0x78410bE7749601a7Dc80C0a55E0526Ad98624668",
     "crpFactory": "0x04da0f6e9f29583a12Db84EcD22114aDfc2722c5",
     "weth": "0xd0A1E359811322d97991E03f863a0C30C2cF029C",
     "multicall": "0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A"
