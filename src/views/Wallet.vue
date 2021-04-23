@@ -255,8 +255,8 @@ export default {
         console.log(
           `${name} didn't mint: ${amount} ${symbol} to ${this.web3.account}`
         );
-        this.mintButtonLoading = false;
       }
+      this.mintButtonLoading = false;
     }
   }
 };
