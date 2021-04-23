@@ -129,6 +129,8 @@ import { getAddress } from '@ethersproject/address';
 import { Contract } from '@ethersproject/contracts';
 import minter from '../helpers/abi/Minter.json';
 import { getInstance } from '@snapshot-labs/lock/plugins/vue';
+import provider from '@/helpers/provider';
+import store from '@/store';
 
 export default {
   data() {
@@ -246,7 +248,13 @@ export default {
       const parsedUnits = parseUnits(amount.toString(), decimals);
 
       try {
-        await contract.mint(this.web3.account, parsedUnits);
+        const tx = await contract.mint(this.web3.account, parsedUnits);
+        const title = `Mint ${name}`;
+        store.commit('watchTransaction', { ...tx, title });
+
+        const receipt = await provider.waitForTransaction(tx.hash, 1);
+        store.commit('confirmTransaction', receipt);
+
         console.log(
           `${name} minted: ${amount} ${symbol} to ${this.web3.account}`
         );
