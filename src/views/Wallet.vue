@@ -90,10 +90,13 @@
           @click="mintToken"
           type="button"
           class="button-primary button-sm"
+          :loading="mintButtonLoading"
           v-text="
-            `${$t('get')} ${1000 / this.tokens[this.token].price} ${
-              tokens[token].symbol
-            }`
+            mintButtonLoading
+              ? ''
+              : `${$t('get')} ${1000 / this.tokens[this.token].price} ${
+                  tokens[token].symbol
+                }`
           "
         >
         </UiButton>
@@ -129,18 +132,13 @@ import { getInstance } from '@snapshot-labs/lock/plugins/vue';
 
 export default {
   data() {
-    const contractAddress = '0x7f0af1a00aa20dd127019ddb79957c6270068b64';
     return {
       modalWrapperOpen: false,
       side: 0,
       token: getTokenBySymbol('DAI').address,
       tokenModalOpen: false,
       query: '',
-      contract: new Contract(
-        contractAddress,
-        minter['abi'],
-        getInstance().web3?.getSigner()
-      )
+      mintButtonLoading: false
     };
   },
   computed: {
@@ -233,19 +231,32 @@ export default {
       this.token = tokenAddress;
     },
     async mintToken() {
+      this.mintButtonLoading = true;
+      const contractAddress = this.token;
+      const contract = new Contract(
+        contractAddress,
+        minter['abi'],
+        getInstance().web3?.getSigner()
+      );
       const amount = 1000 / this.tokens[this.token].price;
-      const contract = this.contract;
       const name = await contract.name();
       const symbol = await contract.symbol();
 
       const decimals = await contract.decimals();
       const parsedUnits = parseUnits(amount.toString(), decimals);
 
-      await contract.mint(this.web3.account, parsedUnits);
-
-      console.log(
-        `${name} minted: ${amount} ${symbol} to ${this.web3.account}`
-      );
+      try {
+        await contract.mint(this.web3.account, parsedUnits);
+        console.log(
+          `${name} minted: ${amount} ${symbol} to ${this.web3.account}`
+        );
+      } catch (err) {
+        console.log(err.message);
+        console.log(
+          `${name} didn't mint: ${amount} ${symbol} to ${this.web3.account}`
+        );
+        this.mintButtonLoading = false;
+      }
     }
   }
 };
