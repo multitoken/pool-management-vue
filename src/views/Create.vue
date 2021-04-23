@@ -107,7 +107,7 @@
         </UiTableTr>
       </div>
     </UiTable>
-    <UiButton v-if="tokens.length < 8" class="mb-4" @click="addToken">
+    <UiButton v-if="tokens.length < 255" class="mb-4" @click="addToken">
       {{ $t('addToken') }}
     </UiButton>
     <div class="d-flex flex-items-center px-4 px-md-0 mb-3">
@@ -297,7 +297,7 @@ export default {
       if (this.tokens.length < 2) {
         return this.$t('errMinPoolTokens');
       }
-      if (this.tokens.length > 8) {
+      if (this.tokens.length > 255) {
         return this.$t('errMaxPoolTokens');
       }
       // Weight validation
