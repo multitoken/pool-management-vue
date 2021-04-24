@@ -66,7 +66,7 @@
     </Container>
     <Container class="d-flex mb-3">
       <div class="flex-auto">
-        <h3 v-text="$t('geTestTokens')" />
+        <h3 v-text="$t('getTestTokens')" />
       </div>
     </Container>
     <UiTable class="d-flex mb-3 float-left">
@@ -254,6 +254,8 @@ export default {
 
         const receipt = await provider.waitForTransaction(tx.hash, 1);
         store.commit('confirmTransaction', receipt);
+
+        await store.dispatch('getBalances');
 
         console.log(
           `${name} minted: ${amount} ${symbol} to ${this.web3.account}`
