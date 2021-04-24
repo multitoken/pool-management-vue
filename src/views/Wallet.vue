@@ -66,7 +66,7 @@
     </Container>
     <Container class="d-flex mb-3">
       <div class="flex-auto">
-        <h3 v-text="$t('geTestTokens')" />
+        <h3 v-text="$t('getTestTokens')" />
       </div>
     </Container>
     <UiTable class="d-flex mb-3 float-left">
