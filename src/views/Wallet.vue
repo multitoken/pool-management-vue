@@ -255,6 +255,8 @@ export default {
         const receipt = await provider.waitForTransaction(tx.hash, 1);
         store.commit('confirmTransaction', receipt);
 
+        await store.dispatch('getBalances');
+
         console.log(
           `${name} minted: ${amount} ${symbol} to ${this.web3.account}`
         );
