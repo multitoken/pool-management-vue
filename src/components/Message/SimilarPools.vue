@@ -6,7 +6,7 @@
   >
     <Icon name="info" size="22" class="mr-4" />
     <div>
-      <div v-text="$t('similarPools')" />
+      <div v-text="$t('similarEtfs')" />
       <div v-for="pool in pools" :key="pool.id">
         <router-link
           :to="{ name: 'pool', params: { id: pool.id } }"
@@ -161,13 +161,14 @@ export default {
 @import '../../vars';
 
 #info {
+  color: $info;
   border: 1px solid $info;
   border-radius: 4px;
-  color: $info;
 }
 
 .link {
-  color: $info;
   cursor: pointer;
+
+  color: $info;
 }
 </style>

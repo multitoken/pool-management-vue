@@ -1,6 +1,6 @@
 <template>
   <div class="overflow-hidden ml-n2 mr-n2 text-center">
-    <div class="col-12 col-md-3 float-left mb-4">
+    <div class="col-12 col-md-3 float-left my-2">
       <div
         class="border rounded-0 rounded-md-1 panel-background py-4 mx-0 mx-md-2"
       >
@@ -8,7 +8,7 @@
         <p v-text="$t('liquidity')" class="mb-0" />
       </div>
     </div>
-    <div class="col-12 col-md-3 float-left mb-4">
+    <div class="col-12 col-md-3 float-left my-2">
       <div
         class="border rounded-0 rounded-md-1 panel-background py-4 mx-0 mx-md-2"
       >
@@ -16,7 +16,7 @@
         <p v-text="$t('volume24')" class="mb-0" />
       </div>
     </div>
-    <div class="col-12 col-md-3 float-left mb-4">
+    <div class="col-12 col-md-3 float-left my-2">
       <div
         class="border rounded-0 rounded-md-1 panel-background py-4 mx-0 mx-md-2"
       >
@@ -24,12 +24,12 @@
         <p v-text="$t('swapFee')" class="mb-0" />
       </div>
     </div>
-    <div class="col-12 col-md-3 float-left mb-4">
+    <div class="col-12 col-md-3 float-left my-2">
       <div
         class="border rounded-0 rounded-md-1 panel-background py-4 mx-0 mx-md-2"
       >
         <h3 v-text="_num(poolSharePercent, 'percent')" />
-        <p v-text="$t('myPoolShare')" class="mb-0" />
+        <p v-text="$t('myEtfShare')" class="mb-0" />
       </div>
     </div>
   </div>

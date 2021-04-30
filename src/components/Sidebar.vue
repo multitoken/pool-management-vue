@@ -11,28 +11,28 @@
             <router-link
               :to="{ name: 'home' }"
               :class="{ active: $router.currentRoute.name === 'home' }"
-              v-text="$t('dashboard')"
+              v-text="$t('myEtfs')"
             />
           </li>
           <li>
             <router-link
               :to="{ name: 'explore' }"
               :class="{ active: $router.currentRoute.name === 'explore' }"
-              v-text="$t('explorePools')"
+              v-text="$t('etfs')"
             />
           </li>
           <li>
             <router-link
               :to="{ name: 'create' }"
               :class="{ active: $router.currentRoute.name === 'create' }"
-              v-text="$t('createPool')"
+              v-text="$t('createEtf')"
             />
           </li>
         </ul>
         <ul class="py-3">
           <li>
             <a :href="config.exchangeUrl" target="_blank">
-              {{ $t('exchange') }}
+              {{ $t('swapBuySell') }}
               <Icon name="external-link" class="ml-1" />
             </a>
           </li>
@@ -78,29 +78,36 @@ export default {
 @import '../vars';
 
 #sidebar {
-  z-index: 5;
-  border-right: $border;
   position: fixed;
-  background-color: $panel-background;
-  margin-top: 79px;
-  width: 264px;
+  z-index: 5;
   left: -264px;
+
+  width: 264px;
+  margin-top: 79px;
+
   transition: left 0.2s;
+
+  border-right: $border;
+  background-color: $panel-background;
 
   @media (min-width: $width-xl) {
     left: 0;
   }
 
   ul > li > a {
-    font-size: 16px;
-    color: $white;
     display: block;
+
     padding: 10px 22px 12px;
 
+    color: $white;
+
+    font-size: 16px;
+
     &.active {
-      background: $blue-900;
-      border-left: 3px solid $blue;
       padding-left: 19px;
+
+      border-left: 3px solid $blue;
+      background: $blue-900;
     }
   }
 

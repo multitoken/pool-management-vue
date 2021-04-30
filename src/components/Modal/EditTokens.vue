@@ -40,7 +40,7 @@
       <div v-if="step === 1" class="m-4 px-4 text-center">
         <h4
           v-text="
-            `${$t('confirmRemove')} ${_ticker(pendingRemove)} ${$t('fromPool')}`
+            `${$t('confirmRemove')} ${_ticker(pendingRemove)} ${$t('fromEtf')}`
           "
           class="mb-3"
         />

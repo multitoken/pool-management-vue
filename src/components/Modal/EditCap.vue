@@ -6,7 +6,7 @@
       </template>
       <div class="text-center m-4">
         <h5 class="px-4 mb-4 mx-auto overflow-hidden" style="max-width: 340px;">
-          {{ $t('changePoolSupplyCap') }}
+          {{ $t('changeEtfSupplyCap') }}
         </h5>
         <div class="text-center m-4 mt-0">
           <Toggle

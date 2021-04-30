@@ -6,7 +6,7 @@
     <UiTable>
       <UiTableTh>
         <div
-          v-text="$t('poolAddress')"
+          v-text="$t('etf')"
           class="column-sm text-left hide-sm hide-md hide-lg"
         />
         <div v-text="$t('assets')" class="flex-auto text-left" />

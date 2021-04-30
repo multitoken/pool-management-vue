@@ -17,65 +17,88 @@ export default {
 @import '../../vars';
 
 .button {
-  background-color: $secondary-button-background;
+  height: 44px;
+  margin: 0;
+  padding: 0 22px 3px;
+
   color: $secondary-button-text;
   border: 1px solid $secondary-button-border;
   border-radius: 22px;
-  padding: 0 22px 3px;
   outline: none;
-  height: 44px;
+  background-color: $secondary-button-background;
+
   line-height: 40px;
-  margin: 0;
 
   &:hover {
     background-color: $secondary-button-background-hover;
   }
 
   &:disabled {
-    background: $button-disabled;
-    border: 1px solid $button-disabled;
-    color: $button-disabled-text;
     cursor: not-allowed;
+
+    color: $button-disabled-text;
+    border: 1px solid $button-disabled;
+    background: $button-disabled;
   }
 
   &.button-sm {
-    font-size: 12px;
-    border-radius: 19px;
-    padding: 0 14px;
     height: 36px;
+    padding: 0 14px;
+
+    border-radius: 19px;
+
+    font-size: 12px;
     line-height: 34px;
   }
 
   &.button-primary {
-    background-color: $primary-button-background;
     color: $primary-button-text;
     border-color: $primary-button-border;
+    background-color: $primary-button-background;
 
     &:hover {
       background-color: $primary-button-background-hover;
     }
 
     &:disabled {
-      background: $button-disabled;
-      border: 1px solid $button-disabled;
-      color: $button-disabled-text;
       cursor: not-allowed;
+
+      color: $button-disabled-text;
+      border: 1px solid $button-disabled;
+      background: $button-disabled;
     }
   }
 
+  &.buttton-non-clickable {
+    cursor: auto;
+    pointer-events: none;
+  }
+
   &.button-red {
-    border-color: $error;
     color: $error;
+    border-color: $error;
+  }
+
+  &.button-highlight {
+    color: $button-disabled;
+    border-color: $bg-green;
+    background-color: $bg-green;
   }
 
   &.notification-red {
-    background-color: $error;
     border-color: $error;
+    background-color: $error;
   }
 
   &.notification-green {
-    background-color: $bg-green;
     border-color: $bg-green;
+    background-color: $bg-green;
+  }
+
+  &.notification-blue {
+    color: $black;
+    border-color: $bg-blue;
+    background-color: $bg-blue-light;
   }
 }
 </style>

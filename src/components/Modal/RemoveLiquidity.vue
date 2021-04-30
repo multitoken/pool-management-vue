@@ -22,7 +22,7 @@
           <UiTable>
             <UiTableTh>
               <div v-text="$t('asset')" class="column-lg flex-auto text-left" />
-              <div v-text="$t('myPoolBalance')" class="column" />
+              <div v-text="$t('myEtfBalance')" class="column" />
               <div v-text="$t('withdrawalAmt')" class="column-sm" />
             </UiTableTh>
             <UiTableTr

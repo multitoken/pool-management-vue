@@ -13,19 +13,17 @@
           class="button-primary ml-2"
           @click="openAddLiquidityModal"
         >
-          {{ $t('addLiquidity') }}
+          {{ $t('issue') }}
         </UiButton>
         <UiButton
           v-if="enableAddLiquidity && pool.tokens.length > 0"
           class="ml-2"
           @click="openRemoveLiquidityModal"
         >
-          {{ $t('removeLiquidity') }}
+          {{ $t('redeem') }}
         </UiButton>
       </div>
     </div>
-    <PoolBoxes :pool="pool" :bPool="bPool" />
-    <Chart :pool="pool" />
     <Tabs :pool="pool" />
     <router-view
       :key="$route.path"
@@ -33,6 +31,8 @@
       :bPool="bPool"
       @reload="loadPool"
     />
+    <PoolBoxes :pool="pool" :bPool="bPool" />
+    <Chart :pool="pool" />
     <portal to="modal">
       <ModalAddLiquidity
         :pool="pool"
