@@ -16,7 +16,7 @@
             height="45"
           />
           <span
-            class="d-inline-block text-white"
+            class="brand d-inline-block text-white"
             style="letter-spacing: 1px; font-size: 16px;"
             v-text="'Multitoken'"
           />
@@ -25,7 +25,7 @@
           </span>
         </router-link>
       </div>
-      <div class="header-middle">
+      <div class="header-middle hide-sm hide-md">
         <div class="chain-buttons-container">
           <UiButton
             class="mx-1"
@@ -55,7 +55,7 @@
         </a>
         <UiButton
           v-if="$auth.isAuthenticated && !wrongNetwork"
-          class="buttton-non-clickable balance"
+          class="buttton-non-clickable balance hide-sm hide-md"
         >
           <span v-text="_num(balancesTotalValue, 'usd')" />
         </UiButton>
@@ -70,7 +70,7 @@
           <span
             v-else
             v-text="_shortenAddress(web3.account)"
-            class="hide-sm ml-2 pl-1"
+            class="hide-sm hide-md hide-lg  ml-2 pl-1"
           />
         </UiButton>
         <UiButton
@@ -365,14 +365,14 @@ export default {
 
 .header-middle {
   position: absolute;
-  left: calc(50% - 60px);
+  left: calc(50% - 150px);
 
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: center;
 
-  width: 120px;
+  width: 300px;
 
   color: #fff;
 }
@@ -381,21 +381,26 @@ export default {
   display: flex;
 }
 
-@media (max-width: 830px) {
+@media (max-width: 1020px) {
   .header-middle {
-    left: 195px;
+    left: 260px;
   }
 }
 
-@media (max-width: 694px) {
+@media (max-width: 920px) {
+  .brand {
+    display: none !important;
+  }
+
   .header-middle {
-    bottom: 0;
-    left: calc(50% - 150px);
+    left: 170px;
+  }
+}
 
-    flex-direction: row;
-    justify-content: space-around;
-
-    width: 300px;
+@media (max-width: 826px) {
+  .header-middle {
+    left: unset;
+    position: relative;
   }
 }
 
