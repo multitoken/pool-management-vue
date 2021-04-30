@@ -5,7 +5,7 @@
     :class="ui.sidebarIsOpen ? 'is-open' : 'is-closed'"
   >
     <nav class="nav d-flex flex-column height-full">
-      <div class="flex-auto">
+      <div class="d-flex flex-column flex-auto">
         <ul class="border-bottom py-3">
           <li v-if="$auth.isAuthenticated">
             <router-link
@@ -30,21 +30,51 @@
             </a>
           </li>
         </ul>
-      </div>
-      <div class="d-block m-4">
+        <span class="d-flex text-center justify-content-around connect">
+          Connect with us
+        </span>
+        <div class="d-flex justify-content-around">
+          <a
+            href="https://medium.com/multitoken"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img alt="Medium page" src="~/@/assets/logo-medium.svg" />
+          </a>
+          <a href="https://t.me/MultiToken" target="_blank" rel="noreferrer">
+            <img alt="Telegram channel" src="~/@/assets/logo-telegram.svg" />
+          </a>
+          <a
+            href="https://twitter.com/multitokencom"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img alt="Twitter page" src="~/@/assets/logo-twtr.svg" />
+          </a>
+          <a
+            href="https://twitter.com/multitokencom"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img alt="GitHub" src="~/@/assets/logo-medium.svg" />
+          </a>
+        </div>
         <a
-          v-if="commitSha"
-          :href="`https://github.com/${pkg.repository}/tree/${commitSha}`"
+          class="d-flex text-center my-2 link-text justify-content-around protocol-link"
+          href="https://www.multitoken.com/#multitoken-protocol"
           target="_blank"
         >
-          Build {{ pkg.version }}#{{ commitSha.slice(0, 7) }}
-          <Icon name="external-link" class="ml-1" />
+          <ins>
+            MultiToken Protocol
+          </ins>
         </a>
       </div>
+      <div class="d-block m-4">
+        <span class="d-flex text-center justify-content-around risk-warning">
+          Use at your own risk
+        </span>
+      </div>
     </nav>
-    <portal to="modal">
-      <ModalAbout :open="modalOpen" @close="modalOpen = false" />
-    </portal>
   </div>
 </template>
 
@@ -104,5 +134,25 @@ export default {
   &.is-open {
     left: 0 !important;
   }
+}
+
+.connect {
+  margin-top: auto;
+
+  font-size: $font-size-bigger;
+}
+
+.protocol-link {
+  font-size: $font-size-bigger;
+}
+
+.risk-warning {
+  color: #f00;
+
+  font-size: 20px;
+}
+
+.justify-content-around {
+  justify-content: space-around;
 }
 </style>
