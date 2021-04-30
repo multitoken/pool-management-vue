@@ -2,8 +2,8 @@
   "network": "kovan",
   "chainId": 42,
   "defaultPrecision": 2,
-  "rpcUrl": "https://kovan.infura.io/v3/8dd19a9306014b30bb8e994bbf21211c",
-  "wsUrl": "wss://kovan.infura.io/ws/v3/8dd19a9306014b30bb8e994bbf21211c",
+  "rpcUrl": "https://kovan.infura.io/v3/c85c3269b9c9414bb8f35b3bf68c1412",
+  "wsUrl": "wss://kovan.infura.io/ws/v3/c85c3269b9c9414bb8f35b3bf68c1412",
   "subgraphUrl": "https://api.thegraph.com/subgraphs/name/cron-md/multitoken",
   "explorer": "https://kovan.etherscan.io",
   "exchangeUrl": "https://exchange.multitoken.finance",
@@ -73,6 +73,14 @@
     "0xeafb30bb014bcabf7de59307a883d196ca2c3ec3",
     "0xde3b773f50ebd7868c8957f6e968f9c970f90c9b",
     "0x9558711c0278a054241fc04a2d71b8e6ded28004",
-    "0x7ea9297f3936b840360d8057e1435cbd654a4ba3"
+    "0x7ea9297f3936b840360d8057e1435cbd654a4ba3",
+    "0x85e43a977f90997c0ca58445fefe63959a6b45c8",
+    "0x7826d886620721a00af3b1b31f0cd0c46e45b8f9",
+    "0x6a4db05d5f22650dea5acde109641ca2754d2784",
+    "0x1208c535030b80dd9049cd04a8f8911d4bf5ae3d",
+    "0x04a269f14fd7c40db9a2d7233d9b80437a4aeb6f",
+    "0xf13901ce59d9cc22eb7b05c364cfbbdf4f502134",
+    "0x825462600bff18f8b92463d71ea59d10690156d1",
+    "0x4b9e4744b4f346178b87d4b8cc136108741a6edf"
   ]
 }
