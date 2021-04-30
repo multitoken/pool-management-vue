@@ -1,8 +1,5 @@
 <template>
   <Page>
-    <Container>
-      <Filters :value="filters" v-model="filters" />
-    </Container>
     <ListPools :query="query" :key="JSON.stringify(query)" />
   </Page>
 </template>
