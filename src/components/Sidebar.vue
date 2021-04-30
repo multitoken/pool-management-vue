@@ -56,7 +56,7 @@
             target="_blank"
             rel="noreferrer"
           >
-            <img alt="GitHub" src="~/@/assets/logo-medium.svg" />
+            <img alt="GitHub" src="~/@/assets/logo-github.svg" />
           </a>
         </div>
         <a
