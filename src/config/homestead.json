@@ -42,7 +42,7 @@
       "id": "walletlink",
       "name": "Coinbase",
       "options": {
-        "appName": "Multitoken - ETF management",
+        "appName": "Multitoken - ETF marketplace",
         "darkMode": true,
         "chainId": 1,
         "ethJsonrpcUrl": "https://cloudflare-eth.com"
