@@ -29,9 +29,6 @@
               <Icon name="external-link" class="ml-1" />
             </a>
           </li>
-          <li>
-            <a @click="modalOpen = true" v-text="$t('about')" />
-          </li>
         </ul>
       </div>
       <div class="d-block m-4">
