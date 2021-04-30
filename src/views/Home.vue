@@ -9,7 +9,7 @@
       class="mb-4"
     />
     <Container class="mb-3">
-      <h3 class="flex-auto" v-text="$t('myEtfs')" />
+      <h3 class="flex-auto" v-text="$t('myShares')" />
     </Container>
     <ListPools :key="JSON.stringify(queryMyPools)" :query="queryMyPools" />
   </Page>

@@ -11,7 +11,7 @@
             <router-link
               :to="{ name: 'home' }"
               :class="{ active: $router.currentRoute.name === 'home' }"
-              v-text="$t('myEtfs')"
+              v-text="$t('myShares')"
             />
           </li>
           <li>
