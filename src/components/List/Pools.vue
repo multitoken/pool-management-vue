@@ -77,7 +77,9 @@ export default {
       this.loading = true;
       this.page++;
       const page = this.page;
-      const pools = await this.getPools({ page });
+      let query = this.query || {};
+      query = { ...query, page };
+      const pools = await this.getPools(query);
       this.pools = this.pools.concat(pools);
       this.loading = false;
     }
