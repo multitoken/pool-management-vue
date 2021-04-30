@@ -67,7 +67,8 @@ export default {
         };
       return {
         where: {
-          crp: true
+          crp: true,
+          id_not_in: config.excludedPoolsIds,
         }
       };
     },
