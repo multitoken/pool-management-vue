@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow-hidden ml-n2 mr-n2 text-center">
+  <div class="d-flex pool-boxes overflow-hidden ml-n2 mr-n2 text-center">
     <div class="col-12 col-md-3 float-left my-2">
       <div
         class="border rounded-0 rounded-md-1 panel-background py-4 mx-0 mx-md-2"
@@ -14,14 +14,6 @@
       >
         <h3 v-text="_num(pool.lastSwapVolume, 'usd')" />
         <p v-text="$t('volume24')" class="mb-0" />
-      </div>
-    </div>
-    <div class="col-12 col-md-3 float-left my-2">
-      <div
-        class="border rounded-0 rounded-md-1 panel-background py-4 mx-0 mx-md-2"
-      >
-        <h3 v-text="_num(pool.swapFee, 'percent')" />
-        <p v-text="$t('swapFee')" class="mb-0" />
       </div>
     </div>
     <div class="col-12 col-md-3 float-left my-2">
@@ -65,3 +57,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.pool-boxes {
+  justify-content: space-around;
+}
+</style>
