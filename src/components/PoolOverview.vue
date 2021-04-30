@@ -13,9 +13,6 @@
         v-text="`→ ${_num(userShare.future, 'percent')}`"
       />
     </div>
-    <div class="text-white">
-      {{ $t('swapFee') }}: {{ _num(pool.swapFee, 'percent') }}
-    </div>
     <div class="text-center">
       <Pie :tokens="pool.tokens" size="100" class="mt-3 mb-2" />
     </div>
