@@ -25,11 +25,6 @@
         </div>
       </div>
     </div>
-    <UiNum
-      :value="pool.swapFee"
-      format="percent"
-      class="column hide-sm hide-md"
-    />
     <div v-text="_num(poolLiquidity, 'usd')" class="column" />
     <div
       v-text="_num(myLiquidity, 'usd')"
