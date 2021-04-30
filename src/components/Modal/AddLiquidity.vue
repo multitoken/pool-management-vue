@@ -2,7 +2,7 @@
   <UiModal :open="open" @close="$emit('close')" v-if="pool.id">
     <UiModalForm>
       <template slot="header">
-        <h3 v-text="$t('addLiquidity')" class="text-white" />
+        <h3 v-text="$t('issue')" class="text-white" />
       </template>
       <div class="text-center m-4 mt-0">
         <Toggle
@@ -150,7 +150,7 @@
           :loading="loading"
           class="button-primary"
         >
-          {{ $t('addLiquidity') }}
+          {{ $t('issue') }}
         </Button>
       </template>
     </UiModalForm>
