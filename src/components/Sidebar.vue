@@ -21,13 +21,6 @@
               v-text="$t('etfs')"
             />
           </li>
-          <li>
-            <router-link
-              :to="{ name: 'create' }"
-              :class="{ active: $router.currentRoute.name === 'create' }"
-              v-text="$t('createEtf')"
-            />
-          </li>
         </ul>
         <ul class="py-3">
           <li>
