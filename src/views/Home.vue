@@ -1,7 +1,7 @@
 <template>
   <Page>
     <Container class="mb-3">
-      <h3 class="flex-auto" v-text="$t('myLiquidity')" />
+      <h3 class="flex-auto" v-text="$t('myShares')" />
     </Container>
     <ListPools
       :key="JSON.stringify(queryMyLiquidity)"

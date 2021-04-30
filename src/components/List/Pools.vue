@@ -11,10 +11,7 @@
         />
         <div v-text="$t('assets')" class="flex-auto text-left" />
         <div v-text="$t('marketCap')" class="column" />
-        <div
-          v-text="$t('myLiquidity')"
-          class="column hide-sm hide-md hide-lg"
-        />
+        <div v-text="$t('myShares')" class="column hide-sm hide-md hide-lg" />
         <div v-text="$t('volume24')" class="column hide-sm hide-md hide-lg" />
       </UiTableTh>
       <div v-infinite-scroll="loadMore" infinite-scroll-distance="10">
