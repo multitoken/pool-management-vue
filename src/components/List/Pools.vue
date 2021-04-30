@@ -10,7 +10,6 @@
           class="column-sm text-left hide-sm hide-md hide-lg"
         />
         <div v-text="$t('assets')" class="flex-auto text-left" />
-        <div v-text="$t('swapFee')" class="column hide-sm hide-md" />
         <div v-text="$t('marketCap')" class="column" />
         <div
           v-text="$t('myLiquidity')"
