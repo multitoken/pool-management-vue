@@ -22,7 +22,7 @@
           v-text="_shorten(pool.config.name || pool.metadata.name, 24)"
         />
         <span v-else>
-          {{ $t('pool') }} {{ _shortenAddress(pool.address) }}
+          {{ $t('etf') }} {{ _shortenAddress(pool.address) }}
         </span>
         <span
           v-if="pool.config.symbol || pool.metadata.symbol"

@@ -64,12 +64,12 @@
       </div>
       <h4 v-else v-text="$t('noProxy')" />
     </Container>
-    <Container class="d-flex mb-3">
+    <Container v-if="isNotMainnet" class="d-flex mb-3">
       <div class="flex-auto">
         <h3 v-text="$t('getTestTokens')" />
       </div>
     </Container>
-    <UiTable class="d-flex mb-3 float-left">
+    <UiTable v-if="isNotMainnet" class="token-minter d-flex mb-3 float-left">
       <div
         class="d-flex"
         @click="tokenModalOpen = true"
@@ -89,7 +89,7 @@
         <UiButton
           @click="mintToken"
           type="button"
-          class="button-primary button-sm"
+          class="minter-button button-primary button-sm"
           :loading="mintButtonLoading"
           v-text="
             mintButtonLoading
@@ -131,6 +131,7 @@ import minter from '../helpers/abi/Minter.json';
 import { getInstance } from '@snapshot-labs/lock/plugins/vue';
 import provider from '@/helpers/provider';
 import store from '@/store';
+import config from '@/config';
 
 export default {
   data() {
@@ -144,6 +145,9 @@ export default {
     };
   },
   computed: {
+    isNotMainnet() {
+      return config.network !== 'homestead';
+    },
     balances() {
       const balances = Object.entries(this.web3.balances)
         .filter(
@@ -271,3 +275,15 @@ export default {
   }
 };
 </script>
+
+<style scoped lang="scss">
+@media (max-width: 766px) {
+  .token-minter {
+    width: 100% !important;
+  }
+}
+
+.minter-button {
+  margin-left: auto;
+}
+</style>

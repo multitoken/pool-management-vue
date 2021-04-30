@@ -361,7 +361,7 @@ const actions = {
       });
       await tx.wait(6);
       setGoal('H854WJCE');
-      dispatch('notify', ['green', i18n.tc('successCreatePool')]);
+      dispatch('notify', ['green', i18n.tc('successCreateEtf')]);
       commit('CREATE_SMART_POOL_SUCCESS');
     } catch (e) {
       if (!e || isTxReverted(e)) return Promise.reject(e);

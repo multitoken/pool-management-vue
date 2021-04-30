@@ -295,10 +295,10 @@ export default {
       if (feeErrorText) return feeErrorText;
       // Token count validation
       if (this.tokens.length < 2) {
-        return this.$t('errMinPoolTokens');
+        return this.$t('errMinEtfTokens');
       }
       if (this.tokens.length > 255) {
-        return this.$t('errMaxPoolTokens');
+        return this.$t('errMaxEtfTokens');
       }
       // Weight validation
       for (const token of this.tokens) {

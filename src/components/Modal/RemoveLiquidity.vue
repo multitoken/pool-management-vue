@@ -2,7 +2,7 @@
   <UiModal :open="open" @close="$emit('close')" v-if="pool.id">
     <UiModalForm>
       <template slot="header">
-        <h3 v-text="$t('removeLiquidity')" class="text-white" />
+        <h3 v-text="$t('redeem')" class="text-white" />
       </template>
       <div class="text-center m-4 mt-0">
         <Toggle
@@ -22,7 +22,7 @@
           <UiTable>
             <UiTableTh>
               <div v-text="$t('asset')" class="column-lg flex-auto text-left" />
-              <div v-text="$t('myPoolBalance')" class="column" />
+              <div v-text="$t('myEtfBalance')" class="column" />
               <div v-text="$t('withdrawalAmt')" class="column-sm" />
             </UiTableTh>
             <UiTableTr
@@ -110,7 +110,7 @@
           :loading="loading"
           class="button-primary"
         >
-          {{ $t('removeLiquidity') }}
+          {{ $t('redeem') }}
         </Button>
       </template>
     </UiModalForm>

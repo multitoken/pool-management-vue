@@ -1,23 +1,27 @@
 # Fork of Balancer Pool Management
 
-Pool management interface for users to add and remove liquidity to Balancer pools.
+ETF management interface for users to add and remove liquidity to Multitoken ETFs.
 
 ## Project setup
+
 ```
 npm install
 ```
 
 ### Compiles and hot-reloads for development
+
 ```
 npm run serve
 ```
 
 ### Compiles and minifies for production
+
 ```
 npm run build
 ```
 
 ### Lints and fixes files
+
 ```
 npm run lint
 ```

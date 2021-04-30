@@ -15,13 +15,13 @@
       </h5>
     </div>
     <div class="mb-3">
-      <div v-text="$t('poolType')" class="mb-2" />
+      <div v-text="$t('etfType')" class="mb-2" />
       <h5 v-text="bPool.getTypeStr()" class="text-white" />
     </div>
     <div v-if="bPool.metadata.tokens.length == 0">
       <div class="d-flex flex-items-center p-4 warning-box">
         <Icon name="warning" size="22" class="mr-4" />
-        <div v-text="$t('deadPoolWarning')" />
+        <div v-text="$t('deadEtfWarning')" />
       </div>
       <br />
     </div>
@@ -116,7 +116,7 @@
       </h5>
     </div>
     <div v-if="bPool.isCrp() && bPool.metadata.crpController" class="mb-3">
-      <div v-text="$t('smartPoolController')" class="mb-2" />
+      <div v-text="$t('smartEtfController')" class="mb-2" />
       <h5>
         <a
           :href="_etherscanLink(bPool.metadata.crpController)"

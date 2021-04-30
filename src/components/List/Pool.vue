@@ -1,7 +1,11 @@
 <template>
   <UiTableTr :to="{ name: 'pool', params: { id: pool.id } }">
     <div class="column-sm text-left hide-sm hide-md hide-lg">
-      {{ _shortenAddress(pool.id) }}
+      {{
+        !poolMetadata
+          ? _shortenAddress(pool.id)
+          : `${poolMetadata.name} (${poolMetadata.symbol})`
+      }}
     </div>
     <div>
       <Pie :tokens="pool.tokens" class="mr-3" size="34" />
@@ -21,11 +25,6 @@
         </div>
       </div>
     </div>
-    <UiNum
-      :value="pool.swapFee"
-      format="percent"
-      class="column hide-sm hide-md"
-    />
     <div v-text="_num(poolLiquidity, 'usd')" class="column" />
     <div
       v-text="_num(myLiquidity, 'usd')"
@@ -42,9 +41,13 @@
 
 <script>
 import { getPoolLiquidity } from '@/helpers/price';
+import Pool from '@/_balancer/pool';
 
 export default {
   props: ['pool'],
+  data() {
+    return { poolMetadata: null };
+  },
   computed: {
     poolLiquidity() {
       return getPoolLiquidity(this.pool, this.price.values);
@@ -54,6 +57,10 @@ export default {
       if (!this.pool.finalized || !poolShares) return 0;
       return (this.poolLiquidity / this.pool.totalShares) * poolShares;
     }
+  },
+  async mounted() {
+    const bPool = new Pool(this.pool.id);
+    this.poolMetadata = await bPool.getMetadata();
   }
 };
 </script>
