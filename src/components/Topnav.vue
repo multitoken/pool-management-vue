@@ -26,10 +26,9 @@
         </router-link>
       </div>
       <div class="header-middle">
-        <span class="mb-2">Network</span>
         <div class="chain-buttons-container">
           <UiButton
-            class="button-sm mx-1"
+            class="mx-1"
             v-for="(chain, i) in chains"
             @click="changeNetwork(chain)"
             :key="i"
@@ -294,7 +293,7 @@ export default {
     },
     balancesTotalValue() {
       return this.balances.reduce((a, b) => a + b.value || 0, 0);
-    },
+    }
   },
   methods: {
     ...mapActions(['toggleSidebar', 'login']),
