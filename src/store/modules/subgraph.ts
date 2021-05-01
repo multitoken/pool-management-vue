@@ -103,6 +103,16 @@ const actions = {
     const tsYesterdayRounded = Math.round(tsYesterday / 3600) * 3600; // Round timestamp by hour to leverage subgraph cache
 
     where.tokensList_not = [];
+    where.id_not_in = [
+      '0xf13901ce59d9cc22eb7b05c364cfbbdf4f502134',
+      '0x85e43a977f90997c0ca58445fefe63959a6b45c8',
+      '0x825462600bff18f8b92463d71ea59d10690156d1',
+      '0x6a4db05d5f22650dea5acde109641ca2754d2784',
+      '0x7826d886620721a00af3b1b31f0cd0c46e45b8f9',
+      '0x4b9e4744b4f346178b87d4b8cc136108741a6edf',
+      '0x04a269f14fd7c40db9a2d7233d9b80437a4aeb6f',
+      '0x1208c535030b80dd9049cd04a8f8911d4bf5ae3d'
+    ];
     const query = {
       pools: {
         __args: {
