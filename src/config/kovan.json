@@ -6,7 +6,7 @@
   "wsUrl": "wss://kovan.infura.io/ws/v3/c85c3269b9c9414bb8f35b3bf68c1412",
   "subgraphUrl": "https://api.thegraph.com/subgraphs/name/cron-md/multitoken",
   "explorer": "https://kovan.etherscan.io",
-  "exchangeUrl": "https://exchange.multitoken.finance",
+  "exchangeUrl": "https://swap.multitoken.com",
   "addresses": {
     "bFactory": "0x336a59d26F33283eE2A66417c9f763E27e111820",
     "bActions": "0x4e913Bb6fEedCA8500cC4F70628b61219DC5C02a",
