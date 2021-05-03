@@ -9,7 +9,7 @@
   >
     <UiLoading v-if="step === 'loading'" />
     <span v-else-if="step === 'login'" v-text="'Connect wallet'" />
-    <span v-else-if="step === 'proxy'" v-text="'Setup proxy'" />
+    <span v-else-if="step === 'proxy'" v-text="'Prepare contract'" />
     <span
       v-else-if="step === 'approval'"
       v-text="`Unlock ${nextRequiredApproval.symbol}`"
