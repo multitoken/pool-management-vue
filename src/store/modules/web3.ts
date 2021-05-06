@@ -245,13 +245,9 @@ const actions = {
           commit('HANDLE_DISCONNECT');
           if (state.active) await dispatch('loadWeb3');
         });
-        auth.provider.on('networkChanged', async () => {
+        auth.provider.on('networkChanged', async x => {
           commit('HANDLE_NETWORK_CHANGED');
-          if (state.active) {
-            await dispatch('clearUser');
-            await dispatch('logout');
-            await dispatch('login');
-          }
+          window.location.reload();
         });
       }
       const [network, accounts] = await Promise.all([
