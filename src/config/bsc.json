@@ -3,7 +3,7 @@
   "chainId": 56,
   "defaultPrecision": 2,
   "rpcUrl": "https://bsc-dataseed.binance.org",
-  "wsUrl": "wss://bsc-ws-node.nariox.org:443",
+  "wsUrl": "wss://apis.ankr.com/wss/4fa98a79a40945b699190f251f603c58/7d08a3f1129434a5e9e124af13cb8f44/binance/full/main",
   "subgraphUrl": "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-beta",
   "explorer": "https://bscscan.com",
   "exchangeUrl": "https://swap.multitoken.com/",
