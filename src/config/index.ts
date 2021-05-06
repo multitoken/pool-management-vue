@@ -39,7 +39,7 @@ for (const token of tokensBSC) {
     decimals: token.decimals,
     precision: 3,
     hasIcon: false,
-    logoUrl: `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${token.addresses.main}/logo.png`
+    logoUrl: `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${token.addresses.bsc}/logo.png`
   };
 }
 
