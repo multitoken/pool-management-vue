@@ -29,7 +29,7 @@
               <Icon name="external-link" class="ml-1" />
             </a>
           </li>
-          <li>
+          <li v-if="isKovanTestNet">
             <router-link
               :to="{ name: 'wallet' }"
               :class="{ active: $router.currentRoute.name === 'wallet' }"
@@ -87,6 +87,7 @@
 
 <script>
 import pkg from '@/../package.json';
+import config from '@/config';
 
 const commitSha = process.env.VUE_APP_COMMIT_SHA;
 
@@ -97,6 +98,11 @@ export default {
       pkg,
       commitSha
     };
+  },
+  computed: {
+    isKovanTestNet() {
+      return config.network == 'kovan';
+    }
   }
 };
 </script>
@@ -122,13 +128,13 @@ export default {
   }
 
   ul > li > a {
+    font-size: 16px;
+
     display: block;
 
     padding: 10px 22px 12px;
 
     color: $white;
-
-    font-size: 16px;
 
     &.active {
       padding-left: 19px;
@@ -144,9 +150,9 @@ export default {
 }
 
 .connect {
-  margin-top: auto;
-
   font-size: $font-size-bigger;
+
+  margin-top: auto;
 }
 
 .protocol-link {
@@ -154,8 +160,9 @@ export default {
 }
 
 .risk-warning {
-  color: #f00;
-
   font-size: 20px;
+
+  color: #f00;
 }
+
 </style>
