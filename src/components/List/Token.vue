@@ -22,12 +22,6 @@
     </div>
     <UiNum :value="token.weightPercent / 1e2" format="percent" class="column" />
     <UiNum :value="tokenBalance" class="column hide-sm" />
-    <UiNum :value="myPoolBalance" class="column hide-sm hide-md" />
-    <UiNum
-      :value="myShareValue"
-      format="currency"
-      class="column hide-sm hide-md hide-lg"
-    />
   </UiTableTr>
 </template>
 

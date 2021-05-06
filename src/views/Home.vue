@@ -8,10 +8,6 @@
       :query="queryMyLiquidity"
       class="mb-4"
     />
-    <Container class="mb-3">
-      <h3 class="flex-auto" v-text="$t('myEtfs')" />
-    </Container>
-    <ListPools :key="JSON.stringify(queryMyPools)" :query="queryMyPools" />
   </Page>
 </template>
 
