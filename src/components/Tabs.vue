@@ -50,20 +50,6 @@ export default {
         });
       }
 
-      // Show Actions if the person is logged in
-      // AND (the pool can change weights (so potentially provide pokeWeights to anyone)
-      //      OR this user is the controller, and it has one of the rights with associated actions)
-      if (
-        this.web3.account &&
-        this.pool.rights.canChangeWeights &&
-        this.pool.tokens.length > 0
-      ) {
-        items.push({
-          name: this.$t('actions'),
-          to: { name: 'pool-actions' }
-        });
-      }
-
       return items;
     }
   }

@@ -8,19 +8,19 @@
     "symbol": "BNB",
     "wrapped": "wbnb"
   },
-  "rpcUrl": "https://bsc-dataseed.binance.org/",
+  "rpcUrl": "https://bsc-dataseed.binance.org",
   "wsUrl": "wss://apis.ankr.com/wss/4fa98a79a40945b699190f251f603c58/7d08a3f1129434a5e9e124af13cb8f44/binance/full/main",
   "subgraphUrl": "https://api.thegraph.com/subgraphs/name/cron-md/multitoken",
   "explorer": "https://bscscan.com",
-  "exchangeUrl": "https://swap.multitoken.com",
+  "exchangeUrl": "https://swap.multitoken.com/",
   "addresses": {
-    "bFactory": "0x336a59d26F33283eE2A66417c9f763E27e111820",
-    "bActions": "0x4e913Bb6fEedCA8500cC4F70628b61219DC5C02a",
-    "dsProxyRegistry": "0xbF1f7a145ADfF7ef6C1cfCD731bd5b3fB630acdC",
-    "proxy": "0x78410bE7749601a7Dc80C0a55E0526Ad98624668",
-    "crpFactory": "0x3eD2A77d24F32813f3E035C5f867A2274D1795fb",
+    "bFactory": "0xebCAA6318d834b69CB4ADD6467583a12F348fd5c",
+    "bActions": "0xd631704FD9582edF70eC5f0dD13013Afe8a7D0e8",
+    "dsProxyRegistry": "0xCe150D83E291c44f85771360B067e68730294484",
+    "proxy": "0x4D9289412338bb55DEC6FA770c51804349f7ae78",
+    "crpFactory": "0x144d8970C9F3870aDf91889BA32C430d6D131EC9",
     "wbnb": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-    "multicall": "0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A"
+    "multicall": "0x41263cBA59EB80dC200F3E2544eda4ed6A90E76C"
   },
   "connectors": {
     "injected": {
@@ -28,6 +28,5 @@
       "name": "MetaMask"
     }
   },
-  "excludedPoolsIds": [
-  ]
+  "excludedPoolsIds": []
 }

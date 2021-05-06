@@ -32,7 +32,7 @@ export default class Pool {
     return this.metadata.finalized
       ? 'Shared'
       : this.isCrp()
-      ? 'Smart pool'
+      ? 'ETF'
       : 'Private';
   }
 

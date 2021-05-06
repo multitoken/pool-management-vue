@@ -45,14 +45,6 @@
         </div>
       </div>
       <div :key="web3.account">
-        <a
-          v-if="$auth.isAuthenticated && totalPendingClaims > 0"
-          href="https://claim.balancer.finance"
-          target="_blank"
-          class="mr-2"
-        >
-          <UiButton>✨ {{ _num(totalPendingClaims) }} BAL</UiButton>
-        </a>
         <UiButton
           v-if="$auth.isAuthenticated && !wrongNetwork"
           class="buttton-non-clickable balance hide-sm hide-md"
@@ -124,128 +116,23 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { getTotalPendingClaims } from '@/_balancer/claim';
-import provider from '@/helpers/provider';
 import { formatUnits } from '@ethersproject/units';
 import i18n from '@/i18n';
+
+import chainParams from '../helpers/chainParams.json';
 
 export default {
   data() {
     return {
       loading: false,
-      totalPendingClaims: false,
       chains: ['mainnet', 'kovan', 'bsc'],
-      chainParams: {
-        mainnet: {
-          chainId: '0x1',
-          chainName: 'Ethereum',
-          nativeCurrency: {
-            name: 'Ethereum',
-            symbol: 'ETH',
-            decimals: 18
-          },
-          rpcUrls: ['https://mainnet.infura.io/v3'],
-          blockExplorerUrls: ['https://etherscan.io']
-        },
-        kovan: {
-          chainId: '0x2a',
-          chainName: 'Kovan',
-          nativeCurrency: {
-            name: 'Ethereum',
-            symbol: 'ETH',
-            decimals: 18
-          },
-          rpcUrls: ['https://kovan.infura.io/v3'],
-          blockExplorerUrls: ['https://kovan.etherscan.io']
-        },
-        fantom: {
-          chainId: '0xfa',
-          chainName: 'Fantom',
-          nativeCurrency: {
-            name: 'Fantom',
-            symbol: 'FTM',
-            decimals: 18
-          },
-          rpcUrls: ['https://rpcapi.fantom.network'],
-          blockExplorerUrls: ['https://ftmscan.com']
-        },
-        bsc: {
-          chainId: '0x38',
-          chainName: 'BSC',
-          nativeCurrency: {
-            name: 'Binance Coin',
-            symbol: 'BNB',
-            decimals: 18
-          },
-          rpcUrls: ['https://bsc-dataseed.binance.org'],
-          blockExplorerUrls: ['https://bscscan.com']
-        },
-        matic: {
-          chainId: '0x89',
-          chainName: 'Matic',
-          nativeCurrency: {
-            name: 'Matic',
-            symbol: 'MATIC',
-            decimals: 18
-          },
-          rpcUrls: ['https://rpc-mainnet.maticvigil.com'],
-          blockExplorerUrls: ['https://explorer-mainnet.maticvigil.com']
-        },
-        heco: {
-          chainId: '0x80',
-          chainName: 'Heco',
-          nativeCurrency: {
-            name: 'Heco Token',
-            symbol: 'HT',
-            decimals: 18
-          },
-          rpcUrls: ['https://http-mainnet.hecochain.com'],
-          blockExplorerUrls: ['https://hecoinfo.com']
-        },
-        xdai: {
-          chainId: '0x64',
-          chainName: 'xDai',
-          nativeCurrency: {
-            name: 'xDai Token',
-            symbol: 'xDai',
-            decimals: 18
-          },
-          rpcUrls: ['https://rpc.xdaichain.com'],
-          blockExplorerUrls: ['https://blockscout.com/poa/xdai']
-        },
-        harmony: {
-          chainId: '0x63564C40',
-          chainName: 'Harmony One',
-          nativeCurrency: {
-            name: 'One Token',
-            symbol: 'ONE',
-            decimals: 18
-          },
-          rpcUrls: ['https://api.s0.t.hmny.io'],
-          blockExplorerUrls: ['https://explorer.harmony.one/']
-        }
-      },
+      chainParams: chainParams,
       modalOpen: {
         account: false,
         activity: false,
         about: false
       }
     };
-  },
-  watch: {
-    'web3.account': async function() {
-      this.totalPendingClaims = false;
-      if (!this.web3.account) return;
-      try {
-        this.totalPendingClaims = await getTotalPendingClaims(
-          this.config.chainId,
-          provider,
-          this.web3.account
-        );
-      } catch (e) {
-        console.log(e);
-      }
-    }
   },
   computed: {
     ...mapGetters(['myPendingTransactions']),
@@ -314,34 +201,28 @@ export default {
     async changeNetwork(chainName) {
       if (
         // BSC Coming soon notification
-        this.chainParams[chainName].chainName ===
-        this.chainParams['bsc'].chainName
+        chainParams[chainName].chainName === chainParams['mainnet'].chainName
       ) {
-        return this.$store.dispatch('notify', ['blue', i18n.tc('comingSoon')]);
+        return this.$store.dispatch('notify', ['gray', i18n.tc('comingSoon')]);
       }
 
       try {
         await this.$auth.web3.send('wallet_addEthereumChain', [
-          this.chainParams[chainName],
+          chainParams[chainName],
           this.web3.account
         ]);
         this.$store.dispatch('notify', [
           'green',
-          `${i18n.tc('changedNetwork')} ${
-            this.chainParams[chainName].chainName
-          }.`
+          `${i18n.tc('changedNetwork')} ${chainParams[chainName].chainName}.`
         ]);
       } catch (e) {
         if (
-          this.chainParams[chainName].chainName ===
-            this.chainParams['mainnet'].chainName ||
-          this.chainParams[chainName].chainName ===
-            this.chainParams['kovan'].chainName
+          chainParams[chainName].chainName === chainParams['kovan'].chainName
         ) {
           this.$store.dispatch('notify', [
             'red',
             `${i18n.tc('useMetamaskToSwitch')} ${
-              this.chainParams[chainName].chainName
+              chainParams[chainName].chainName
             } network.`
           ]);
         } else {
@@ -363,12 +244,12 @@ export default {
 }
 
 .alphaWarning {
+  font-size: 12px;
+
   position: relative;
   top: -10px;
 
   color: #f00;
-
-  font-size: 12px;
 }
 
 .header-middle {
@@ -376,13 +257,14 @@ export default {
   left: calc(50% - 150px);
 
   display: flex;
-  align-items: center;
   flex-direction: column;
-  justify-content: center;
 
   width: 300px;
 
   color: #fff;
+
+  align-items: center;
+  justify-content: center;
 }
 
 .chain-buttons-container {
@@ -407,8 +289,8 @@ export default {
 
 @media (max-width: 826px) {
   .header-middle {
-    left: unset;
     position: relative;
+    left: unset;
   }
 }
 
