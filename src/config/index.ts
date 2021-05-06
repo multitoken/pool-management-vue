@@ -2,10 +2,9 @@ import merge from 'lodash/merge';
 import registry from '@balancer-labs/assets/generated/pm/registry.homestead.json';
 import tokensBSC from '@multitoken/assets/data/tokens-bsc.js';
 import tokensETH from '@multitoken/assets/data/tokens-eth.js';
-import mainnet from '@/config/homestead.json';
+import mainnet from '@/config/mainnet.json';
 import kovan from '@/config/kovan.json';
 import bsc from '@/config/bsc.json';
-import chainParams from '../helpers/chainParams.json';
 
 // Add tokens
 const registryKovan = {
@@ -46,12 +45,13 @@ const configs = { mainnet, kovan, bsc };
 configs.mainnet = merge(registry, configs.mainnet);
 configs.kovan = merge(registryKovan, configs.kovan);
 configs.bsc = merge(registryBSC, configs.bsc);
-const walletChainId = Object.entries(chainParams).find(
-  p => p[1].chainId === window.ethereum?.chainId
-);
-const network =
-  (walletChainId && walletChainId[0]) || process.env.VUE_APP_NETWORK || 'kovan';
+const network = process.env.VUE_APP_NETWORK || 'kovan';
 const config = configs[network];
 config.env = process.env.VUE_APP_ENV || 'staging';
+config.urls = {
+  mainnet: process.env.VUE_APP_MAINNET_URL,
+  kovan: process.env.VUE_APP_KOVAN_URL,
+  bsc: process.env.VUE_APP_BSC_URL
+};
 
 export default config;
