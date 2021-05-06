@@ -29,11 +29,18 @@
               <Icon name="external-link" class="ml-1" />
             </a>
           </li>
+          <li>
+            <router-link
+              :to="{ name: 'wallet' }"
+              :class="{ active: $router.currentRoute.name === 'wallet' }"
+              v-text="$t('getTestTokens')"
+            />
+          </li>
         </ul>
-        <span class="d-flex text-center justify-content-around connect">
+        <span class="d-flex text-center flex-justify-around connect mb-2">
           Connect with us
         </span>
-        <div class="d-flex justify-content-around">
+        <div class="d-flex flex-justify-around">
           <a
             href="https://medium.com/multitoken"
             target="_blank"
@@ -60,7 +67,7 @@
           </a>
         </div>
         <a
-          class="d-flex text-center my-2 link-text justify-content-around protocol-link"
+          class="d-flex text-center my-2 link-text flex-justify-around protocol-link"
           href="https://www.multitoken.com/#multitoken-protocol"
           target="_blank"
         >
@@ -70,7 +77,7 @@
         </a>
       </div>
       <div class="d-block m-4">
-        <span class="d-flex text-center justify-content-around risk-warning">
+        <span class="d-flex text-center flex-justify-around risk-warning">
           Use at your own risk
         </span>
       </div>
@@ -150,9 +157,5 @@ export default {
   color: #f00;
 
   font-size: 20px;
-}
-
-.justify-content-around {
-  justify-content: space-around;
 }
 </style>
