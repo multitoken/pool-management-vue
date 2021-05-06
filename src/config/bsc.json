@@ -3,7 +3,6 @@
   "chainId": 56,
   "defaultPrecision": 2,
   "baseToken": {
-    "address": "ether",
     "name": "Bincance",
     "symbol": "BNB",
     "wrapped": "wbnb"

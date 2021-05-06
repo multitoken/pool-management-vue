@@ -147,7 +147,7 @@ export default {
       const baseToken = this.config?.baseToken;
 
       const price = this.price.values[this.config?.addresses[baseToken?.wrapped]];
-      const balance = formatUnits(this.web3.balances[baseToken?.address] || 0, 18);
+      const balance = formatUnits(this.web3.balances['ether'] || 0, 18);
       const result = {
         address: baseToken?.address,
         name: baseToken?.name,
@@ -160,10 +160,9 @@ export default {
       return result;
     },
     balances() {
-      const baseToken = this.config?.baseToken;
       const balances = Object.entries(this.web3.balances)
         .filter(
-          ([address]) => address !== baseToken?.address && this.web3.tokenMetadata[address]
+          ([address]) => address !== 'ether' && this.web3.tokenMetadata[address]
         )
         .map(([address, denormBalance]) => {
           const price = this.price.values[address];

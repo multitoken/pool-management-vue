@@ -3,7 +3,6 @@
   "chainId": 42,
   "defaultPrecision": 2,
   "baseToken": {
-    "address": "ether",
     "name": "Ethereum",
     "symbol": "ETH",
     "wrapped": "weth"
