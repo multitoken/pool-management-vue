@@ -143,6 +143,20 @@ export default {
         !this.loading
       );
     },
+    baseTokenBalance() {
+      const baseToken = this.config?.baseToken;
+
+      const price = this.price.values[this.config?.addresses[baseToken?.wrapped]];
+      const balance = formatUnits(this.web3.balances['ether'] || 0, 18);
+      return {
+        address: baseToken?.address,
+        name: baseToken?.name,
+        symbol: baseToken?.symbol,
+        price: price,
+        balance: balance,
+        value: price * balance
+      };
+    },
     balances() {
       const balances = Object.entries(this.web3.balances)
         .filter(
@@ -164,17 +178,8 @@ export default {
           };
         })
         .filter(({ value }) => value > 0.001);
-      const ethPrice = this.price.values[this.config?.addresses.weth];
-      const ethBalance = formatUnits(this.web3.balances['ether'] || 0, 18);
       return [
-        {
-          address: 'ether',
-          name: 'ETH',
-          symbol: 'ETH',
-          price: ethPrice,
-          balance: ethBalance,
-          value: ethPrice * ethBalance
-        },
+        this.baseTokenBalance,
         ...balances
       ];
     },
