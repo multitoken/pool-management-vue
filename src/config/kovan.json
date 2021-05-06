@@ -2,6 +2,12 @@
   "network": "kovan",
   "chainId": 42,
   "defaultPrecision": 2,
+  "baseToken": {
+    "address": "ether",
+    "name": "Ethereum",
+    "symbol": "ETH",
+    "wrapped": "weth"
+  },
   "rpcUrl": "https://kovan.infura.io/v3/c85c3269b9c9414bb8f35b3bf68c1412",
   "wsUrl": "wss://kovan.infura.io/ws/v3/c85c3269b9c9414bb8f35b3bf68c1412",
   "subgraphUrl": "https://api.thegraph.com/subgraphs/name/cron-md/multitoken",

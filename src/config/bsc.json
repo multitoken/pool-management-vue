@@ -2,6 +2,12 @@
   "network": "bsc",
   "chainId": 56,
   "defaultPrecision": 2,
+  "baseToken": {
+    "address": "ether",
+    "name": "Bincance",
+    "symbol": "BNB",
+    "wrapped": "wbnb"
+  },
   "rpcUrl": "https://bsc-dataseed.binance.org/",
   "wsUrl": "wss://apis.ankr.com/wss/4fa98a79a40945b699190f251f603c58/7d08a3f1129434a5e9e124af13cb8f44/binance/full/main",
   "subgraphUrl": "https://api.thegraph.com/subgraphs/name/cron-md/multitoken",
@@ -13,7 +19,7 @@
     "dsProxyRegistry": "0xbF1f7a145ADfF7ef6C1cfCD731bd5b3fB630acdC",
     "proxy": "0x78410bE7749601a7Dc80C0a55E0526Ad98624668",
     "crpFactory": "0x3eD2A77d24F32813f3E035C5f867A2274D1795fb",
-    "weth": "0xd0A1E359811322d97991E03f863a0C30C2cF029C",
+    "wbnb": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
     "multicall": "0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A"
   },
   "connectors": {

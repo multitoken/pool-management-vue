@@ -256,10 +256,27 @@ export default {
         !this.loading
       );
     },
+    baseTokenBalance() {
+      const baseToken = this.config?.baseToken;
+
+      const price = this.price.values[this.config?.addresses[baseToken?.wrapped]];
+      const balance = formatUnits(this.web3.balances[baseToken?.address] || 0, 18);
+      const result = {
+        address: baseToken?.address,
+        name: baseToken?.name,
+        symbol: baseToken?.symbol,
+        price: price,
+        balance: balance,
+        value: price * balance
+      };
+      debugger;
+      return result;
+    },
     balances() {
+      const baseToken = this.config?.baseToken;
       const balances = Object.entries(this.web3.balances)
         .filter(
-          ([address]) => address !== 'ether' && this.web3.tokenMetadata[address]
+          ([address]) => address !== baseToken?.address && this.web3.tokenMetadata[address]
         )
         .map(([address, denormBalance]) => {
           const price = this.price.values[address];
@@ -277,17 +294,8 @@ export default {
           };
         })
         .filter(({ value }) => value > 0.001);
-      const ethPrice = this.price.values[this.config?.addresses.weth];
-      const ethBalance = formatUnits(this.web3.balances['ether'] || 0, 18);
       return [
-        {
-          address: 'ether',
-          name: 'ETH',
-          symbol: 'ETH',
-          price: ethPrice,
-          balance: ethBalance,
-          value: ethPrice * ethBalance
-        },
+        this.baseTokenBalance,
         ...balances
       ];
     },

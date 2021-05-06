@@ -2,6 +2,12 @@
   "network": "homestead",
   "chainId": 1,
   "defaultPrecision": 2,
+  "baseToken": {
+    "address": "ether",
+    "name": "Ethereum",
+    "symbol": "ETH",
+    "wrapped": "weth"
+  },
   "rpcUrl": "https://mainnet.infura.io/v3/8dd19a9306014b30bb8e994bbf21211c",
   "wsUrl": "wss://mainnet.infura.io/ws/v3/8dd19a9306014b30bb8e994bbf21211c",
   "subgraphUrl": "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-beta",
