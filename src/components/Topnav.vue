@@ -148,7 +148,7 @@ export default {
 
       const price = this.price.values[this.config?.addresses[baseToken?.wrapped]];
       const balance = formatUnits(this.web3.balances['ether'] || 0, 18);
-      const result = {
+      return {
         address: baseToken?.address,
         name: baseToken?.name,
         symbol: baseToken?.symbol,
@@ -156,8 +156,6 @@ export default {
         balance: balance,
         value: price * balance
       };
-      debugger;
-      return result;
     },
     balances() {
       const balances = Object.entries(this.web3.balances)
