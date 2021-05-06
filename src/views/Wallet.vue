@@ -64,12 +64,16 @@
       </div>
       <h4 v-else v-text="$t('noProxy')" />
     </Container>
-    <Container v-if="isNotMainnet" class="d-flex mb-3">
+    <Container v-if="isKovanTestNet" class="d-flex mb-3">
       <div class="flex-auto">
         <h3 v-text="$t('getTestTokens')" />
       </div>
     </Container>
-    <UiTable v-if="isNotMainnet" class="token-minter d-flex mb-3 float-left">
+    <UiTable
+      v-if="isKovanTestNet"
+      class="token-minter d-flex mb-3 float-left"
+      ref="tokenMinter"
+    >
       <div
         class="d-flex"
         @click="tokenModalOpen = true"
@@ -145,8 +149,8 @@ export default {
     };
   },
   computed: {
-    isNotMainnet() {
-      return config.network !== 'homestead';
+    isKovanTestNet() {
+      return config.network == 'kovan';
     },
     balances() {
       const balances = Object.entries(this.web3.balances)
@@ -271,6 +275,11 @@ export default {
         );
       }
       this.mintButtonLoading = false;
+    }
+  },
+  mounted() {
+    if (this.$refs.tokenMinter) {
+      this.$refs.tokenMinter.$el.scrollIntoView({ behavior: 'smooth' });
     }
   }
 };

@@ -29,11 +29,18 @@
               <Icon name="external-link" class="ml-1" />
             </a>
           </li>
+          <li v-if="isKovanTestNet">
+            <router-link
+              :to="{ name: 'wallet' }"
+              :class="{ active: $router.currentRoute.name === 'wallet' }"
+              v-text="$t('getTestTokens')"
+            />
+          </li>
         </ul>
-        <span class="d-flex text-center justify-content-around connect">
+        <span class="d-flex text-center flex-justify-around connect mb-2">
           Connect with us
         </span>
-        <div class="d-flex justify-content-around">
+        <div class="d-flex flex-justify-around">
           <a
             href="https://medium.com/multitoken"
             target="_blank"
@@ -52,7 +59,7 @@
             <img alt="Twitter page" src="~/@/assets/logo-twtr.svg" />
           </a>
           <a
-            href="https://twitter.com/multitokencom"
+            href="https://github.com/multitoken/pool-management-vue"
             target="_blank"
             rel="noreferrer"
           >
@@ -60,7 +67,7 @@
           </a>
         </div>
         <a
-          class="d-flex text-center my-2 link-text justify-content-around protocol-link"
+          class="d-flex text-center my-2 link-text flex-justify-around protocol-link"
           href="https://www.multitoken.com/#multitoken-protocol"
           target="_blank"
         >
@@ -70,7 +77,7 @@
         </a>
       </div>
       <div class="d-block m-4">
-        <span class="d-flex text-center justify-content-around risk-warning">
+        <span class="d-flex text-center flex-justify-around risk-warning">
           Use at your own risk
         </span>
       </div>
@@ -80,6 +87,7 @@
 
 <script>
 import pkg from '@/../package.json';
+import config from '@/config';
 
 const commitSha = process.env.VUE_APP_COMMIT_SHA;
 
@@ -90,6 +98,11 @@ export default {
       pkg,
       commitSha
     };
+  },
+  computed: {
+    isKovanTestNet() {
+      return config.network == 'kovan';
+    }
   }
 };
 </script>
@@ -115,13 +128,13 @@ export default {
   }
 
   ul > li > a {
+    font-size: 16px;
+
     display: block;
 
     padding: 10px 22px 12px;
 
     color: $white;
-
-    font-size: 16px;
 
     &.active {
       padding-left: 19px;
@@ -137,9 +150,9 @@ export default {
 }
 
 .connect {
-  margin-top: auto;
-
   font-size: $font-size-bigger;
+
+  margin-top: auto;
 }
 
 .protocol-link {
@@ -147,12 +160,9 @@ export default {
 }
 
 .risk-warning {
-  color: #f00;
-
   font-size: 20px;
+
+  color: #f00;
 }
 
-.justify-content-around {
-  justify-content: space-around;
-}
 </style>
