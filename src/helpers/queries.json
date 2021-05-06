@@ -112,6 +112,8 @@
         }
       },
       "id": true,
+      "name": true,
+      "symbol": true,
       "publicSwap": true,
       "finalized": true,
       "crp": true,
