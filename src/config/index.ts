@@ -69,7 +69,6 @@ configs.rinkeby = merge(registryRinkeby, configs.rinkeby);
 const walletChainId = Object.entries(chainParams).find(
   p => p[1].chainId === window.ethereum?.chainId
 );
-walletChainId && console.log('walletChainId[0]:', walletChainId[0]);
 const network =
   (walletChainId && walletChainId[0]) || process.env.VUE_APP_NETWORK || 'kovan';
 const config = configs[network];
