@@ -2,7 +2,7 @@
   <UiModal :open="open" @close="$emit('close')" style="max-width: 440px;">
     <UiModalForm @submit="handleSubmit">
       <template slot="header">
-        <h3 v-text="$t(title)" class="text-white" />
+        <h3 v-text="title" class="text-white" />
       </template>
       <div class="m-4 p-4 border rounded-2">
         <div class="mb-2">
@@ -81,9 +81,6 @@ import { validateNumberInput, ValidationError } from '@/helpers/validation';
 import { normalizeBalance } from '@/helpers/utils';
 import { mapActions } from 'vuex';
 
-const GAS_BUFFER_ERROR = 0.01;
-const GAS_BUFFER_WARNING = 0.2;
-
 export default {
   props: ['open', 'side'],
   data() {
@@ -102,32 +99,41 @@ export default {
   },
   computed: {
     title() {
-      return this.currentSide === 2 ? 'wrapWethToEth' : 'wrapEthToWeth';
+      const baseToken = this.config.baseToken;
+      return this.currentSide === 2
+        ? `Wrap ${baseToken.wrappedSymbol} to ${baseToken.symbol}`
+        : `Wrap ${baseToken.symbol} to ${baseToken.wrappedSymbol}`;
     },
     symbols() {
       return {
-        tokenIn: this.currentSide === 2 ? 'WETH' : 'ETH',
-        tokenOut: this.currentSide === 2 ? 'ETH' : 'WETH'
+        tokenIn:
+          this.currentSide === 2
+            ? this.config.baseToken.wrappedSymbol
+            : this.config.baseToken.symbol,
+        tokenOut:
+          this.currentSide === 2
+            ? this.config.baseToken.symbol
+            : this.config.baseToken.wrappedSymbol
       };
     },
     balance() {
       let balance = this.web3.balances['ether'] || '0';
       if (this.currentSide === 2)
-        balance = this.web3.balances[this.config.addresses.weth] || '0';
+        balance = this.web3.balances[this.config.addresses.wrapped] || '0';
       return normalizeBalance(balance, 18);
     },
     isValid() {
       const error = validateNumberInput(this.amount);
       if (error !== ValidationError.NONE) return false;
       return this.currentSide === 1
-        ? !this.balance.minus(GAS_BUFFER_ERROR).lt(this.amount)
+        ? !this.balance.minus(this.config.gas.bufferError).lt(this.amount)
         : !this.balance.lt(this.amount);
     },
     etherLeft() {
       return (
         this.currentSide === 2 ||
         this.balance.isZero() ||
-        !this.balance.minus(GAS_BUFFER_WARNING).lt(this.amount)
+        !this.balance.minus(this.config.gas.bufferWarning).lt(this.amount)
       );
     }
   },
@@ -143,7 +149,7 @@ export default {
     handleMax() {
       const maxAllowedAmount =
         this.currentSide === 1
-          ? this.balance.minus(GAS_BUFFER_WARNING)
+          ? this.balance.minus(this.config.gas.bufferWarning)
           : this.balance;
       this.amount = maxAllowedAmount.isNegative()
         ? '0'

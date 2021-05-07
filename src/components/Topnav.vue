@@ -27,21 +27,14 @@
       </div>
       <div class="header-middle hide-sm hide-md">
         <div class="chain-buttons-container">
-          <UiButton
-            class="mx-1"
-            v-for="(chain, i) in chains"
-            @click="changeNetwork(chain)"
-            :key="i"
-            :class="{
-              'button-highlight':
-                web3.injectedChainId == parseInt(chainParams[chain].chainId, 16)
-            }"
-            :disabled="
-              web3.injectedChainId == parseInt(chainParams[chain].chainId, 16)
-            "
-          >
-            {{ chainParams[chain].chainName }}
-          </UiButton>
+          <a v-for="(chain, i) in chains" :key="i" :href="getNetworkURL(chain)">
+            <UiButton
+              class="mx-1"
+              :class="{ 'button-highlight': chain === currentNetwork }"
+            >
+              {{ chainParams[chain].chainName }}
+            </UiButton>
+          </a>
         </div>
       </div>
       <div :key="web3.account">
@@ -117,7 +110,6 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import { formatUnits } from '@ethersproject/units';
-import i18n from '@/i18n';
 
 import chainParams from '../helpers/chainParams.json';
 
@@ -143,6 +135,23 @@ export default {
         !this.loading
       );
     },
+    currentNetwork() {
+      return this.config.network;
+    },
+    baseTokenBalance() {
+      const baseToken = this.config?.baseToken;
+
+      const price = this.price.values[this.config?.addresses.wrapped];
+      const balance = formatUnits(this.web3.balances['ether'] || 0, 18);
+      return {
+        address: baseToken?.address,
+        name: baseToken?.name,
+        symbol: baseToken?.symbol,
+        price: price,
+        balance: balance,
+        value: price * balance
+      };
+    },
     balances() {
       const balances = Object.entries(this.web3.balances)
         .filter(
@@ -164,19 +173,7 @@ export default {
           };
         })
         .filter(({ value }) => value > 0.001);
-      const ethPrice = this.price.values[this.config?.addresses.weth];
-      const ethBalance = formatUnits(this.web3.balances['ether'] || 0, 18);
-      return [
-        {
-          address: 'ether',
-          name: 'ETH',
-          symbol: 'ETH',
-          price: ethPrice,
-          balance: ethBalance,
-          value: ethPrice * ethBalance
-        },
-        ...balances
-      ];
+      return [this.baseTokenBalance, ...balances];
     },
     balancesTotalValue() {
       return this.balances.reduce((a, b) => a + b.value || 0, 0);
@@ -190,37 +187,8 @@ export default {
       await this.login(connector);
       this.loading = false;
     },
-    async changeNetwork(chainName) {
-      if (
-        // BSC Coming soon notification
-        chainParams[chainName].chainName === chainParams['mainnet'].chainName
-      ) {
-        return this.$store.dispatch('notify', ['gray', i18n.tc('comingSoon')]);
-      }
-
-      try {
-        await this.$auth.web3.send('wallet_addEthereumChain', [
-          chainParams[chainName],
-          this.web3.account
-        ]);
-        this.$store.dispatch('notify', [
-          'green',
-          `${i18n.tc('changedNetwork')} ${chainParams[chainName].chainName}.`
-        ]);
-      } catch (e) {
-        if (
-          chainParams[chainName].chainName === chainParams['kovan'].chainName
-        ) {
-          this.$store.dispatch('notify', [
-            'red',
-            `${i18n.tc('useMetamaskToSwitch')} ${
-              chainParams[chainName].chainName
-            } network.`
-          ]);
-        } else {
-          this.$store.dispatch('notify', ['red', e.message]);
-        }
-      }
+    getNetworkURL(chainName) {
+      return this?.config?.urls[chainName];
     }
   }
 };
@@ -291,4 +259,5 @@ export default {
     display: none !important;
   }
 }
+
 </style>
