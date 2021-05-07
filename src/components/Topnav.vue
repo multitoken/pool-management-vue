@@ -141,9 +141,7 @@ export default {
     baseTokenBalance() {
       const baseToken = this.config?.baseToken;
 
-      const price = this.price.values[
-        this.config?.addresses[baseToken?.wrapped]
-      ];
+      const price = this.price.values[this.config?.addresses.wrapped];
       const balance = formatUnits(this.web3.balances['ether'] || 0, 18);
       return {
         address: baseToken?.address,

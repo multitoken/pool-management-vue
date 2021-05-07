@@ -41,7 +41,7 @@ export async function subgraphRequest(url, query) {
 
 export function getTokenLogoUrl(address: string): string | null {
   if (address === 'ether') {
-    address = config.addresses.weth;
+    address = config.addresses.wrapped;
   }
   address = getAddress(address);
   const metadata = config.tokens[address];

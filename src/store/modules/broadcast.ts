@@ -847,7 +847,7 @@ const actions = {
     try {
       const params = [
         'Weth',
-        config.addresses.weth,
+        config.addresses.wrapped,
         'deposit',
         [],
         { value: toWei(amount).toString() }
@@ -874,7 +874,7 @@ const actions = {
     try {
       const params = [
         'Weth',
-        config.addresses.weth,
+        config.addresses.wrapped,
         'withdraw',
         [toWei(amount).toString()],
         {}

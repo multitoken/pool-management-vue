@@ -6,15 +6,27 @@ import mainnet from '@/config/mainnet.json';
 import kovan from '@/config/kovan.json';
 import bsc from '@/config/bsc.json';
 
+interface ConfigToken {
+  address: string;
+  id: string;
+  name: string;
+  symbol: string;
+  decimals: number;
+  precision: number;
+  hasIcon: boolean;
+  logoUrl: string;
+  color: string;
+}
+
 interface Config {
   network: string;
   chainId: number;
+  isTestNet: boolean;
   defaultPrecision: number;
   baseToken: {
     name: string;
     symbol: string;
     wrappedSymbol: string;
-    wrapped: string;
   };
   rpcUrl: string;
   wsUrl: string;
@@ -27,22 +39,12 @@ interface Config {
     dsProxyRegistry: string;
     proxy: string;
     crpFactory: string;
-    weth?: string;
-    wbnb?: string;
+    wrapped: string;
     multicall: string;
   };
   connectors: any;
   excludedPoolsIds: never[];
-  tokens?: {
-    address: string;
-    id: string;
-    name: string;
-    symbol: string;
-    decimals: string;
-    precision: string;
-    hasIcon: string;
-    logoUrl: string;
-  };
+  tokens: { [key: string]: ConfigToken };
   env?: string;
   urls?: {
     mainnet: string | undefined;
@@ -57,7 +59,7 @@ const registryKovan = {
   untrusted: []
 };
 for (const token of tokensETH) {
-  registryKovan['tokens'][token.addresses.kovan] = {
+  registryKovan.tokens[token.addresses.kovan] = {
     address: token.addresses.kovan,
     id: token.coingeckoID,
     name: token.name,
@@ -74,7 +76,7 @@ const registryBSC = {
   untrusted: []
 };
 for (const token of tokensBSC) {
-  registryBSC['tokens'][token.addresses.bsc] = {
+  registryBSC.tokens[token.addresses.bsc] = {
     address: token.addresses.bsc,
     id: token.coingeckoID,
     name: token.name,

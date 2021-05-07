@@ -27,7 +27,7 @@
         <div class="flex-auto text-left">
           <div v-if="balance.address !== 'ether'" class="flex-auto">
             <UiButton
-              v-if="balance.address === config.addresses.weth"
+              v-if="balance.address === config.addresses.wrapped"
               @click="[(modalWrapperOpen = true), (side = 2)]"
               type="button"
               class="button-primary button-sm ml-2"
@@ -171,7 +171,7 @@ export default {
           };
         })
         .filter(({ value }) => value > 0.001);
-      const ethPrice = this.price.values[this.config?.addresses.weth];
+      const ethPrice = this.price.values[this.config?.addresses.wrapped];
       const ethBalance = formatUnits(this.web3.balances['ether'] || 0, 18);
       return [
         {
@@ -235,8 +235,7 @@ export default {
   },
   methods: {
     changeToken(selectedToken) {
-      const tokenAddress = getAddress(selectedToken);
-      this.token = tokenAddress;
+      this.token = getAddress(selectedToken);
     },
     async mintToken() {
       this.mintButtonLoading = true;
