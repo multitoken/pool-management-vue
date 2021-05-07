@@ -64,13 +64,13 @@
       </div>
       <h4 v-else v-text="$t('noProxy')" />
     </Container>
-    <Container v-if="isKovanTestNet" class="d-flex mb-3">
+    <Container v-if="isTestNet" class="d-flex mb-3">
       <div class="flex-auto">
         <h3 v-text="$t('getTestTokens')" />
       </div>
     </Container>
     <UiTable
-      v-if="isKovanTestNet"
+      v-if="isTestNet"
       class="token-minter d-flex mb-3 float-left"
       ref="tokenMinter"
     >
@@ -145,13 +145,11 @@ export default {
       token: getTokenBySymbol('DAI').address,
       tokenModalOpen: false,
       query: '',
-      mintButtonLoading: false
+      mintButtonLoading: false,
+      isTestNet: config.isTestNet
     };
   },
   computed: {
-    isKovanTestNet() {
-      return config.network == 'kovan';
-    },
     balances() {
       const balances = Object.entries(this.web3.balances)
         .filter(
