@@ -6,6 +6,51 @@ import mainnet from '@/config/mainnet.json';
 import kovan from '@/config/kovan.json';
 import bsc from '@/config/bsc.json';
 
+interface Config {
+  network: string;
+  chainId: number;
+  defaultPrecision: number;
+  baseToken: {
+    name: string;
+    symbol: string;
+    wrappedSymbol: string;
+    wrapped: string;
+  };
+  rpcUrl: string;
+  wsUrl: string;
+  subgraphUrl: string;
+  explorer: string;
+  exchangeUrl: string;
+  addresses: {
+    bFactory: string;
+    bActions: string;
+    dsProxyRegistry: string;
+    proxy: string;
+    crpFactory: string;
+    weth?: string;
+    wbnb?: string;
+    multicall: string;
+  };
+  connectors: any;
+  excludedPoolsIds: never[];
+  tokens?: {
+    address: string;
+    id: string;
+    name: string;
+    symbol: string;
+    decimals: string;
+    precision: string;
+    hasIcon: string;
+    logoUrl: string;
+  };
+  env?: string;
+  urls?: {
+    mainnet: string | undefined;
+    kovan: string | undefined;
+    bsc: string | undefined;
+  };
+}
+
 // Add tokens
 const registryKovan = {
   tokens: {},
@@ -46,7 +91,7 @@ configs.mainnet = merge(registry, configs.mainnet);
 configs.kovan = merge(registryKovan, configs.kovan);
 configs.bsc = merge(registryBSC, configs.bsc);
 const network = process.env.VUE_APP_NETWORK || 'kovan';
-const config = configs[network];
+const config: Config = configs[network];
 config.env = process.env.VUE_APP_ENV || 'staging';
 config.urls = {
   mainnet: process.env.VUE_APP_MAINNET_URL,

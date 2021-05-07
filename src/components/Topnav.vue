@@ -28,7 +28,10 @@
       <div class="header-middle hide-sm hide-md">
         <div class="chain-buttons-container">
           <a v-for="(chain, i) in chains" :key="i" :href="getNetworkURL(chain)">
-            <UiButton class="mx-1" :class="{'button-highlight': chain === currentNetwork}">
+            <UiButton
+              class="mx-1"
+              :class="{ 'button-highlight': chain === currentNetwork }"
+            >
               {{ chainParams[chain].chainName }}
             </UiButton>
           </a>
@@ -107,7 +110,6 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import { formatUnits } from '@ethersproject/units';
-import i18n from '@/i18n';
 
 import chainParams from '../helpers/chainParams.json';
 
@@ -139,7 +141,9 @@ export default {
     baseTokenBalance() {
       const baseToken = this.config?.baseToken;
 
-      const price = this.price.values[this.config?.addresses[baseToken?.wrapped]];
+      const price = this.price.values[
+        this.config?.addresses[baseToken?.wrapped]
+      ];
       const balance = formatUnits(this.web3.balances['ether'] || 0, 18);
       return {
         address: baseToken?.address,
@@ -171,10 +175,7 @@ export default {
           };
         })
         .filter(({ value }) => value > 0.001);
-      return [
-        this.baseTokenBalance,
-        ...balances
-      ];
+      return [this.baseTokenBalance, ...balances];
     },
     balancesTotalValue() {
       return this.balances.reduce((a, b) => a + b.value || 0, 0);
@@ -260,4 +261,5 @@ export default {
     display: none !important;
   }
 }
+
 </style>
