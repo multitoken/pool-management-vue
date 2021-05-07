@@ -3,8 +3,9 @@
   "chainId": 56,
   "defaultPrecision": 2,
   "baseToken": {
-    "name": "Bincance",
+    "name": "Binance",
     "symbol": "BNB",
+    "wrappedSymbol": "WBNB",
     "wrapped": "wbnb"
   },
   "rpcUrl": "https://bsc-dataseed.binance.org",

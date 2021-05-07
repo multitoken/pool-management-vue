@@ -854,7 +854,7 @@ const actions = {
       ];
       await dispatch('processTransaction', {
         params,
-        title: 'Wrap ETH to WETH'
+        title: `Wrap ${config.baseToken.symbol} to ${config.baseToken.wrappedSymbol}`
       });
       await dispatch('getBalances');
       setGoal('KFAFBADQ');
@@ -881,7 +881,7 @@ const actions = {
       ];
       await dispatch('processTransaction', {
         params,
-        title: 'Unwrap WETH to ETH'
+        title: `Unwrap ${config.baseToken.wrappedSymbol} to ${config.baseToken.symbol}`
       });
       await dispatch('getBalances');
       setGoal('XSBEFNTT');

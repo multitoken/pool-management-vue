@@ -106,8 +106,14 @@ export default {
     },
     symbols() {
       return {
-        tokenIn: this.currentSide === 2 ? 'WETH' : 'ETH',
-        tokenOut: this.currentSide === 2 ? 'ETH' : 'WETH'
+        tokenIn:
+          this.currentSide === 2
+            ? this.config.baseToken.wrappedSymbol
+            : this.config.baseToken.symbol,
+        tokenOut:
+          this.currentSide === 2
+            ? this.config.baseToken.symbol
+            : this.config.baseToken.wrappedSymbol
       };
     },
     balance() {

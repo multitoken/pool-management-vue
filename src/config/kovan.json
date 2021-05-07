@@ -5,6 +5,7 @@
   "baseToken": {
     "name": "Ethereum",
     "symbol": "ETH",
+    "wrappedSymbol": "WETH",
     "wrapped": "weth"
   },
   "rpcUrl": "https://kovan.infura.io/v3/c85c3269b9c9414bb8f35b3bf68c1412",

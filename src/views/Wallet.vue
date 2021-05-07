@@ -32,7 +32,7 @@
               type="button"
               class="button-primary button-sm ml-2"
             >
-              Unwrap to ETH
+              {{ `Unwrap to ${config.baseToken.symbol}` }}
             </UiButton>
           </div>
           <div v-else class="flex-auto">
@@ -41,7 +41,7 @@
               type="button"
               class="button-primary button-sm ml-2"
             >
-              Wrap to WETH
+              {{ `Wrap to ${config.baseToken.wrappedSymbol}` }}
             </UiButton>
           </div>
         </div>
@@ -178,8 +178,8 @@ export default {
       return [
         {
           address: 'ether',
-          name: 'ETH',
-          symbol: 'ETH',
+          name: this.config.baseToken.name,
+          symbol: config.baseToken.symbol,
           price: ethPrice,
           balance: ethBalance,
           value: ethPrice * ethBalance

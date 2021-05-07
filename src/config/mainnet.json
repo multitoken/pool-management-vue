@@ -5,6 +5,7 @@
   "baseToken": {
     "name": "Ethereum",
     "symbol": "ETH",
+    "wrappedSymbol": "WETH",
     "wrapped": "weth"
   },
   "rpcUrl": "https://mainnet.infura.io/v3/8dd19a9306014b30bb8e994bbf21211c",
