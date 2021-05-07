@@ -108,17 +108,23 @@ export function isLocked(
   return amount.gt(tokenAllowance[spender]);
 }
 
+export function getColorByAddress(address: string): string {
+  const rColor =
+    parseInt(`0x${address[3]}${address[4]}${address[5]}`, 16) % 255;
+  const gColor =
+    parseInt(`0x${address[6]}${address[7]}${address[8]}`, 16) % 255;
+  const bColor =
+    parseInt(`0x${address[9]}${address[10]}${address[11]}`, 16) % 255;
+  return `#${rColor.toString(16)}${gColor.toString(16)}${bColor.toString(16)}`;
+}
+
 export function formatPool(pool) {
   pool.tokens = pool.tokens.map(token => {
     token.checksum = getAddress(token.address);
     token.weightPercent = (100 / pool.totalWeight) * token.denormWeight;
-    const configToken = config.tokens?.[token.checksum];
-    if (configToken?.color) {
-      token.color = configToken.color;
-    } else {
-      // eslint-disable-next-line prettier/prettier
-      token.color = `hsl(${Math.round(360 * Math.random())}, ${25 + 70 * Math.random()}%, ${55 + 15 * Math.random()}%)`;
-    }
+    token.color = config.tokens[token.checksum]?.color
+      ? config.tokens[token.checksum].color
+      : getColorByAddress(token.checksum);
     return token;
   });
   if (pool.shares) pool.holders = pool.shares.length;
