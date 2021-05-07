@@ -59,7 +59,7 @@
             <img alt="Twitter page" src="~/@/assets/logo-twtr.svg" />
           </a>
           <a
-            href="https://github.com/multitoken/pool-management-vue"
+            href="https://github.com/multitoken"
             target="_blank"
             rel="noreferrer"
           >
