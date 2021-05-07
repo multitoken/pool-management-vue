@@ -2,9 +2,14 @@
   "network": "bsc",
   "chainId": 56,
   "defaultPrecision": 2,
+  "baseToken": {
+    "name": "Bincance",
+    "symbol": "BNB",
+    "wrapped": "wbnb"
+  },
   "rpcUrl": "https://bsc-dataseed.binance.org",
   "wsUrl": "wss://apis.ankr.com/wss/4fa98a79a40945b699190f251f603c58/7d08a3f1129434a5e9e124af13cb8f44/binance/full/main",
-  "subgraphUrl": "https://api.thegraph.com/subgraphs/name/cron-md/multitoken",
+  "subgraphUrl": "https://api.thegraph.com/subgraphs/name/cron-md/multitoken_bsc",
   "explorer": "https://bscscan.com",
   "exchangeUrl": "https://swap.multitoken.com/",
   "addresses": {
@@ -13,7 +18,7 @@
     "dsProxyRegistry": "0xCe150D83E291c44f85771360B067e68730294484",
     "proxy": "0x4D9289412338bb55DEC6FA770c51804349f7ae78",
     "crpFactory": "0x144d8970C9F3870aDf91889BA32C430d6D131EC9",
-    "weth": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+    "wbnb": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
     "multicall": "0x41263cBA59EB80dC200F3E2544eda4ed6A90E76C"
   },
   "connectors": {
@@ -21,7 +26,6 @@
       "id": "injected",
       "name": "MetaMask"
     }
-},
+  },
   "excludedPoolsIds": []
 }
-  
