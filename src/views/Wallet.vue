@@ -3,7 +3,7 @@
     <Container class="d-flex mb-3">
       <div class="flex-auto">
         <h3 v-text="$t('myWallet')" />
-        <a :href="_etherscanLink(web3.account)" target="_blank">
+        <a :href="_explorerLink(web3.account)" target="_blank">
           <span v-text="_shortenAddress(web3.account)" />
           <Icon name="external-link" size="16" class="ml-1 mr-2" />
         </a>
@@ -27,12 +27,12 @@
         <div class="flex-auto text-left">
           <div v-if="balance.address !== 'ether'" class="flex-auto">
             <UiButton
-              v-if="balance.address === config.addresses.weth"
+              v-if="balance.address === config.addresses.wrapped"
               @click="[(modalWrapperOpen = true), (side = 2)]"
               type="button"
               class="button-primary button-sm ml-2"
             >
-              Unwrap to ETH
+              {{ `Unwrap to ${config.baseToken.symbol}` }}
             </UiButton>
           </div>
           <div v-else class="flex-auto">
@@ -41,7 +41,7 @@
               type="button"
               class="button-primary button-sm ml-2"
             >
-              Wrap to WETH
+              {{ `Wrap to ${config.baseToken.wrappedSymbol}` }}
             </UiButton>
           </div>
         </div>
@@ -57,20 +57,20 @@
     <Container class="d-flex mb-3">
       <div v-if="web3.dsProxyAddress" class="flex-auto">
         <h3 v-text="$t('myProxy')" />
-        <a :href="_etherscanLink(web3.dsProxyAddress)" target="_blank">
+        <a :href="_explorerLink(web3.dsProxyAddress)" target="_blank">
           <span v-text="web3.dsProxyAddress" />
           <Icon name="external-link" size="16" class="ml-1 mr-2" />
         </a>
       </div>
       <h4 v-else v-text="$t('noProxy')" />
     </Container>
-    <Container v-if="isKovanTestNet" class="d-flex mb-3">
+    <Container v-if="isTestNet" class="d-flex mb-3">
       <div class="flex-auto">
         <h3 v-text="$t('getTestTokens')" />
       </div>
     </Container>
     <UiTable
-      v-if="isKovanTestNet"
+      v-if="isTestNet"
       class="token-minter d-flex mb-3 float-left"
       ref="tokenMinter"
     >
@@ -145,13 +145,11 @@ export default {
       token: getTokenBySymbol('DAI').address,
       tokenModalOpen: false,
       query: '',
-      mintButtonLoading: false
+      mintButtonLoading: false,
+      isTestNet: config.isTestNet
     };
   },
   computed: {
-    isKovanTestNet() {
-      return config.network == 'kovan';
-    },
     balances() {
       const balances = Object.entries(this.web3.balances)
         .filter(
@@ -173,13 +171,13 @@ export default {
           };
         })
         .filter(({ value }) => value > 0.001);
-      const ethPrice = this.price.values[this.config?.addresses.weth];
+      const ethPrice = this.price.values[this.config?.addresses.wrapped];
       const ethBalance = formatUnits(this.web3.balances['ether'] || 0, 18);
       return [
         {
           address: 'ether',
-          name: 'ETH',
-          symbol: 'ETH',
+          name: this.config.baseToken.name,
+          symbol: config.baseToken.symbol,
           price: ethPrice,
           balance: ethBalance,
           value: ethPrice * ethBalance
@@ -237,8 +235,7 @@ export default {
   },
   methods: {
     changeToken(selectedToken) {
-      const tokenAddress = getAddress(selectedToken);
-      this.token = tokenAddress;
+      this.token = getAddress(selectedToken);
     },
     async mintToken() {
       this.mintButtonLoading = true;
