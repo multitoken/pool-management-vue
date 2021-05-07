@@ -283,15 +283,13 @@ export function filterObj(obj, fn) {
 export function formatNumber(number, key) {
   if (number === 0) return '-';
 
-  if (number < 0.0001) number = 0;
-
   let format = '0.[000]';
   if (number > 1000) format = '0.[0]a';
   if (number < 1) format = '0.[0000]';
 
   if (key === 'long') {
     format = '0,000.[00]';
-    if (number < 1) format = '0.[0000]';
+    if (number < 1) format = '0.[000000]';
   }
 
   if (key === 'usd') {

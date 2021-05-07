@@ -21,7 +21,7 @@
       </router-link>
     </div>
     <UiNum :value="token.weightPercent / 1e2" format="percent" class="column" />
-    <UiNum :value="tokenBalance" class="column hide-sm" />
+    <UiNum :value="tokenBalance" format="long" class="column hide-sm" />
   </UiTableTr>
 </template>
 
