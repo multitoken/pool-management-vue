@@ -847,14 +847,14 @@ const actions = {
     try {
       const params = [
         'Weth',
-        config.addresses.weth,
+        config.addresses.wrapped,
         'deposit',
         [],
         { value: toWei(amount).toString() }
       ];
       await dispatch('processTransaction', {
         params,
-        title: 'Wrap ETH to WETH'
+        title: `Wrap ${config.baseToken.symbol} to ${config.baseToken.wrappedSymbol}`
       });
       await dispatch('getBalances');
       setGoal('KFAFBADQ');
@@ -874,14 +874,14 @@ const actions = {
     try {
       const params = [
         'Weth',
-        config.addresses.weth,
+        config.addresses.wrapped,
         'withdraw',
         [toWei(amount).toString()],
         {}
       ];
       await dispatch('processTransaction', {
         params,
-        title: 'Unwrap WETH to ETH'
+        title: `Unwrap ${config.baseToken.wrappedSymbol} to ${config.baseToken.symbol}`
       });
       await dispatch('getBalances');
       setGoal('XSBEFNTT');

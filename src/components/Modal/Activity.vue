@@ -11,7 +11,7 @@
         >
           <div class="flex-auto">
             <a
-              :href="_etherscanLink(tx.hash, 'tx')"
+              :href="_explorerLink(tx.hash, 'tx')"
               target="_blank"
               class="text-white"
             >
