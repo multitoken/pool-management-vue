@@ -159,7 +159,7 @@ export function isValidAddress(str) {
 }
 
 export function delay(ms) {
-  return new Promise(resolve => setTimeout(() => resolve(), ms));
+  return new Promise<void>(resolve => setTimeout(() => resolve(), ms));
 }
 
 export function clone(item) {
@@ -217,7 +217,7 @@ export function getTokenBySymbol(symbol) {
   const tokenAddress = tokenAddresses.find(
     tokenAddress => config.tokens[tokenAddress].symbol === symbol
   );
-  return config.tokens[tokenAddress];
+  return config.tokens[tokenAddress!];
 }
 
 export const isTxRejected = error => {
