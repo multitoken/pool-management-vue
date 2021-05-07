@@ -15,6 +15,10 @@ export interface Config {
   chainId: number;
   isTestNet: boolean;
   defaultPrecision: number;
+  gas: {
+    bufferError: number;
+    bufferWarning: number;
+  };
   baseToken: {
     name: string;
     symbol: string;

@@ -21,6 +21,10 @@ const config: Config = {
   chainId: 1,
   isTestNet: false,
   defaultPrecision: 2,
+  gas: {
+    bufferError: 0.01,
+    bufferWarning: 0.2
+  },
   baseToken: {
     name: 'Ethereum',
     symbol: 'ETH',

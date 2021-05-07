@@ -21,6 +21,10 @@ const config: Config = {
   chainId: 56,
   isTestNet: false,
   defaultPrecision: 3,
+  gas: {
+    bufferError: 0.0001,
+    bufferWarning: 0.0002
+  },
   baseToken: {
     name: 'Binance',
     symbol: 'BNB',
