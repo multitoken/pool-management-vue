@@ -40,6 +40,7 @@ export interface Config {
   };
   connectors: any;
   excludedPoolsIds: string[];
+  untrusted: string[];
   tokens: { [key: string]: ConfigToken };
   env: string;
   urls: {

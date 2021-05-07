@@ -113,6 +113,7 @@ const config: Config = {
     '0x825462600bff18f8b92463d71ea59d10690156d1',
     '0x4b9e4744b4f346178b87d4b8cc136108741a6edf'
   ],
+  untrusted: [],
   env: process.env.VUE_APP_ENV || 'production',
   tokens: tokens,
   urls: {

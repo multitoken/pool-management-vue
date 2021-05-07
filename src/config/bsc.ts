@@ -52,6 +52,7 @@ const config: Config = {
     }
   },
   excludedPoolsIds: [],
+  untrusted: [],
   env: process.env.VUE_APP_ENV || 'production',
   tokens: tokens,
   urls: {

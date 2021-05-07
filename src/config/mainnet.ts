@@ -88,6 +88,7 @@ const config: Config = {
   excludedPoolsIds: [],
   env: process.env.VUE_APP_ENV || 'production',
   tokens: tokens,
+  untrusted: [],
   urls: {
     mainnet: process.env.VUE_APP_MAINNET_URL || '/',
     kovan: process.env.VUE_APP_KOVAN_URL || '/',
