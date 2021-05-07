@@ -21,17 +21,6 @@ export const EDIT_POOL_GOOGLE_FORM =
 export const amplAddress = '0xD46bA6D942050d489DBd938a2C909A5d5039A161';
 export const validAmplPools = ['0xa751a143f8fe0a108800bfb915585e4255c2fe80'];
 
-export const unknownColors = [
-  '#5d6872',
-  '#7e9e99',
-  '#9d9f7f',
-  '#68aca9',
-  '#a593a5',
-  '#387080',
-  '#c7bdf4',
-  '#c28d75'
-];
-
 export const capInputOptions = {
   NUMERIC: i18n.tc('value'),
   UNLIMITED: i18n.tc('unlimited')
@@ -120,16 +109,15 @@ export function isLocked(
 }
 
 export function formatPool(pool) {
-  let colorIndex = 0;
   pool.tokens = pool.tokens.map(token => {
     token.checksum = getAddress(token.address);
     token.weightPercent = (100 / pool.totalWeight) * token.denormWeight;
-    const configToken = config.tokens[token.checksum];
-    if (configToken) {
+    const configToken = config.tokens?.[token.checksum];
+    if (configToken?.color) {
       token.color = configToken.color;
     } else {
-      token.color = unknownColors[colorIndex];
-      colorIndex++;
+      // eslint-disable-next-line prettier/prettier
+      token.color = `hsl(${Math.round(360 * Math.random())}, ${25 + 70 * Math.random()}%, ${55 + 15 * Math.random()}%)`;
     }
     return token;
   });
