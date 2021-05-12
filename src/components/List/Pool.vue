@@ -1,19 +1,19 @@
 <template>
   <UiTableTr :to="{ name: 'pool', params: { id: pool.id } }">
-    <div class="column-sm text-left hide-sm hide-md hide-lg">
+    <div class="column-sm text-left hide-sm hide-md hide-lg flex-shrink-0">
       {{ `${pool.name} (${pool.symbol})` }}
     </div>
-    <div>
-      <Pie :tokens="pool.tokens" class="mr-3" size="34" />
+    <div class="d-flex flex-justify-center flex-items-center mx-2">
+      <Pie :tokens="pool.tokens" size="38" />
     </div>
     <div class="flex-auto text-left">
-      <div class="d-flex flex-wrap" style="max-width: 340px;">
+      <div class="d-flex flex-wrap flex-justify-start">
         <div
           v-for="token in pool.tokens"
           :key="token.address"
           :class="token.symbol.length > 14 && 'tooltipped tooltipped-n'"
           :aria-label="token.symbol"
-          class="d-flex flex-items-center mr-2"
+          class="poolToken d-flex flex-items-center flex-justify-start my-1"
         >
           <Icon name="bullet" size="16" :style="`color: ${token.color}`" />
           {{ _num(token.weightPercent / 100, 'percent-short') }}
@@ -21,16 +21,16 @@
         </div>
       </div>
     </div>
-    <div v-text="_num(poolLiquidity, 'usd')" class="column" />
+    <div v-text="_num(poolLiquidity, 'usd')" class="column flex-shrink-0" />
     <div
       v-text="_num(myLiquidity, 'usd')"
       format="currency"
-      class="column hide-sm hide-md hide-lg"
+      class="column hide-sm hide-md hide-lg flex-shrink-0"
     />
     <div
       v-text="_num(pool.lastSwapVolume, 'usd')"
       format="currency"
-      class="column hide-sm hide-md hide-lg"
+      class="column hide-sm hide-md hide-lg flex-shrink-0"
     />
   </UiTableTr>
 </template>
@@ -52,3 +52,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.poolToken {
+  flex-basis: 100px;
+}
+</style>
