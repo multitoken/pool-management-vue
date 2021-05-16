@@ -31,8 +31,8 @@
       :bPool="bPool"
       @reload="loadPool"
     />
+    <br/>
     <PoolBoxes :pool="pool" :bPool="bPool" />
-    <Chart :pool="pool" />
     <portal to="modal">
       <ModalAddLiquidity
         :pool="pool"

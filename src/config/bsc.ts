@@ -33,7 +33,7 @@ const config: Config = {
   rpcUrl: 'https://bsc-dataseed.binance.org',
   wsUrl:
     'wss://apis.ankr.com/wss/4fa98a79a40945b699190f251f603c58/7d08a3f1129434a5e9e124af13cb8f44/binance/full/main',
-  subgraphUrl: 'https://api.thegraph.com/subgraphs/name/cron-md/multitoken_bsc',
+  subgraphUrl: 'https://etfs-backend.herokuapp.com/v1/pools/56',
   explorer: 'https://bscscan.com',
   exchangeUrl: 'https://swap.multitoken.com/',
   addresses: {
