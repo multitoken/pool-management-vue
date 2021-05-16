@@ -3,7 +3,7 @@
     <router-link
       v-if="to"
       :to="to"
-      class="line v-align-middle px-4 py-3 highlight d-flex"
+      class="line v-align-middle px-3 py-2 highlight d-flex"
     >
       <slot />
     </router-link>
@@ -24,9 +24,13 @@ export default {
 
 .line {
   display: flex;
-  align-items: center;
-  border-top: $border;
-  color: $white;
+
   text-align: right;
+
+  color: $white;
+  border-top: $border;
+
+  align-items: center;
 }
+
 </style>

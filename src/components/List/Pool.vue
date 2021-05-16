@@ -1,6 +1,6 @@
 <template>
   <UiTableTr :to="{ name: 'pool', params: { id: pool.id } }">
-    <div class="column-sm text-left hide-sm hide-md hide-lg flex-shrink-0">
+    <div class="column text-center hide-sm hide-md hide-lg flex-shrink-0">
       {{ `${pool.name} (${pool.symbol})` }}
     </div>
     <div class="d-flex flex-justify-center flex-items-center mx-2">
@@ -32,6 +32,32 @@
       format="currency"
       class="column hide-sm hide-md hide-lg flex-shrink-0"
     />
+    <div class="column flex-shrink-0 d-flex flex-column">
+      <a
+        :v-if="isBSCNetwork"
+        :href="`${config.exchangeUrl}/${BNBAddress}/${LPTokenAddress}`"
+        target="_blank"
+        v-on:click.stop
+      >
+        <UiButton class="button-lp-tokens button-highlight">
+          {{ $t('multitoken') }}
+        </UiButton>
+      </a>
+      <a
+        :v-if="isBSCNetwork"
+        :href="
+          `https://exchange.pancakeswap.finance/#/swap?outputCurrency=${LPTokenAddress}`
+        "
+        target="_blank"
+        v-on:click.stop
+        @mouseenter="pancakeButtonHovered = true"
+        @mouseleave="pancakeButtonHovered = false"
+      >
+        <UiButton class="button-lp-tokens button-highlight">
+          {{ $t('pancake') }}
+        </UiButton>
+      </a>
+    </div>
   </UiTableTr>
 </template>
 
@@ -48,6 +74,22 @@ export default {
       const poolShares = this.subgraph.poolShares[this.pool.id];
       if (!this.pool.finalized || !poolShares) return 0;
       return (this.poolLiquidity / this.pool.totalShares) * poolShares;
+    },
+    isBSCNetwork() {
+      return this.config.network == 'bsc';
+    },
+    BNBAddress() {
+      // TODO: add real BNB address
+      return '0x266A9AAc60B0211D7269dd8b0e792D645d2923e6';
+    },
+    LPTokenAddress() {
+      // TODO: add real LP token address
+      return '0xdCC967319024DeeBbf9B5B6868F4985cFB724687';
+    }
+  },
+  methods: {
+    handleButtonClick(e) {
+      e.stopPropagation();
     }
   }
 };
@@ -57,4 +99,5 @@ export default {
 .poolToken {
   flex-basis: 100px;
 }
+
 </style>

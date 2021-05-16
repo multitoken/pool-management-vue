@@ -35,7 +35,7 @@ const config: Config = {
     'wss://apis.ankr.com/wss/4fa98a79a40945b699190f251f603c58/7d08a3f1129434a5e9e124af13cb8f44/binance/full/main',
   subgraphUrl: 'https://api.thegraph.com/subgraphs/name/cron-md/multitoken_bsc',
   explorer: 'https://bscscan.com',
-  exchangeUrl: 'https://swap.multitoken.com/',
+  exchangeUrl: 'https://swap.multitoken.com/#/swap',
   addresses: {
     bFactory: '0xebCAA6318d834b69CB4ADD6467583a12F348fd5c',
     bActions: '0xd631704FD9582edF70eC5f0dD13013Afe8a7D0e8',
