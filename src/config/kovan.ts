@@ -36,11 +36,11 @@ const config: Config = {
   explorer: 'https://kovan.etherscan.io',
   exchangeUrl: 'https://swap.multitoken.com',
   addresses: {
-    bFactory: '0x336a59d26F33283eE2A66417c9f763E27e111820',
+    bFactory: '0xfdFb567fe7634FCca702Cd6a83c3a733AFbd944e',
     bActions: '0x4e913Bb6fEedCA8500cC4F70628b61219DC5C02a',
     dsProxyRegistry: '0xbF1f7a145ADfF7ef6C1cfCD731bd5b3fB630acdC',
-    proxy: '0x78410bE7749601a7Dc80C0a55E0526Ad98624668',
-    crpFactory: '0x3eD2A77d24F32813f3E035C5f867A2274D1795fb',
+    proxy: '0xd401AB4E848Af3297bd2515331607Fee6dC538Af',
+    crpFactory: '0x347DE12015cE231F7cd569c56DeD78a22273469D',
     wrapped: '0xd0A1E359811322d97991E03f863a0C30C2cF029C',
     multicall: '0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A'
   },
