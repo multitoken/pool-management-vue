@@ -130,18 +130,20 @@ export default {
     ...mapGetters(['myPendingTransactions']),
     wrongNetwork() {
       return (
-        this.config.chainId !== this.web3.injectedChainId &&
+        this.store.state.web3.config.chainId !== this.web3.injectedChainId &&
         !this.ui.authLoading &&
         !this.loading
       );
     },
     currentNetwork() {
-      return this.config.network;
+      return this.store.state.web3.config.network;
     },
     baseTokenBalance() {
-      const baseToken = this.config?.baseToken;
+      const baseToken = this.store.state.web3.config?.baseToken;
 
-      const price = this.price.values[this.config?.addresses.wrapped];
+      const price = this.price.values[
+        this.store.state.web3.config?.addresses.wrapped
+      ];
       const balance = formatUnits(this.web3.balances['ether'] || 0, 18);
       return {
         address: baseToken?.address,
@@ -259,5 +261,4 @@ export default {
     display: none !important;
   }
 }
-
 </style>

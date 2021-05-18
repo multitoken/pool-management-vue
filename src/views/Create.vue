@@ -422,7 +422,10 @@ export default {
       Vue.set(this.amounts, tokenAddress, '');
     },
     addToken() {
-      const anotherToken = getAnotherToken(this.config.tokens, this.tokens);
+      const anotherToken = getAnotherToken(
+        this.store.state.web3.config.tokens,
+        this.tokens
+      );
       this.tokens.push(anotherToken);
       Vue.set(this.weights, anotherToken, '');
       Vue.set(this.amounts, anotherToken, '');

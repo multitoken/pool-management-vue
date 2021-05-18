@@ -87,7 +87,7 @@ export default {
   },
   computed: {
     lbpData() {
-      return getLbpData(this.pool, this.config.chainId);
+      return getLbpData(this.pool, this.store.state.web3.config.chainId);
     },
     displayPriceHistory() {
       return this.pool.crp && this.lbpData.isLbpPool;
@@ -126,7 +126,11 @@ export default {
           if (i > 0 && swap.timestamp != this.swaps[i - 1].timestamp) {
             data.push({
               time: swap.timestamp,
-              value: swapPrice(this.pool, this.config.chainId, swap)
+              value: swapPrice(
+                this.pool,
+                this.store.state.web3.config.chainId,
+                swap
+              )
             });
           }
         }

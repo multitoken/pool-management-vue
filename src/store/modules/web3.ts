@@ -10,6 +10,7 @@ import config from '@/config';
 import provider from '@/helpers/provider';
 import wsProvider from '@/helpers/wsProvider';
 import { multicall } from '@/_balancer/utils';
+import { formatUnits } from '@ethersproject/units';
 
 let auth;
 
@@ -162,6 +163,11 @@ const actions = {
     if (auth.provider) {
       auth.web3 = new Web3Provider(auth.provider);
       await dispatch('loadWeb3');
+      console.log(auth.provider);
+      auth.provider.on('chainChanged', async chainId => {
+        commit('setNetwork', parseInt(formatUnits(chainId, 0)));
+        await dispatch('loadAccount');
+      });
     }
     commit('SET', { authLoading: false });
   },
@@ -172,7 +178,7 @@ const actions = {
   initTokenMetadata: async ({ commit }) => {
     const invalids = ['0xD46bA6D942050d489DBd938a2C909A5d5039A161'];
     const metadata = Object.fromEntries(
-      Object.entries(config.tokens).map(tokenEntry => {
+      Object.entries(config.state.config.tokens).map(tokenEntry => {
         const { decimals, symbol, name } = tokenEntry[1] as any;
         return [
           tokenEntry[0],
@@ -217,7 +223,7 @@ const actions = {
     commit('LOAD_WEB3_REQUEST');
     try {
       if (auth.provider) await dispatch('loadProvider');
-      if (state.injectedChainId === config.chainId) {
+      if (state.injectedChainId === config.state.config.chainId) {
         await dispatch('loadAccount');
         await dispatch('checkPendingTransactions');
       }
@@ -245,7 +251,7 @@ const actions = {
           commit('HANDLE_DISCONNECT');
           if (state.active) await dispatch('loadWeb3');
         });
-        auth.provider.on('networkChanged', async x => {
+        auth.provider.on('networkChanged', async () => {
           commit('HANDLE_NETWORK_CHANGED');
           window.location.reload();
         });
@@ -256,7 +262,8 @@ const actions = {
       ]);
       const account = accounts.length > 0 ? accounts[0] : null;
       let name = '';
-      if (config.chainId === 1) name = await provider.lookupAddress(account);
+      if (config.state.config.chainId === 1)
+        name = await provider.lookupAddress(account);
       commit('LOAD_PROVIDER_SUCCESS', {
         injectedLoaded: true,
         injectedChainId: network.chainId,
@@ -282,7 +289,7 @@ const actions = {
   getPoolBalances: async (_state, { poolAddress, tokens }) => {
     const promises: any = [];
     const multi = new Contract(
-      config.addresses.multicall,
+      config.state.config.addresses.multicall,
       abi['Multicall'],
       provider
     );
@@ -325,7 +332,7 @@ const actions = {
     const address = state.account;
     const promises: any = [];
     const multi = new Contract(
-      config.addresses.multicall,
+      config.state.config.addresses.multicall,
       abi['Multicall'],
       provider
     );
@@ -371,7 +378,7 @@ const actions = {
     const address = state.account;
     const promises: any = [];
     const multi = new Contract(
-      config.addresses.multicall,
+      config.state.config.addresses.multicall,
       abi['Multicall'],
       provider
     );
@@ -415,7 +422,7 @@ const actions = {
     const address = state.account;
     try {
       const dsProxyRegistryContract = new Contract(
-        config.addresses.dsProxyRegistry,
+        config.state.config.addresses.dsProxyRegistry,
         abi['DSProxyRegistry'],
         provider
       );

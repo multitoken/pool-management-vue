@@ -268,7 +268,7 @@ export default {
     tokenError() {
       if (
         this.pool.tokens.some(token =>
-          this.config.untrusted.includes(token.checksum)
+          this.store.state.web3.config.untrusted.includes(token.checksum)
         )
       ) {
         return this.$t('untrustedTokens');

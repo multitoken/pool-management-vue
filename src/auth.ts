@@ -10,7 +10,7 @@ import config from '@/config';
 const options: any = { connectors: [] };
 const connectors = { injected, fortmatic, portis, walletconnect, walletlink };
 
-Object.entries(config.connectors).forEach((connector: any) => {
+Object.entries(config.state.config.connectors).forEach((connector: any) => {
   options.connectors.push({
     key: connector[0],
     connector: connectors[connector[0]],

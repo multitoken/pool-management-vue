@@ -148,7 +148,7 @@ export default {
       this.loading = false;
     },
     isDisabled(address) {
-      return this.config.untrusted.includes(address);
+      return this.store.state.web3.config.untrusted.includes(address);
     }
   }
 };
