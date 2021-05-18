@@ -27,11 +27,6 @@
       format="currency"
       class="column hide-sm hide-md hide-lg flex-shrink-0"
     />
-    <div
-      v-text="_num(pool.lastSwapVolume, 'usd')"
-      format="currency"
-      class="column hide-sm hide-md hide-lg flex-shrink-0"
-    />
   </UiTableTr>
 </template>
 
