@@ -122,8 +122,8 @@ export function formatPool(pool) {
   pool.tokens = pool.tokens.map(token => {
     token.checksum = getAddress(token.address);
     token.weightPercent = (100 / pool.totalWeight) * token.denormWeight;
-    token.color = config.tokens[token.checksum]?.color
-      ? config.tokens[token.checksum].color
+    token.color = config.state.config.tokens[token.checksum]?.color
+      ? config.state.config.tokens[token.checksum].color
       : getColorByAddress(token.checksum);
     return token;
   });
@@ -219,11 +219,11 @@ export function calcPoolTokensByRatio(ratio, totalShares) {
 }
 
 export function getTokenBySymbol(symbol) {
-  const tokenAddresses = Object.keys(config.tokens);
+  const tokenAddresses = Object.keys(config.state.config.tokens);
   const tokenAddress = tokenAddresses.find(
-    tokenAddress => config.tokens[tokenAddress].symbol === symbol
+    tokenAddress => config.state.config.tokens[tokenAddress].symbol === symbol
   );
-  return config.tokens[tokenAddress!];
+  return config.state.config.tokens[tokenAddress!];
 }
 
 export const isTxRejected = error => {
@@ -272,7 +272,7 @@ export function blockNumberToTimestamp(
     1: 13,
     42: 5
   };
-  const avgBlockTime = AVG_BLOCK_TIMES[config.chainId];
+  const avgBlockTime = AVG_BLOCK_TIMES[config.state.config.chainId];
   return currentTime + avgBlockTime * 1000 * (blockNumber - currentBlockNumber);
 }
 

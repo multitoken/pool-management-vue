@@ -54,6 +54,7 @@
 import { mapActions } from 'vuex';
 import { getAddress } from '@ethersproject/address';
 import { bnum, isValidAddress, normalizeBalance } from '@/helpers/utils';
+import config from '@/config';
 
 export default {
   props: ['open', 'not'],
@@ -148,7 +149,7 @@ export default {
       this.loading = false;
     },
     isDisabled(address) {
-      return this.store.state.web3.config.untrusted.includes(address);
+      return config.state.config.untrusted.includes(address);
     }
   }
 };

@@ -5,7 +5,7 @@ import { jsonToGraphQLQuery } from 'json-to-graphql-query';
 import config from '../config';
 import { abi as multicallAbi } from '../helpers/abi/Multicall.json';
 
-const MULTICALL = config.addresses.multicall;
+const MULTICALL = config.state.config.addresses.multicall;
 
 export async function multicall(provider, abi, calls, options?) {
   const multi = new Contract(MULTICALL, multicallAbi, provider);
@@ -41,10 +41,10 @@ export async function subgraphRequest(url, query) {
 
 export function getTokenLogoUrl(address: string): string | null {
   if (address === 'ether') {
-    address = config.addresses.wrapped;
+    address = config.state.config.addresses.wrapped;
   }
   address = getAddress(address);
-  const metadata = config.tokens[address];
+  const metadata = config.state.config.tokens[address];
   if (!metadata) {
     return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
   }

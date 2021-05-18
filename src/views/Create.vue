@@ -202,6 +202,7 @@ import {
   getDenorm,
   isValidDenormValue
 } from '@/helpers/weights';
+import config from '@/config';
 
 // The contract defaults are 90,000 for the weight change duration, and 500 for the add token timelock
 // Since broadcast currently calls the createPool overload that passes in the block time parameters, we
@@ -423,7 +424,7 @@ export default {
     },
     addToken() {
       const anotherToken = getAnotherToken(
-        this.store.state.web3.config.tokens,
+        config.state.config.tokens,
         this.tokens
       );
       this.tokens.push(anotherToken);

@@ -163,11 +163,6 @@ const actions = {
     if (auth.provider) {
       auth.web3 = new Web3Provider(auth.provider);
       await dispatch('loadWeb3');
-      console.log(auth.provider);
-      auth.provider.on('chainChanged', async chainId => {
-        commit('setNetwork', parseInt(formatUnits(chainId, 0)));
-        await dispatch('loadAccount');
-      });
     }
     commit('SET', { authLoading: false });
   },
@@ -251,9 +246,18 @@ const actions = {
           commit('HANDLE_DISCONNECT');
           if (state.active) await dispatch('loadWeb3');
         });
+        auth.provider.on('chainChanged', async chainId => {
+          console.log('chainChanged to', chainId);
+
+          await store.dispatch(
+            'updateConfig',
+            parseInt(formatUnits(chainId, 0))
+          );
+          await dispatch('loadAccount');
+        });
         auth.provider.on('networkChanged', async () => {
           commit('HANDLE_NETWORK_CHANGED');
-          window.location.reload();
+          // window.location.reload();
         });
       }
       const [network, accounts] = await Promise.all([
@@ -278,7 +282,9 @@ const actions = {
   loadAccount: async ({ dispatch }) => {
     if (!state.account) return;
     // @ts-ignore
-    const tokens = Object.entries(config.tokens).map(token => token[1].address);
+    const tokens = Object.entries(config.state.config.tokens).map(
+      token => token[1].address
+    );
     await dispatch('getProxy');
     await Promise.all([
       dispatch('getBalances', tokens),

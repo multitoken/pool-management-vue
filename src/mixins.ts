@@ -29,16 +29,17 @@ export default {
       return trunc(value, decimals);
     },
     _explorerLink(str: string, type = 'address'): string {
-      return `${config.explorer}/${type}/${str}`;
+      return `${config.state.config.explorer}/${type}/${str}`;
     },
     _ticker(address: string): string {
-      if (address === 'ether') return config.baseToken.symbol;
-      const token = config.tokens[address];
+      if (address === 'ether') return config.state.config.baseToken.symbol;
+      const token = config.state.config.tokens[address];
       return token ? token.symbol : this._shortenAddress(address);
     },
     _precision(rawValue: number, address: string): number {
-      const tokenConfig = config.tokens[address] || {};
-      const precision = tokenConfig.precision || config.defaultPrecision;
+      const tokenConfig = config.state.config.tokens[address] || {};
+      const precision =
+        tokenConfig.precision || config.state.config.defaultPrecision;
       const value = rawValue.toFixed(precision);
       return parseFloat(value);
     }

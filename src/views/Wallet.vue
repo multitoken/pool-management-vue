@@ -27,12 +27,12 @@
         <div class="flex-auto text-left">
           <div v-if="balance.address !== 'ether'" class="flex-auto">
             <UiButton
-              v-if="balance.address === config.addresses.wrapped"
+              v-if="balance.address === config.state.config.addresses.wrapped"
               @click="[(modalWrapperOpen = true), (side = 2)]"
               type="button"
               class="button-primary button-sm ml-2"
             >
-              {{ `Unwrap to ${config.baseToken.symbol}` }}
+              {{ `Unwrap to ${config.state.config.baseToken.symbol}` }}
             </UiButton>
           </div>
           <div v-else class="flex-auto">
@@ -41,7 +41,7 @@
               type="button"
               class="button-primary button-sm ml-2"
             >
-              {{ `Wrap to ${config.baseToken.wrappedSymbol}` }}
+              {{ `Wrap to ${config.state.config.baseToken.wrappedSymbol}` }}
             </UiButton>
           </div>
         </div>
@@ -146,7 +146,7 @@ export default {
       tokenModalOpen: false,
       query: '',
       mintButtonLoading: false,
-      isTestNet: config.isTestNet
+      isTestNet: config.state.config.isTestNet
     };
   },
   computed: {
@@ -172,14 +172,14 @@ export default {
         })
         .filter(({ value }) => value > 0.001);
       const ethPrice = this.price.values[
-        this.store.state.web3.config?.addresses.wrapped
+        config.state.config?.addresses.wrapped
       ];
       const ethBalance = formatUnits(this.web3.balances['ether'] || 0, 18);
       return [
         {
           address: 'ether',
-          name: this.store.state.web3.config.baseToken.name,
-          symbol: config.baseToken.symbol,
+          name: config.state.config.baseToken.name,
+          symbol: config.state.config.baseToken.symbol,
           price: ethPrice,
           balance: ethBalance,
           value: ethPrice * ethBalance

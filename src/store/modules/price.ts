@@ -34,8 +34,8 @@ const actions = {
       return;
     }
     const idToAddressMap = {};
-    for (const address in config.tokens) {
-      const id = config.tokens[address].id;
+    for (const address in config.state.config.tokens) {
+      const id = config.state.config.tokens[address].id;
       if (!id) {
         continue;
       }

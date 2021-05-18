@@ -228,7 +228,7 @@ const actions = {
     try {
       const params = [
         'DSProxyRegistry',
-        config.addresses.dsProxyRegistry,
+        config.state.config.addresses.dsProxyRegistry,
         'build',
         [],
         {}
@@ -269,9 +269,16 @@ const actions = {
         .toString();
       const underlyingParams = [
         'BActions',
-        config.addresses.bActions,
+        config.state.config.addresses.bActions,
         'create',
-        [config.addresses.bFactory, tokens, balances, weights, swapFee, true],
+        [
+          config.state.config.addresses.bFactory,
+          tokens,
+          balances,
+          weights,
+          swapFee,
+          true
+        ],
         {}
       ];
       console.log(
@@ -338,11 +345,11 @@ const actions = {
 
       const underlyingParams = [
         'BActions',
-        config.addresses.bActions,
+        config.state.config.addresses.bActions,
         'createSmartPool',
         [
-          config.addresses.crpFactory,
-          config.addresses.bFactory,
+          config.state.config.addresses.crpFactory,
+          config.state.config.addresses.bFactory,
           poolParams,
           crpParams,
           rights
@@ -378,7 +385,7 @@ const actions = {
       const dsProxyAddress = rootState.web3.dsProxyAddress;
       const underlyingParams = [
         'BActions',
-        config.addresses.bActions,
+        config.state.config.addresses.bActions,
         isCrp ? 'joinSmartPool' : 'joinPool',
         [poolAddress, poolAmountOut, maxAmountsIn],
         {}
@@ -410,7 +417,7 @@ const actions = {
       const dsProxyAddress = rootState.web3.dsProxyAddress;
       const underlyingParams = [
         'BActions',
-        config.addresses.bActions,
+        config.state.config.addresses.bActions,
         'joinswapExternAmountIn',
         [poolAddress, tokenInAddress, tokenAmountIn, minPoolAmountOut],
         {}
@@ -502,7 +509,7 @@ const actions = {
     try {
       const underlyingParams = [
         'BActions',
-        config.addresses.bActions,
+        config.state.config.addresses.bActions,
         'setPublicSwap',
         [poolAddress, publicSwap],
         {}
@@ -528,7 +535,7 @@ const actions = {
         .toString();
       const underlyingParams = [
         'BActions',
-        config.addresses.bActions,
+        config.state.config.addresses.bActions,
         'setSwapFee',
         [poolAddress, newFee],
         {}
@@ -575,7 +582,7 @@ const actions = {
     try {
       const underlyingParams = [
         'BActions',
-        config.addresses.bActions,
+        config.state.config.addresses.bActions,
         'setController',
         [poolAddress, newController],
         {}
@@ -604,7 +611,7 @@ const actions = {
         .toString();
       const underlyingParams = [
         'BActions',
-        config.addresses.bActions,
+        config.state.config.addresses.bActions,
         'increaseWeight',
         [poolAddress, token, newWeight, tokenAmountIn],
         {}
@@ -629,7 +636,7 @@ const actions = {
       poolAmountIn = toWei(poolAmountIn);
       const underlyingParams = [
         'BActions',
-        config.addresses.bActions,
+        config.state.config.addresses.bActions,
         'decreaseWeight',
         [poolAddress, token, newWeight, poolAmountIn.toString()],
         {}
@@ -655,7 +662,7 @@ const actions = {
       });
       const underlyingParams = [
         'BActions',
-        config.addresses.bActions,
+        config.state.config.addresses.bActions,
         'updateWeightsGradually',
         [poolAddress, newWeights, startBlock, endBlock],
         {}
@@ -676,7 +683,7 @@ const actions = {
       newCap = toWei(newCap).toString();
       const underlyingParams = [
         'BActions',
-        config.addresses.bActions,
+        config.state.config.addresses.bActions,
         'setCap',
         [poolAddress, newCap],
         {}
@@ -705,7 +712,7 @@ const actions = {
       denormalizedWeight = toWei(denormalizedWeight).toString();
       const underlyingParams = [
         'BActions',
-        config.addresses.bActions,
+        config.state.config.addresses.bActions,
         'commitAddToken',
         [poolAddress, token, balance, denormalizedWeight],
         {}
@@ -728,7 +735,7 @@ const actions = {
     try {
       const underlyingParams = [
         'BActions',
-        config.addresses.bActions,
+        config.state.config.addresses.bActions,
         'applyAddToken',
         [poolAddress, token, tokenAmountIn],
         {}
@@ -755,7 +762,7 @@ const actions = {
     try {
       const underlyingParams = [
         'BActions',
-        config.addresses.bActions,
+        config.state.config.addresses.bActions,
         'removeToken',
         [poolAddress, token, poolAmountIn.toString()],
         {}
@@ -778,7 +785,7 @@ const actions = {
     try {
       const underlyingParams = [
         'BActions',
-        config.addresses.bActions,
+        config.state.config.addresses.bActions,
         'whitelistLiquidityProvider',
         [poolAddress, provider],
         {}
@@ -801,7 +808,7 @@ const actions = {
     try {
       const underlyingParams = [
         'BActions',
-        config.addresses.bActions,
+        config.state.config.addresses.bActions,
         'removeWhitelistedLiquidityProvider',
         [poolAddress, provider],
         {}
@@ -847,14 +854,14 @@ const actions = {
     try {
       const params = [
         'Weth',
-        config.addresses.wrapped,
+        config.state.config.addresses.wrapped,
         'deposit',
         [],
         { value: toWei(amount).toString() }
       ];
       await dispatch('processTransaction', {
         params,
-        title: `Wrap ${config.baseToken.symbol} to ${config.baseToken.wrappedSymbol}`
+        title: `Wrap ${config.state.config.baseToken.symbol} to ${config.state.config.baseToken.wrappedSymbol}`
       });
       await dispatch('getBalances');
       setGoal('KFAFBADQ');
@@ -874,14 +881,14 @@ const actions = {
     try {
       const params = [
         'Weth',
-        config.addresses.wrapped,
+        config.state.config.addresses.wrapped,
         'withdraw',
         [toWei(amount).toString()],
         {}
       ];
       await dispatch('processTransaction', {
         params,
-        title: `Unwrap ${config.baseToken.wrappedSymbol} to ${config.baseToken.symbol}`
+        title: `Unwrap ${config.state.config.baseToken.wrappedSymbol} to ${config.state.config.baseToken.symbol}`
       });
       await dispatch('getBalances');
       setGoal('XSBEFNTT');
