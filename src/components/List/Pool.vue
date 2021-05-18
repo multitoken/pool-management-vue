@@ -22,11 +22,6 @@
       </div>
     </div>
     <div v-text="_num(poolLiquidity, 'usd')" class="column flex-shrink-0" />
-    <div
-      v-text="_num(myLiquidity, 'usd')"
-      format="currency"
-      class="column hide-sm hide-md hide-lg flex-shrink-0"
-    />
   </UiTableTr>
 </template>
 
@@ -38,11 +33,6 @@ export default {
   computed: {
     poolLiquidity() {
       return getPoolLiquidity(this.pool, this.price.values);
-    },
-    myLiquidity() {
-      const poolShares = this.subgraph.poolShares[this.pool.id];
-      if (!this.pool.finalized || !poolShares) return 0;
-      return (this.poolLiquidity / this.pool.totalShares) * poolShares;
     }
   }
 };
