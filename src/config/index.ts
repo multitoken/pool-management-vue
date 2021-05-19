@@ -3,7 +3,10 @@ import kovan from '@/config/kovan';
 import bsc from '@/config/bsc';
 import { Config } from '@/config/types';
 
-const configs = { mainnet, kovan, bsc };
-const config: Config = configs[process.env.VUE_APP_NETWORK || ''];
+const config: Record<string, Config> = {
+  '1': mainnet,
+  '42': kovan,
+  '56': bsc
+};
 
 export default config;

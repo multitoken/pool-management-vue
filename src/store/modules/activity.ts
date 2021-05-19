@@ -2,7 +2,8 @@ import Vue from 'vue';
 import { getInstance } from '@snapshot-labs/lock/plugins/vue';
 import { lsGet, lsRemove, lsSet } from '@/helpers/localStorage';
 import { sendTransaction } from '@/helpers/web3';
-import provider from '@/helpers/provider';
+import getProvider from '@/helpers/provider';
+import store from '@/store';
 
 const state = {
   transactions: lsGet('transactions') || {}
@@ -62,6 +63,7 @@ const actions = {
     console.log('Watch transaction', tx);
     commit('watchTransaction', { ...tx, title });
 
+    const provider = getProvider(store.getters.getConfig().chainId);
     const receipt = await provider.waitForTransaction(tx.hash, 1);
     console.log('Confirm transaction', receipt);
     commit('confirmTransaction', receipt);
@@ -69,6 +71,7 @@ const actions = {
     return tx;
   },
   async checkPendingTransactions({ commit, getters }) {
+    const provider = getProvider(store.getters.getConfig().chainId);
     getters.myPendingTransactions.forEach(tx => {
       provider.waitForTransaction(tx.hash, 1).then(receipt => {
         console.log('Confirm transaction', receipt);

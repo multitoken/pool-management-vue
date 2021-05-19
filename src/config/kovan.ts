@@ -26,6 +26,7 @@ const config: Config = {
     bufferWarning: 0.02
   },
   baseToken: {
+    address: 'ether',
     name: 'Ethereum',
     symbol: 'ETH',
     wrappedSymbol: 'WETH'

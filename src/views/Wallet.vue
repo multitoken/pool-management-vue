@@ -27,7 +27,10 @@
         <div class="flex-auto text-left">
           <div v-if="balance.address !== 'ether'" class="flex-auto">
             <UiButton
-              v-if="balance.address === config.addresses.wrapped"
+              v-if="
+                balance.address ===
+                  this.$store.getters.getConfig().addresses.wrapped
+              "
               @click="[(modalWrapperOpen = true), (side = 2)]"
               type="button"
               class="button-primary button-sm ml-2"
@@ -134,8 +137,6 @@ import { Contract } from '@ethersproject/contracts';
 import minter from '../helpers/abi/Minter.json';
 import { getInstance } from '@snapshot-labs/lock/plugins/vue';
 import provider from '@/helpers/provider';
-import store from '@/store';
-import config from '@/config';
 
 export default {
   data() {
@@ -146,7 +147,8 @@ export default {
       tokenModalOpen: false,
       query: '',
       mintButtonLoading: false,
-      isTestNet: config.isTestNet
+      isTestNet: this.$store.getters.getConfig().isTestNet,
+      config: this.$store.getters.getConfig()
     };
   },
   computed: {
@@ -171,13 +173,15 @@ export default {
           };
         })
         .filter(({ value }) => value > 0.001);
-      const ethPrice = this.price.values[this.config?.addresses.wrapped];
+      const ethPrice = this.price.values[
+        this.$store.getters.getConfig()?.addresses.wrapped
+      ];
       const ethBalance = formatUnits(this.web3.balances['ether'] || 0, 18);
       return [
         {
           address: 'ether',
-          name: this.config.baseToken.name,
-          symbol: config.baseToken.symbol,
+          name: this.$store.getters.getConfig().baseToken.name,
+          symbol: this.$store.getters.getConfig().baseToken.symbol,
           price: ethPrice,
           balance: ethBalance,
           value: ethPrice * ethBalance
@@ -255,12 +259,12 @@ export default {
       try {
         const tx = await contract.mint(this.web3.account, parsedUnits);
         const title = `Mint ${name}`;
-        store.commit('watchTransaction', { ...tx, title });
+        this.$store.commit('watchTransaction', { ...tx, title });
 
         const receipt = await provider.waitForTransaction(tx.hash, 1);
-        store.commit('confirmTransaction', receipt);
+        this.$store.commit('confirmTransaction', receipt);
 
-        await store.dispatch('getBalances');
+        await this.$store.dispatch('getBalances');
 
         console.log(
           `${name} minted: ${amount} ${symbol} to ${this.web3.account}`

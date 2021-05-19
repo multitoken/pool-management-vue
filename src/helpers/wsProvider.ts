@@ -1,6 +1,10 @@
 import { WebSocketProvider } from '@ethersproject/providers';
-import config from '@/config';
+import configs from '@/config';
 
-const provider = new WebSocketProvider(config.wsUrl);
+const providers = {};
 
-export default provider;
+export default function getWSProvider(network: string) {
+  const url: string = configs[network].wsUrl;
+  if (!providers[network]) providers[network] = new WebSocketProvider(url);
+  return providers[network];
+}

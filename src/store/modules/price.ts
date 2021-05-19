@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { getAddress } from '@ethersproject/address';
-import config from '@/config';
+import store from '@/store';
 
 const ENDPOINT = 'https://api.coingecko.com/api/v3';
 
@@ -34,8 +34,8 @@ const actions = {
       return;
     }
     const idToAddressMap = {};
-    for (const address in config.tokens) {
-      const id = config.tokens[address].id;
+    for (const address in store.getters.getConfig().tokens) {
+      const id = store.getters.getConfig().tokens[address].id;
       if (!id) {
         continue;
       }

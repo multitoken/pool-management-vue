@@ -4,20 +4,14 @@ import { Web3Provider } from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
 import { AddressZero } from '@ethersproject/constants';
 import { Interface } from '@ethersproject/abi';
-import store from '@/store';
 import abi from '@/helpers/abi';
-import config from '@/config';
-import provider from '@/helpers/provider';
-import wsProvider from '@/helpers/wsProvider';
+import store from '@/store';
+import getProvider from '@/helpers/provider';
+import getWSProvider from '@/helpers/wsProvider';
 import { multicall } from '@/_balancer/utils';
+import { formatUnits } from '@ethersproject/units';
 
 let auth;
-
-if (wsProvider) {
-  wsProvider.on('block', blockNumber => {
-    store.commit('GET_BLOCK_SUCCESS', blockNumber);
-  });
-}
 
 const state = {
   injectedLoaded: false,
@@ -156,6 +150,13 @@ const mutations = {
 
 const actions = {
   login: async ({ dispatch, commit }, connector = 'injected') => {
+    const wsProvider = getWSProvider(store.getters.getConfig().chainId);
+    if (wsProvider) {
+      wsProvider.on('block', blockNumber => {
+        store.commit('GET_BLOCK_SUCCESS', blockNumber);
+      });
+    }
+
     commit('SET', { authLoading: true });
     auth = getInstance();
     await auth.login(connector);
@@ -165,14 +166,16 @@ const actions = {
     }
     commit('SET', { authLoading: false });
   },
+
   logout: async ({ commit }) => {
     Vue.prototype.$auth.logout();
     commit('LOGOUT');
   },
+
   initTokenMetadata: async ({ commit }) => {
     const invalids = ['0xD46bA6D942050d489DBd938a2C909A5d5039A161'];
     const metadata = Object.fromEntries(
-      Object.entries(config.tokens).map(tokenEntry => {
+      Object.entries(store.getters.getConfig().tokens).map(tokenEntry => {
         const { decimals, symbol, name } = tokenEntry[1] as any;
         return [
           tokenEntry[0],
@@ -187,8 +190,10 @@ const actions = {
     );
     commit('LOAD_TOKEN_METADATA_SUCCESS', metadata);
   },
+
   loadTokenMetadata: async ({ commit }, tokens) => {
     commit('LOAD_TOKEN_METADATA_REQUEST');
+    const provider = getProvider(store.getters.getConfig().chainId);
     try {
       const keys = ['decimals', 'symbol', 'name'];
       const calls = tokens
@@ -213,11 +218,12 @@ const actions = {
       return Promise.reject();
     }
   },
+
   loadWeb3: async ({ commit, dispatch }) => {
     commit('LOAD_WEB3_REQUEST');
     try {
       if (auth.provider) await dispatch('loadProvider');
-      if (state.injectedChainId === config.chainId) {
+      if (state.injectedChainId === store.getters.getConfig().chainId) {
         await dispatch('loadAccount');
         await dispatch('checkPendingTransactions');
       }
@@ -227,6 +233,7 @@ const actions = {
       return Promise.reject();
     }
   },
+
   loadProvider: async ({ commit, dispatch }) => {
     commit('LOAD_PROVIDER_REQUEST');
     try {
@@ -245,18 +252,54 @@ const actions = {
           commit('HANDLE_DISCONNECT');
           if (state.active) await dispatch('loadWeb3');
         });
-        auth.provider.on('networkChanged', async x => {
+        auth.provider.on('chainChanged', async chainId => {
+          console.log('chainChanged to', chainId);
+          await dispatch('clearUser');
+          auth.web3 = new Web3Provider(auth.provider);
+          await store.dispatch(
+            'updateConfig',
+            parseInt(formatUnits(chainId, 0))
+          );
+
+          const accounts = await auth.web3.listAccounts();
+          const account = accounts.length > 0 ? accounts[0] : null;
+
+          const provider = getProvider(store.getters.getConfig().chainId);
+
+          let name = '';
+          if (store.getters.getConfig().chainId === 1)
+            name = await provider.lookupAddress(account);
+
+          commit('LOAD_PROVIDER_SUCCESS', {
+            injectedLoaded: true,
+            injectedChainId: parseInt(formatUnits(chainId, 0)),
+            account,
+            name
+          });
+
+          await dispatch('loadAccount');
+        });
+        auth.provider.on('networkChanged', async () => {
           commit('HANDLE_NETWORK_CHANGED');
-          window.location.reload();
         });
       }
+
       const [network, accounts] = await Promise.all([
         auth.web3.getNetwork(),
         auth.web3.listAccounts()
       ]);
+
+      await store.dispatch('updateConfig', network.chainId);
+
       const account = accounts.length > 0 ? accounts[0] : null;
+
+      const provider = getProvider(store.getters.getConfig().chainId);
+
       let name = '';
-      if (config.chainId === 1) name = await provider.lookupAddress(account);
+
+      if (store.getters.getConfig().chainId === 1)
+        name = await provider.lookupAddress(account);
+
       commit('LOAD_PROVIDER_SUCCESS', {
         injectedLoaded: true,
         injectedChainId: network.chainId,
@@ -268,10 +311,13 @@ const actions = {
       return Promise.reject();
     }
   },
+
   loadAccount: async ({ dispatch }) => {
     if (!state.account) return;
-    // @ts-ignore
-    const tokens = Object.entries(config.tokens).map(token => token[1].address);
+    const tokens = Object.entries(store.getters.getConfig().tokens).map(
+      // @ts-ignore
+      token => token[1].address
+    );
     await dispatch('getProxy');
     await Promise.all([
       dispatch('getBalances', tokens),
@@ -279,10 +325,12 @@ const actions = {
       dispatch('getUserPoolShares')
     ]);
   },
+
   getPoolBalances: async (_state, { poolAddress, tokens }) => {
     const promises: any = [];
+    const provider = getProvider(store.getters.getConfig().chainId);
     const multi = new Contract(
-      config.addresses.multicall,
+      store.getters.getConfig().addresses.multicall,
       abi['Multicall'],
       provider
     );
@@ -320,12 +368,14 @@ const actions = {
       return Promise.reject();
     }
   },
+
   getBalances: async ({ commit }, tokens) => {
     commit('GET_BALANCES_REQUEST');
     const address = state.account;
     const promises: any = [];
+    const provider = getProvider(store.getters.getConfig().chainId);
     const multi = new Contract(
-      config.addresses.multicall,
+      store.getters.getConfig().addresses.multicall,
       abi['Multicall'],
       provider
     );
@@ -364,14 +414,16 @@ const actions = {
       return Promise.reject();
     }
   },
+
   getAllowances: async ({ commit }, tokens) => {
     commit('GET_ALLOWANCES_REQUEST');
     const spender: any = state.dsProxyAddress;
     if (!spender) return;
     const address = state.account;
     const promises: any = [];
+    const provider = getProvider(store.getters.getConfig().chainId);
     const multi = new Contract(
-      config.addresses.multicall,
+      store.getters.getConfig().addresses.multicall,
       abi['Multicall'],
       provider
     );
@@ -410,12 +462,14 @@ const actions = {
       return Promise.reject();
     }
   },
+
   getProxy: async ({ commit }) => {
     commit('GET_PROXY_REQUEST');
     const address = state.account;
+    const provider = getProvider(store.getters.getConfig().chainId);
     try {
       const dsProxyRegistryContract = new Contract(
-        config.addresses.dsProxyRegistry,
+        store.getters.getConfig().addresses.dsProxyRegistry,
         abi['DSProxyRegistry'],
         provider
       );
@@ -427,7 +481,9 @@ const actions = {
       return Promise.reject(e);
     }
   },
+
   getBlockNumber: async ({ commit }) => {
+    const provider = getProvider(store.getters.getConfig().chainId);
     try {
       const blockNumber = await provider.getBlockNumber();
       commit('GET_BLOCK_SUCCESS', blockNumber);

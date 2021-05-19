@@ -46,7 +46,8 @@ export default {
   data() {
     return {
       pkg,
-      commitSha
+      commitSha,
+      config: this.$store.getters.getConfig()
     };
   }
 };

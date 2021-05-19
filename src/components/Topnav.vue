@@ -27,19 +27,26 @@
       </div>
       <div class="header-middle hide-sm hide-md">
         <div class="chain-buttons-container">
-          <a v-for="(chain, i) in chains" :key="i" :href="getNetworkURL(chain)">
-            <UiButton
-              class="mx-1"
-              :class="{ 'button-highlight': chain === currentNetwork }"
-            >
-              {{ chainParams[chain].chainName }}
-            </UiButton>
-          </a>
+          <UiButton
+            class="mx-1"
+            v-for="(chain, i) in chains"
+            @click="changeNetwork(chain)"
+            :key="i"
+            :class="{
+              'button-highlight':
+                web3.injectedChainId == parseInt(chainParams[chain].chainId, 16)
+            }"
+            :disabled="
+              web3.injectedChainId == parseInt(chainParams[chain].chainId, 16)
+            "
+          >
+            {{ chainParams[chain].chainName }}
+          </UiButton>
         </div>
       </div>
       <div :key="web3.account">
         <UiButton
-          v-if="$auth.isAuthenticated && !wrongNetwork"
+          v-if="$auth.isAuthenticated && !wrongNetwork && !ui.authLoading"
           class="buttton-non-clickable balance hide-sm hide-md"
         >
           <span v-text="_num(balancesTotalValue, 'usd')" />
@@ -110,6 +117,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import { formatUnits } from '@ethersproject/units';
+import i18n from '@/i18n';
 
 import chainParams from '../helpers/chainParams.json';
 
@@ -130,18 +138,16 @@ export default {
     ...mapGetters(['myPendingTransactions']),
     wrongNetwork() {
       return (
-        this.config.chainId !== this.web3.injectedChainId &&
+        this.$store.getters.getConfig().chainId !== this.web3.injectedChainId &&
         !this.ui.authLoading &&
         !this.loading
       );
     },
-    currentNetwork() {
-      return this.config.network;
-    },
     baseTokenBalance() {
-      const baseToken = this.config?.baseToken;
+      const config = this.$store.getters.getConfig();
+      const baseToken = config.baseToken;
 
-      const price = this.price.values[this.config?.addresses.wrapped];
+      const price = this.price.values[config.addresses.wrapped];
       const balance = formatUnits(this.web3.balances['ether'] || 0, 18);
       return {
         address: baseToken?.address,
@@ -187,8 +193,37 @@ export default {
       await this.login(connector);
       this.loading = false;
     },
-    getNetworkURL(chainName) {
-      return this?.config?.urls[chainName];
+    async changeNetwork(chainName) {
+      if (
+        // Coming soon notification
+        chainParams[chainName].chainName === chainParams['mainnet'].chainName
+      ) {
+        return this.$store.dispatch('notify', ['gray', i18n.tc('comingSoon')]);
+      }
+
+      try {
+        await this.$auth.web3.send('wallet_addEthereumChain', [
+          chainParams[chainName],
+          this.web3.account
+        ]);
+        this.$store.dispatch('notify', [
+          'green',
+          `${i18n.tc('changedNetwork')} ${chainParams[chainName].chainName}.`
+        ]);
+      } catch (e) {
+        if (
+          chainParams[chainName].chainName === chainParams['kovan'].chainName
+        ) {
+          this.$store.dispatch('notify', [
+            'red',
+            `${i18n.tc('useMetamaskToSwitch')} ${
+              chainParams[chainName].chainName
+            } network.`
+          ]);
+        } else {
+          this.$store.dispatch('notify', ['red', e.message]);
+        }
+      }
     }
   }
 };
@@ -233,7 +268,7 @@ export default {
 
 @media (max-width: 1020px) {
   .header-middle {
-    left: 280px;
+    left: 260px;
   }
 }
 
@@ -259,5 +294,4 @@ export default {
     display: none !important;
   }
 }
-
 </style>

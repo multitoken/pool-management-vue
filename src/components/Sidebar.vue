@@ -24,7 +24,10 @@
         </ul>
         <ul class="py-3">
           <li>
-            <a :href="config.exchangeUrl" target="_blank">
+            <a
+              :href="this.$store.getters.getConfig().exchangeUrl"
+              target="_blank"
+            >
               {{ $t('swapBuySell') }}
               <Icon name="external-link" class="ml-1" />
             </a>
@@ -87,7 +90,6 @@
 
 <script>
 import pkg from '@/../package.json';
-import config from '@/config';
 
 const commitSha = process.env.VUE_APP_COMMIT_SHA;
 
@@ -101,7 +103,7 @@ export default {
   },
   computed: {
     isKovanTestNet() {
-      return config.network == 'kovan';
+      return this.$store.getters.getConfig().network == 'kovan';
     }
   }
 };
@@ -164,5 +166,4 @@ export default {
 
   color: #f00;
 }
-
 </style>
