@@ -22,6 +22,23 @@
         >
           {{ $t('redeem') }}
         </UiButton>
+        <a
+          :v-if="isBSCNetwork"
+          :href="
+            `https://exchange.pancakeswap.finance/#/swap?outputCurrency=${LPTokenAddress}`
+          "
+          target="_blank"
+          v-on:click.stop
+          @mouseenter="pancakeButtonHovered = true"
+          @mouseleave="pancakeButtonHovered = false"
+        >
+          <UiButton
+            v-if="enableAddLiquidity && pool.tokens.length > 0"
+            class="ml-2"
+          >
+            {{ $t('buyETFonPancake') }} <Icon name="external-link" />
+          </UiButton>
+        </a>
       </div>
     </div>
     <Tabs :pool="pool" />
@@ -107,6 +124,10 @@ export default {
         (Object.keys(this.subgraph.poolShares).includes(this.id) ||
           this.web3.balances[getAddress(this.id)])
       );
+    },
+    LPTokenAddress() {
+      // TODO: add real LP token address
+      return '0xdCC967319024DeeBbf9B5B6868F4985cFB724687';
     }
   },
   methods: {
