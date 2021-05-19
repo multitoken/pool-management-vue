@@ -13,11 +13,7 @@
       </div>
       <div class="d-flex">
         <span v-text="$t('network')" class="flex-auto text-gray mr-1" />
-        {{
-          config.state.config.network === 'homestead'
-            ? 'mainnet'
-            : config.state.config.network
-        }}
+        {{ config.network === 'homestead' ? 'mainnet' : config.network }}
       </div>
       <div class="d-flex">
         <span v-text="$t('blockNumber')" class="flex-auto text-gray mr-1" />

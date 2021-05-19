@@ -202,7 +202,6 @@ import {
   getDenorm,
   isValidDenormValue
 } from '@/helpers/weights';
-import config from '@/config';
 
 // The contract defaults are 90,000 for the weight change duration, and 500 for the add token timelock
 // Since broadcast currently calls the createPool overload that passes in the block time parameters, we
@@ -423,10 +422,7 @@ export default {
       Vue.set(this.amounts, tokenAddress, '');
     },
     addToken() {
-      const anotherToken = getAnotherToken(
-        config.state.config.tokens,
-        this.tokens
-      );
+      const anotherToken = getAnotherToken(this.config.tokens, this.tokens);
       this.tokens.push(anotherToken);
       Vue.set(this.weights, anotherToken, '');
       Vue.set(this.amounts, anotherToken, '');

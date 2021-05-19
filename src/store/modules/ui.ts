@@ -24,8 +24,8 @@ const mutations = {
 const actions = {
   init: async ({ commit, dispatch }) => {
     commit('SET', { loading: true });
-    const tokenIds = Object.keys(config.state.config.tokens)
-      .map(tokenAddress => config.state.config.tokens[tokenAddress].id)
+    const tokenIds = Object.keys(config.tokens)
+      .map(tokenAddress => config.tokens[tokenAddress].id)
       .filter(tokenId => !!tokenId);
     await Promise.all([
       dispatch('loadPricesById', tokenIds),

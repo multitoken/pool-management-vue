@@ -80,7 +80,6 @@
 import { validateNumberInput, ValidationError } from '@/helpers/validation';
 import { normalizeBalance } from '@/helpers/utils';
 import { mapActions } from 'vuex';
-import config from '@/config';
 
 export default {
   props: ['open', 'side'],
@@ -100,7 +99,7 @@ export default {
   },
   computed: {
     title() {
-      const baseToken = config.state.config.baseToken;
+      const baseToken = this.config.baseToken;
       return this.currentSide === 2
         ? `Wrap ${baseToken.wrappedSymbol} to ${baseToken.symbol}`
         : `Wrap ${baseToken.symbol} to ${baseToken.wrappedSymbol}`;
@@ -109,37 +108,32 @@ export default {
       return {
         tokenIn:
           this.currentSide === 2
-            ? config.state.config.baseToken.wrappedSymbol
-            : config.state.config.baseToken.symbol,
+            ? this.config.baseToken.wrappedSymbol
+            : this.config.baseToken.symbol,
         tokenOut:
           this.currentSide === 2
-            ? config.state.config.baseToken.symbol
-            : config.state.config.baseToken.wrappedSymbol
+            ? this.config.baseToken.symbol
+            : this.config.baseToken.wrappedSymbol
       };
     },
     balance() {
       let balance = this.web3.balances['ether'] || '0';
       if (this.currentSide === 2)
-        balance =
-          this.web3.balances[config.state.config.addresses.wrapped] || '0';
+        balance = this.web3.balances[this.config.addresses.wrapped] || '0';
       return normalizeBalance(balance, 18);
     },
     isValid() {
       const error = validateNumberInput(this.amount);
       if (error !== ValidationError.NONE) return false;
       return this.currentSide === 1
-        ? !this.balance
-            .minus(config.state.config.gas.bufferError)
-            .lt(this.amount)
+        ? !this.balance.minus(this.config.gas.bufferError).lt(this.amount)
         : !this.balance.lt(this.amount);
     },
     etherLeft() {
       return (
         this.currentSide === 2 ||
         this.balance.isZero() ||
-        !this.balance
-          .minus(config.state.config.gas.bufferWarning)
-          .lt(this.amount)
+        !this.balance.minus(this.config.gas.bufferWarning).lt(this.amount)
       );
     }
   },
@@ -155,7 +149,7 @@ export default {
     handleMax() {
       const maxAllowedAmount =
         this.currentSide === 1
-          ? this.balance.minus(config.state.config.gas.bufferWarning)
+          ? this.balance.minus(this.config.gas.bufferWarning)
           : this.balance;
       this.amount = maxAllowedAmount.isNegative()
         ? '0'
