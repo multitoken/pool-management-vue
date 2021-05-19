@@ -14,6 +14,7 @@ export default {
 </script>
 
 <style lang="scss">
+@use 'sass:color';
 @import '../../vars';
 
 .button {
@@ -23,6 +24,8 @@ export default {
   margin: 0;
   padding: 0 22px 3px;
 
+  transition: 0.3s;
+
   color: $secondary-button-text;
   border: 1px solid $secondary-button-border;
   border-radius: 22px;
@@ -30,6 +33,7 @@ export default {
   background-color: $secondary-button-background;
 
   &:hover {
+    color: $link-text;
     background-color: $secondary-button-background-hover;
   }
 
@@ -57,7 +61,9 @@ export default {
     background-color: $primary-button-background;
 
     &:hover {
-      background-color: $primary-button-background-hover;
+      color: color.scale($primary-button-text, $lightness: +100%);
+      border-color: $primary-button-background-hover;
+      background-color: $primary-button-border-hover;
     }
 
     &:disabled {
@@ -67,6 +73,19 @@ export default {
       border: 1px solid $button-disabled;
       background: $button-disabled;
     }
+  }
+
+  &.button-lp-tokens {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 18px;
+
+    width: 110px;
+    height: 32px;
+    margin: 3px 0;
+    padding: 0 5px;
+
+    border-radius: 17px;
   }
 
   &.buttton-non-clickable {
@@ -83,6 +102,12 @@ export default {
     color: $button-disabled;
     border-color: $bg-green;
     background-color: $bg-green;
+
+    &:hover {
+      color: color.scale($button-disabled, $lightness: +80%);
+      border-color: color.scale($bg-green, $lightness: -10%);
+      background-color: color.scale($bg-green, $lightness: -10%);
+    }
   }
 
   &.notification-red {
@@ -101,4 +126,5 @@ export default {
     background-color: $bg-gray-light;
   }
 }
+
 </style>

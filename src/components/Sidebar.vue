@@ -136,6 +136,10 @@ export default {
 
     color: $white;
 
+    &:hover {
+      color: $link-text;
+    }
+
     &.active {
       padding-left: 19px;
 
