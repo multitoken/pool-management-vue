@@ -168,7 +168,7 @@ export default class Pool {
     };
     try {
       const response = await subgraphRequest(
-        config.state.config.subgraphUrl,
+        config.subgraphUrl,
         merge(queries['getPool'], query)
       );
       return formatPool(response.pool);

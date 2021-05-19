@@ -4,7 +4,7 @@
       <h3 v-text="$t('connectWallet')" class="p-4 border-bottom text-center" />
       <div class="m-4 mb-5">
         <a
-          v-for="(connector, id, i) in config.state.config.connectors"
+          v-for="(connector, id, i) in config.connectors"
           :key="i"
           @click="$emit('login', connector.id)"
           target="_blank"

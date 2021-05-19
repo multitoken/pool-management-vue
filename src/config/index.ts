@@ -2,7 +2,6 @@ import mainnet from '@/config/mainnet';
 import kovan from '@/config/kovan';
 import bsc from '@/config/bsc';
 import { Config } from '@/config/types';
-import Vue from 'vue';
 
 interface СonfigState {
   config: Config;
@@ -31,21 +30,12 @@ const mutations = {
         shortName: ''
       };
     }
-    // _state.config = configs[chainId];
-    Vue.set(_state, 'config', configs[chainId]);
-  }
-};
-
-const actions = {
-  updateConfig({ commit }, chainId: number) {
-    commit('setNetwork', chainId);
-    return;
+    _state.config = configs[chainId];
   }
 };
 
 export default {
   state,
   getters,
-  mutations,
-  actions
+  mutations
 };

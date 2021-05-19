@@ -13,25 +13,25 @@ export default {
     querySharedPools() {
       return {
         where: {
-          id_not_in: config.state.config.excludedPoolsIds,
+          id_not_in: config.excludedPoolsIds,
           finalized: true
         }
       };
     },
     querySmartPools() {
-      if (config.state.config.chainId === 1)
+      if (this.store.state.web3.config.chainId === 1)
         return {
           where: {
             id_in: Object.entries(pools)
               .filter(crp => crp[1].is_compatible)
               .map(crp => crp[0].toLowerCase()),
-            id_not_in: config.state.config.excludedPoolsIds
+            id_not_in: config.excludedPoolsIds
           }
         };
       return {
         where: {
           crp: true,
-          id_not_in: config.state.config.excludedPoolsIds
+          id_not_in: config.excludedPoolsIds
         }
       };
     },
@@ -40,7 +40,7 @@ export default {
         where: {
           finalized: false,
           crp: false,
-          id_not_in: config.state.config.excludedPoolsIds
+          id_not_in: config.excludedPoolsIds
         }
       };
     }

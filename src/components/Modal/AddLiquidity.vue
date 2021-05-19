@@ -174,7 +174,6 @@ import {
 import { calcPoolOutGivenSingleIn } from '@/helpers/math';
 import { validateNumberInput, formatError } from '@/helpers/validation';
 import { canProvideLiquidity } from '@/helpers/whitelist';
-import config from '@/config';
 
 const BALANCE_BUFFER = 0.01;
 
@@ -269,7 +268,7 @@ export default {
     tokenError() {
       if (
         this.pool.tokens.some(token =>
-          config.state.config.untrusted.includes(token.checksum)
+          this.store.state.web3.config.untrusted.includes(token.checksum)
         )
       ) {
         return this.$t('untrustedTokens');
