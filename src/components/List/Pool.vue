@@ -54,6 +54,7 @@
         @mouseleave="pancakeButtonHovered = false"
       >
         <UiButton class="button-lp-tokens button-primary">
+          {{ $t('buyETFonPancake') }}
         </UiButton>
       </a>
     </div>
