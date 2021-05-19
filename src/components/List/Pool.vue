@@ -33,16 +33,16 @@
       class="column hide-sm hide-md hide-lg flex-shrink-0"
     />
     <div class="column flex-shrink-0 d-flex flex-column">
-      <a
+      <!-- <a
         :v-if="isBSCNetwork"
         :href="`${config.exchangeUrl}/${BNBAddress}/${LPTokenAddress}`"
         target="_blank"
         v-on:click.stop
       >
-        <UiButton class="button-lp-tokens button-highlight">
+        <UiButton class="button-lp-tokens button-primary">
           {{ $t('multitoken') }}
         </UiButton>
-      </a>
+      </a> -->
       <a
         :v-if="isBSCNetwork"
         :href="
