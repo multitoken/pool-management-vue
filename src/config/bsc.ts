@@ -39,7 +39,7 @@ const config: Config = {
   addresses: {
     bFactory: '0x776EdBbFba114c3F3b34b0154ECE803e74993436',
     bActions: '0xd631704FD9582edF70eC5f0dD13013Afe8a7D0e8',
-    dsProxyRegistry: '0xB5191199255FEd7bFa7Cf1AEd94426333e891589',
+    dsProxyRegistry: '0xCe150D83E291c44f85771360B067e68730294484',
     proxy: '0x0eAE72E8469a844fa9e02045b32b662E5b44Eafc',
     crpFactory: '0x5F1D2133Ef3D16604dca1b76d8683e3D7dCE1dBb',
     wrapped: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
