@@ -37,11 +37,11 @@ const config: Config = {
   explorer: 'https://bscscan.com',
   exchangeUrl: 'https://swap.multitoken.com/',
   addresses: {
-    bFactory: '0xebCAA6318d834b69CB4ADD6467583a12F348fd5c',
+    bFactory: '0x776EdBbFba114c3F3b34b0154ECE803e74993436',
     bActions: '0xd631704FD9582edF70eC5f0dD13013Afe8a7D0e8',
-    dsProxyRegistry: '0xCe150D83E291c44f85771360B067e68730294484',
-    proxy: '0x4D9289412338bb55DEC6FA770c51804349f7ae78',
-    crpFactory: '0x144d8970C9F3870aDf91889BA32C430d6D131EC9',
+    dsProxyRegistry: '0xB5191199255FEd7bFa7Cf1AEd94426333e891589',
+    proxy: '0x0eAE72E8469a844fa9e02045b32b662E5b44Eafc',
+    crpFactory: '0x5F1D2133Ef3D16604dca1b76d8683e3D7dCE1dBb',
     wrapped: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
     multicall: '0x41263cBA59EB80dC200F3E2544eda4ed6A90E76C'
   },
