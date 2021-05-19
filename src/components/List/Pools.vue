@@ -13,8 +13,8 @@
         <div v-text="$t('marketCap')" class="column" />
         <div v-text="$t('myShares')" class="column hide-sm hide-md hide-lg" />
         <div v-text="$t('volume24')" class="column hide-sm hide-md hide-lg" />
-        <div class="column text-right d-flex flex-items-end flex-justify-end">
-          {{ $t('buyLPTokens') }} <Icon name="external-link" />
+        <div class="column text-center">
+          {{ $t('buyETF') }} <Icon name="external-link" />
         </div>
       </UiTableTh>
       <div v-infinite-scroll="loadMore" infinite-scroll-distance="10">

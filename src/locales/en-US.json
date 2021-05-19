@@ -34,7 +34,7 @@
     "bptTotalSupply": "BPT total supply",
     "burn": "burn",
     "buy": "Buy",
-    "buyLPTokens": "Buy LP Tokens",
+    "buyETF": "Buy ETF",
     "calculateDeposits": "Calculate deposits using Multitoken price (recommended)",
     "canAddRemoveTokens": "Can change tokens",
     "cancel": "Cancel",
