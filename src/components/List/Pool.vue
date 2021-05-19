@@ -53,8 +53,7 @@
         @mouseenter="pancakeButtonHovered = true"
         @mouseleave="pancakeButtonHovered = false"
       >
-        <UiButton class="button-lp-tokens button-highlight">
-          {{ $t('pancake') }}
+        <UiButton class="button-lp-tokens button-primary">
         </UiButton>
       </a>
     </div>

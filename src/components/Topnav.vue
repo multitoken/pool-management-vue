@@ -30,7 +30,7 @@
           <a v-for="(chain, i) in chains" :key="i" :href="getNetworkURL(chain)">
             <UiButton
               class="mx-1"
-              :class="{ 'button-highlight': chain === currentNetwork }"
+              :class="{ 'button-primary': chain === currentNetwork }"
             >
               {{ chainParams[chain].chainName }}
             </UiButton>
@@ -264,4 +264,5 @@ export default {
     display: none !important;
   }
 }
+
 </style>

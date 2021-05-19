@@ -57,13 +57,13 @@ export default {
 
   &.button-primary {
     color: $primary-button-text;
-    border-color: $primary-button-border;
-    background-color: $primary-button-background;
+    border-color: $bg-green;
+    background-color: $bg-green;
 
     &:hover {
-      color: color.scale($primary-button-text, $lightness: +100%);
-      border-color: $primary-button-background-hover;
-      background-color: $primary-button-border-hover;
+      color: $secondary-button-text;
+      border-color: color.scale($bg-green, $lightness: -20%);
+      background-color: color.scale($bg-green, $lightness: -10%);
     }
 
     &:disabled {
@@ -76,16 +76,12 @@ export default {
   }
 
   &.button-lp-tokens {
-    font-size: 16px;
-    font-weight: 700;
+    // font-size: 16px;
     line-height: 18px;
 
     width: 110px;
-    height: 32px;
     margin: 3px 0;
     padding: 0 5px;
-
-    border-radius: 17px;
   }
 
   &.buttton-non-clickable {
@@ -96,17 +92,6 @@ export default {
   &.button-red {
     color: $error;
     border-color: $error;
-  }
-
-  &.button-highlight {
-    border-color: $bg-green;
-    background-color: $bg-green;
-
-    &:hover {
-      color: $button-disabled;
-      border-color: color.scale($bg-green, $lightness: -10%);
-      background-color: color.scale($bg-green, $lightness: +20%);
-    }
   }
 
   &.notification-red {
@@ -125,4 +110,5 @@ export default {
     background-color: $bg-gray-light;
   }
 }
+
 </style>
