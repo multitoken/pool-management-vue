@@ -171,14 +171,12 @@ export default {
           };
         })
         .filter(({ value }) => value > 0.001);
-      const ethPrice = this.price.values[
-        this.store.state.web3.config?.addresses.wrapped
-      ];
+      const ethPrice = this.price.values[this.config?.addresses.wrapped];
       const ethBalance = formatUnits(this.web3.balances['ether'] || 0, 18);
       return [
         {
           address: 'ether',
-          name: this.store.state.web3.config.baseToken.name,
+          name: this.config.baseToken.name,
           symbol: config.baseToken.symbol,
           price: ethPrice,
           balance: ethBalance,
