@@ -99,14 +99,13 @@ export default {
   }
 
   &.button-highlight {
-    color: $button-disabled;
     border-color: $bg-green;
     background-color: $bg-green;
 
     &:hover {
-      color: color.scale($button-disabled, $lightness: +80%);
+      color: $button-disabled;
       border-color: color.scale($bg-green, $lightness: -10%);
-      background-color: color.scale($bg-green, $lightness: -10%);
+      background-color: color.scale($bg-green, $lightness: +20%);
     }
   }
 
@@ -126,5 +125,4 @@ export default {
     background-color: $bg-gray-light;
   }
 }
-
 </style>
