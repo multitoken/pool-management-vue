@@ -23,7 +23,7 @@
           {{ $t('redeem') }}
         </UiButton>
         <a
-          :v-if="isBSCNetwork"
+          v-if="enableAddLiquidity && pool.tokens.length > 0 && isBSCNetwork"
           :href="
             `https://exchange.pancakeswap.finance/#/swap?outputCurrency=${LPTokenAddress}`
           "
@@ -32,11 +32,18 @@
           @mouseenter="pancakeButtonHovered = true"
           @mouseleave="pancakeButtonHovered = false"
         >
-          <UiButton
-            v-if="enableAddLiquidity && pool.tokens.length > 0"
-            class="ml-2"
-          >
-            {{ $t('buyETFonPancake') }} <Icon name="external-link" />
+          <UiButton class="ml-2">
+            {{ $t('buyOnPancake') }} <Icon name="external-link" />
+          </UiButton>
+        </a>
+        <a
+          v-else-if="enableAddLiquidity && pool.tokens.length > 0"
+          :href="`${config.exchangeUrl}/${BNBAddress}/${LPTokenAddress}`"
+          target="_blank"
+          v-on:click.stop
+        >
+          <UiButton class="ml-2">
+            {{ $t('buyOnMultitoken') }} <Icon name="external-link" />
           </UiButton>
         </a>
       </div>
@@ -79,6 +86,7 @@ import { mapActions } from 'vuex';
 import { getAddress } from '@ethersproject/address';
 import Pool from '@/_balancer/pool';
 import { bnum, scale } from '@/helpers/utils';
+import chainParams from '@/helpers/chainParams';
 
 export default {
   data() {
@@ -124,6 +132,16 @@ export default {
         (Object.keys(this.subgraph.poolShares).includes(this.id) ||
           this.web3.balances[getAddress(this.id)])
       );
+    },
+    isBSCNetwork() {
+      return (
+        `0x${this.web3.injectedChainId.toString(16)}` ==
+        chainParams['bsc'].chainId
+      );
+    },
+    BNBAddress() {
+      // TODO: add real BNB address
+      return '0x266A9AAc60B0211D7269dd8b0e792D645d2923e6';
     },
     LPTokenAddress() {
       // TODO: add real LP token address

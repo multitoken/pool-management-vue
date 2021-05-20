@@ -13,7 +13,7 @@
         <div v-text="$t('marketCap')" class="column" />
         <div v-text="$t('myShares')" class="column hide-sm hide-md hide-lg" />
         <div v-text="$t('volume24')" class="column hide-sm hide-md hide-lg" />
-        <div class="column text-center">
+        <div class="column">
           {{ $t('buyETF') }} <Icon name="external-link" />
         </div>
       </UiTableTh>
@@ -32,7 +32,7 @@
             'column',
             'column hide-sm hide-md hide-lg',
             'column hide-sm hide-md hide-lg',
-            'column text-right'
+            'column'
           ]"
           :height="29"
         />

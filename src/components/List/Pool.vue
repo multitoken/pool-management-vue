@@ -32,19 +32,9 @@
       format="currency"
       class="column hide-sm hide-md hide-lg flex-shrink-0"
     />
-    <div class="column flex-shrink-0 d-flex flex-column">
-      <!-- <a
-        :v-if="isBSCNetwork"
-        :href="`${config.exchangeUrl}/${BNBAddress}/${LPTokenAddress}`"
-        target="_blank"
-        v-on:click.stop
-      >
-        <UiButton class="button-lp-tokens button-primary">
-          {{ $t('multitoken') }}
-        </UiButton>
-      </a> -->
+    <div class="column flex-shrink-0">
       <a
-        :v-if="isBSCNetwork"
+        v-if="isBSCNetwork"
         :href="
           `https://exchange.pancakeswap.finance/#/swap?outputCurrency=${LPTokenAddress}`
         "
@@ -53,8 +43,18 @@
         @mouseenter="pancakeButtonHovered = true"
         @mouseleave="pancakeButtonHovered = false"
       >
+        <UiButton class="button-primary">
+          {{ $t('buy') }}
+        </UiButton>
+      </a>
+      <a
+        v-else
+        :href="`${config.exchangeUrl}/${BNBAddress}/${LPTokenAddress}`"
+        target="_blank"
+        v-on:click.stop
+      >
         <UiButton class="button-lp-tokens button-primary">
-          {{ $t('buyETFonPancake') }}
+          {{ $t('buy') }}
         </UiButton>
       </a>
     </div>
@@ -63,6 +63,7 @@
 
 <script>
 import { getPoolLiquidity } from '@/helpers/price';
+import chainParams from '@/helpers/chainParams.json';
 
 export default {
   props: ['pool'],
@@ -76,7 +77,10 @@ export default {
       return (this.poolLiquidity / this.pool.totalShares) * poolShares;
     },
     isBSCNetwork() {
-      return this.config.network == 'bsc';
+      return (
+        `0x${this.web3.injectedChainId.toString(16)}` ==
+        chainParams['bsc'].chainId
+      );
     },
     BNBAddress() {
       // TODO: add real BNB address
