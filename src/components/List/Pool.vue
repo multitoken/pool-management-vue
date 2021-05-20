@@ -22,16 +22,6 @@
       </div>
     </div>
     <div v-text="_num(poolLiquidity, 'usd')" class="column flex-shrink-0" />
-    <div
-      v-text="_num(myLiquidity, 'usd')"
-      format="currency"
-      class="column hide-sm hide-md hide-lg flex-shrink-0"
-    />
-    <div
-      v-text="_num(pool.lastSwapVolume, 'usd')"
-      format="currency"
-      class="column hide-sm hide-md hide-lg flex-shrink-0"
-    />
     <div class="column flex-shrink-0">
       <a
         v-if="isBSCNetwork"
@@ -71,11 +61,6 @@ export default {
     poolLiquidity() {
       return getPoolLiquidity(this.pool, this.price.values);
     },
-    myLiquidity() {
-      const poolShares = this.subgraph.poolShares[this.pool.id];
-      if (!this.pool.finalized || !poolShares) return 0;
-      return (this.poolLiquidity / this.pool.totalShares) * poolShares;
-    },
     isBSCNetwork() {
       return (
         `0x${this.web3.injectedChainId.toString(16)}` ==
@@ -89,11 +74,6 @@ export default {
     LPTokenAddress() {
       // TODO: add real LP token address
       return '0xdCC967319024DeeBbf9B5B6868F4985cFB724687';
-    }
-  },
-  methods: {
-    handleButtonClick(e) {
-      e.stopPropagation();
     }
   }
 };

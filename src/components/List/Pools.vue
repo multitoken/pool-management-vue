@@ -11,8 +11,6 @@
         />
         <div v-text="$t('assets')" class="flex-auto text-center" />
         <div v-text="$t('marketCap')" class="column" />
-        <div v-text="$t('myShares')" class="column hide-sm hide-md hide-lg" />
-        <div v-text="$t('volume24')" class="column hide-sm hide-md hide-lg" />
         <div class="column">
           {{ $t('buyETF') }} <Icon name="external-link" />
         </div>
@@ -27,11 +25,9 @@
         <ListLoading
           v-if="loading"
           :classes="[
-            'column-sm text-center hide-sm hide-md hide-lg',
-            'flex-auto text-center',
-            'column',
-            'column hide-sm hide-md hide-lg',
-            'column hide-sm hide-md hide-lg',
+            'column-sm text-left hide-sm hide-md hide-lg',
+            'flex-auto text-left',
+            'column hide-sm hide-md',
             'column'
           ]"
           :height="29"

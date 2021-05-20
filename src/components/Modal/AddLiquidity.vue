@@ -64,7 +64,7 @@
                       web3.balances[token.checksum] || '0',
                       token.decimals
                     ),
-                    2
+                    4
                   )
                 }}
                 <a @click="handleMax(token)" class="ml-1">

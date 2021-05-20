@@ -18,7 +18,7 @@
           <span
             class="brand d-inline-block text-white"
             style="letter-spacing: 1px; font-size: 16px;"
-            v-text="'Multitoken'"
+            v-text="'Multitoken V1'"
           />
           <span class="alphaWarning">
             Alpha
@@ -238,7 +238,7 @@ export default {
 
 @media (max-width: 1020px) {
   .header-middle {
-    left: 260px;
+    left: 280px;
   }
 }
 
