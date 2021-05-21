@@ -16,6 +16,7 @@
     "addTokenTimelock": "Add token time lock (in blocks)",
     "addTransferBlocked": "Adding liquidity failed as one of the underlying tokens blocked the transfer.",
     "allPoolAssets": "All assets",
+    "alreadyOn": "Already on",
     "amount": "Amount",
     "amountExceedsBalance": "Token amount should not exceed balance",
     "andMax": "and a maximum of",
