@@ -41,7 +41,7 @@ export default {
     },
     myLiquidity() {
       const poolShares = this.subgraph.poolShares[this.pool.id];
-      if (!this.pool.finalized || !poolShares) return 0;
+      if (!poolShares) return 0;
       return (this.poolLiquidity / this.pool.totalShares) * poolShares;
     }
   }

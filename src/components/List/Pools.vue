@@ -25,7 +25,6 @@
           :classes="[
             'column-sm text-left hide-sm hide-md hide-lg',
             'flex-auto text-left',
-            'column hide-sm hide-md',
             'column',
             'column hide-sm hide-md hide-lg'
           ]"

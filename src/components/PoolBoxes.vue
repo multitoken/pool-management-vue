@@ -39,11 +39,7 @@ export default {
       return getPoolLiquidity(this.pool, this.price.values);
     },
     poolSharePercent() {
-      if (
-        (!this.pool.finalized && !this.bPool.isCrp()) ||
-        !this.poolTokenBalance
-      )
-        return 0;
+      if (!this.bPool.isCrp() || !this.poolTokenBalance) return 0;
       return (1 / this.totalShares) * this.poolTokenBalance;
     }
   }
