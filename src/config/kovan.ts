@@ -89,6 +89,7 @@ const config: Config = {
   excludedPoolsIds: [
     '0x1e7967bfab4c2050d15707136fbb2812476f0cfb',
     '0x03544dc2d0900bcef3bc09969e3ed5044ab2c802',
+    '0xbc3b9572eb9065d9f53d93c2d2c612626a07a4a0',
   ],
   untrusted: [],
   env: process.env.VUE_APP_ENV || 'production',
