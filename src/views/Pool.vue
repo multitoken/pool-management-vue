@@ -55,7 +55,7 @@
       :bPool="bPool"
       @reload="loadPool"
     />
-    <br/>
+    <br />
     <PoolBoxes :pool="pool" :bPool="bPool" />
     <portal to="modal">
       <ModalAddLiquidity
@@ -135,7 +135,7 @@ export default {
     },
     isBSCNetwork() {
       return (
-        `0x${this.web3.injectedChainId.toString(16)}` ==
+        `0x${this.web3.injectedChainId?.toString(16)}` ==
         chainParams['bsc'].chainId
       );
     },

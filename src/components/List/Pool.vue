@@ -43,7 +43,7 @@
         target="_blank"
         v-on:click.stop
       >
-        <UiButton class="button-lp-tokens button-primary">
+        <UiButton class="button-primary">
           {{ $t('buy') }}
         </UiButton>
       </a>
@@ -63,7 +63,7 @@ export default {
     },
     isBSCNetwork() {
       return (
-        `0x${this.web3.injectedChainId.toString(16)}` ==
+        `0x${this.web3.injectedChainId?.toString(16)}` ==
         chainParams['bsc'].chainId
       );
     },
