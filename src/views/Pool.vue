@@ -41,16 +41,6 @@
             {{ $t('buyOnPancake') }} <Icon name="external-link" />
           </UiButton>
         </a>
-        <a
-          v-else-if="bPool && enableAddLiquidity && pool.tokens.length > 0"
-          :href="`${config.exchangeUrl}/${BNBAddress}/${LPTokenAddress}`"
-          target="_blank"
-          v-on:click.stop
-        >
-          <UiButton class="ml-2">
-            {{ $t('buyOnMultitoken') }} <Icon name="external-link" />
-          </UiButton>
-        </a>
       </div>
     </div>
     <Tabs :pool="pool" />
@@ -140,8 +130,7 @@ export default {
     },
     isBSCNetwork() {
       return (
-        `0x${this.web3.injectedChainId?.toString(16)}` ==
-        chainParams['bsc'].chainId
+        `0x${this.config.chainId?.toString(16)}` == chainParams['bsc'].chainId
       );
     },
     BNBAddress() {
