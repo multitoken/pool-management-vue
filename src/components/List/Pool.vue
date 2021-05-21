@@ -33,7 +33,11 @@
         @mouseenter="pancakeButtonHovered = true"
         @mouseleave="pancakeButtonHovered = false"
       >
-        <UiButton :disabled="!bPool" class="button-primary">
+        <UiButton
+          :disabled="!bPool"
+          :loading="buttonLoading"
+          class="button-primary"
+        >
           {{ $t('buy') }}
         </UiButton>
       </a>
@@ -43,7 +47,11 @@
         target="_blank"
         v-on:click.stop
       >
-        <UiButton :disabled="!bPool" class="button-primary">
+        <UiButton
+          :disabled="!bPool"
+          :loading="buttonLoading"
+          class="button-primary"
+        >
           {{ $t('buy') }}
         </UiButton>
       </a>
@@ -59,7 +67,8 @@ import Pool from '@/_balancer/pool';
 export default {
   data() {
     return {
-      bPool: undefined
+      bPool: undefined,
+      buttonLoading: true
     };
   },
   props: ['pool'],
@@ -82,9 +91,14 @@ export default {
     }
   },
   async mounted() {
-    const bPool = new Pool(this.pool.id);
-    await bPool.getMetadata();
-    this.bPool = bPool;
+    try {
+      const bPool = new Pool(this.pool.id);
+      await bPool.getMetadata();
+      this.bPool = bPool;
+      this.buttonLoading = false;
+    } catch {
+      this.buttonLoading = false;
+    }
   }
 };
 </script>
