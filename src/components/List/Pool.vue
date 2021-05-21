@@ -33,7 +33,7 @@
         @mouseenter="pancakeButtonHovered = true"
         @mouseleave="pancakeButtonHovered = false"
       >
-        <UiButton class="button-primary">
+        <UiButton :disabled="!bPool" class="button-primary">
           {{ $t('buy') }}
         </UiButton>
       </a>
@@ -43,7 +43,7 @@
         target="_blank"
         v-on:click.stop
       >
-        <UiButton class="button-primary">
+        <UiButton :disabled="!bPool" class="button-primary">
           {{ $t('buy') }}
         </UiButton>
       </a>
@@ -54,8 +54,14 @@
 <script>
 import { getPoolLiquidity } from '@/helpers/price';
 import chainParams from '@/helpers/chainParams.json';
+import Pool from '@/_balancer/pool';
 
 export default {
+  data() {
+    return {
+      bPool: undefined
+    };
+  },
   props: ['pool'],
   computed: {
     poolLiquidity() {
@@ -72,9 +78,13 @@ export default {
       return '0x266A9AAc60B0211D7269dd8b0e792D645d2923e6';
     },
     LPTokenAddress() {
-      // TODO: add real LP token address
-      return '0xdCC967319024DeeBbf9B5B6868F4985cFB724687';
+      return this.bPool?.getBptAddress();
     }
+  },
+  async mounted() {
+    const bPool = new Pool(this.pool.id);
+    await bPool.getMetadata();
+    this.bPool = bPool;
   }
 };
 </script>

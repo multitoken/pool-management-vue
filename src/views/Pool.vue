@@ -23,7 +23,12 @@
           {{ $t('redeem') }}
         </UiButton>
         <a
-          v-if="enableAddLiquidity && pool.tokens.length > 0 && isBSCNetwork"
+          v-if="
+            bPool &&
+              enableAddLiquidity &&
+              pool.tokens.length > 0 &&
+              isBSCNetwork
+          "
           :href="
             `https://exchange.pancakeswap.finance/#/swap?outputCurrency=${LPTokenAddress}`
           "
@@ -37,7 +42,7 @@
           </UiButton>
         </a>
         <a
-          v-else-if="enableAddLiquidity && pool.tokens.length > 0"
+          v-else-if="bPool && enableAddLiquidity && pool.tokens.length > 0"
           :href="`${config.exchangeUrl}/${BNBAddress}/${LPTokenAddress}`"
           target="_blank"
           v-on:click.stop
@@ -144,8 +149,7 @@ export default {
       return '0x266A9AAc60B0211D7269dd8b0e792D645d2923e6';
     },
     LPTokenAddress() {
-      // TODO: add real LP token address
-      return '0xdCC967319024DeeBbf9B5B6868F4985cFB724687';
+      return this.bPool?.getBptAddress();
     }
   },
   methods: {
