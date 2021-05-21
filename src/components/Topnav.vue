@@ -206,7 +206,7 @@ export default {
       if (this.currentNetwork == chainName) {
         this.$store.dispatch('notify', [
           'green',
-          `Already on ${chainParams[chainName].chainName}.`
+          `${i18n.tc('alreadyOn')} ${chainParams[chainName].chainName}.`
         ]);
         return;
       }
