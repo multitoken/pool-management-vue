@@ -3,6 +3,8 @@ import { getAddress } from '@ethersproject/address';
 import { request } from '@/helpers/subgraph';
 import { formatPool, ITEMS_PER_PAGE } from '@/helpers/utils';
 
+import config from '@/config';
+
 const state = {
   balancer: {},
   poolShares: {},
@@ -103,28 +105,7 @@ const actions = {
     const tsYesterdayRounded = Math.round(tsYesterday / 3600) * 3600; // Round timestamp by hour to leverage subgraph cache
 
     where.tokensList_not = [];
-    where.id_not_in = [
-      '0xf13901ce59d9cc22eb7b05c364cfbbdf4f502134',
-      '0x85e43a977f90997c0ca58445fefe63959a6b45c8',
-      '0x825462600bff18f8b92463d71ea59d10690156d1',
-      '0x6a4db05d5f22650dea5acde109641ca2754d2784',
-      '0x7826d886620721a00af3b1b31f0cd0c46e45b8f9',
-      '0x4b9e4744b4f346178b87d4b8cc136108741a6edf',
-      '0x04a269f14fd7c40db9a2d7233d9b80437a4aeb6f',
-      '0x1208c535030b80dd9049cd04a8f8911d4bf5ae3d',
-      '0xfecd1fd7d3731e159145d4ea71e9a4d1d0031b37',
-      '0xf15112cee210dbd8ba1fee9636c1cf0ea4712e9f',
-      '0xd11d0ed5b575b62544ca21b3a1347b824fe631fc',
-      '0xe21b4edec5d47d4c6571d85226f15343dc121908',
-      '0x106480842a6be960b6ab2ff395d9c69ac06a1ce9',
-      '0x1a340f995a3f9b649b287200863df5abb0bbb2b4',
-      '0xb1ad3a5ccf6bd495371940b73abf179cccc740a6',
-      '0xa38de02680bf118ddca75fb26295c57d7bd7a425',
-      '0x9dab2ec9da2f18ca2a5c55dee2d4d59f5767cdf7',
-      '0x7c14e45c1e09a97b709cea0f1cf82cd7a57cd634',
-      '0x50798829c2d08a17e440110b9917c928c08f8b20',
-      '0x2b862baa7d5ae8760dd6fed0bdbec8227175149c'
-    ];
+    where.id_not_in = config.excludedPoolsIds;
     const query = {
       pools: {
         __args: {
