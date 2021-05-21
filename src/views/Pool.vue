@@ -162,7 +162,6 @@ export default {
     openRemoveLiquidityModal() {
       this.modalRemoveLiquidityOpen = true;
     },
-    ...mapActions(['approve']),
     async addToWallet() {
       // TODO: Set decimals dynamically
       this.$auth.web3.send('wallet_watchAsset', {
