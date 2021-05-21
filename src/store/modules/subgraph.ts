@@ -142,7 +142,8 @@ const actions = {
         poolShares: {
           __args: {
             where: {
-              userAddress: address.toLowerCase()
+              userAddress: address.toLowerCase(),
+              poolId_not_in: config.excludedPoolsIds
             }
           }
         }
