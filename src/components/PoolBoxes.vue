@@ -12,7 +12,7 @@
       <div
         class="border rounded-0 rounded-md-1 panel-background py-4 mx-0 mx-md-2"
       >
-        <h3 v-text="_num(poolSharePercent, 'percent')" />
+        <h3 v-text="_num(myLiquidity, 'usd')" />
         <p v-text="$t('myEtfShare')" class="mb-0" />
       </div>
     </div>
@@ -38,9 +38,10 @@ export default {
     poolLiquidity() {
       return getPoolLiquidity(this.pool, this.price.values);
     },
-    poolSharePercent() {
-      if (!this.bPool.isCrp() || !this.poolTokenBalance) return 0;
-      return (1 / this.totalShares) * this.poolTokenBalance;
+    myLiquidity() {
+      const poolShares = this.subgraph.poolShares[this.pool.id];
+      if (!poolShares) return 0;
+      return (this.poolLiquidity / this.pool.totalShares) * poolShares;
     }
   }
 };
