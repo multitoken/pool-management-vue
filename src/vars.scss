@@ -1,3 +1,4 @@
+@use 'sass:color';
 @import '~primer-support';
 
 $link-text: #82ffda;
@@ -5,12 +6,22 @@ $warning: #ffc780;
 $error: #ff8a80;
 $info: #76d5c0;
 $input-hover-border: #4c8073;
-$primary-button-background: #53fed9;
-$primary-button-background-hover: #45f5c9;
-$primary-button-border: #3dfec4;
+$primary-button-background: #4df0ac;
+$primary-button-background-hover: color.scale(
+  $primary-button-background,
+  $lightness: -40%
+);
+$primary-button-border: #57ffb9;
+$primary-button-border-hover: color.scale(
+  $primary-button-background,
+  $lightness: -40%
+);
 $primary-button-text: #000;
 $secondary-button-background: #3a3a3a;
-$secondary-button-background-hover: #3b3b3b;
+$secondary-button-background-hover: color.scale(
+  $secondary-button-background,
+  $lightness: +10%
+);
 $secondary-button-border: #696969;
 $secondary-button-text: #fff;
 $button-disabled: #494949;

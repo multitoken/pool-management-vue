@@ -30,7 +30,7 @@
           <a v-for="(chain, i) in chains" :key="i" :href="getNetworkURL(chain)">
             <UiButton
               class="mx-1"
-              :class="{ 'button-highlight': chain === currentNetwork }"
+              :class="{ 'button-primary': chain === currentNetwork }"
             >
               {{ chainParams[chain].chainName }}
             </UiButton>
@@ -39,7 +39,12 @@
       </div>
       <div :key="web3.account">
         <UiButton
-          v-if="$auth.isAuthenticated && !wrongNetwork"
+          v-if="
+            $auth.isAuthenticated &&
+              !wrongNetwork &&
+              !loading &&
+              !ui.authLoading
+          "
           class="buttton-non-clickable balance hide-sm hide-md"
         >
           <span v-text="_num(balancesTotalValue, 'usd')" />
@@ -55,7 +60,7 @@
           <span
             v-else
             v-text="_shortenAddress(web3.account)"
-            class="hide-sm hide-md hide-lg  ml-2 pl-1"
+            class="hide-sm hide-md hide-lg ml-2 pl-1"
           />
         </UiButton>
         <UiButton

@@ -8,15 +8,19 @@
 @import '../../vars';
 
 .Counter {
-  display: inline-block;
-  padding: 0 6px;
-  height: 22px;
   line-height: 22px;
-  color: $white;
+
+  display: inline-block;
+
   min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+
   text-align: center;
-  background-color: $panel-border;
+
+  color: $black;
   border-radius: 11px;
+  background-color: $panel-border;
 }
 
 .router-link-exact-active,
@@ -25,4 +29,5 @@
     background-color: $blue;
   }
 }
+
 </style>

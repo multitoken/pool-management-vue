@@ -7,10 +7,13 @@
       <UiTableTh>
         <div
           v-text="$t('etf')"
-          class="column-sm text-left hide-sm hide-md hide-lg"
+          class="column text-center hide-sm hide-md hide-lg"
         />
-        <div v-text="$t('assets')" class="flex-auto text-left" />
+        <div v-text="$t('assets')" class="flex-auto text-center" />
         <div v-text="$t('marketCap')" class="column" />
+        <div class="column">
+          {{ $t('buyETF') }} <Icon name="external-link" />
+        </div>
       </UiTableTh>
       <div v-infinite-scroll="loadMore" infinite-scroll-distance="10">
         <div v-if="pools.length > 0">

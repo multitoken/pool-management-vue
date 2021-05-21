@@ -1,6 +1,6 @@
 <template>
   <UiTableTr :to="{ name: 'pool', params: { id: pool.id } }">
-    <div class="column-sm text-left hide-sm hide-md hide-lg flex-shrink-0">
+    <div class="column text-center hide-sm hide-md hide-lg flex-shrink-0">
       {{ `${pool.name} (${pool.symbol})` }}
     </div>
     <div class="d-flex flex-justify-center flex-items-center mx-2">
@@ -22,17 +22,82 @@
       </div>
     </div>
     <div v-text="_num(poolLiquidity, 'usd')" class="column flex-shrink-0" />
+    <div class="column flex-shrink-0">
+      <a
+        v-if="isBSCNetwork"
+        :href="
+          `https://exchange.pancakeswap.finance/#/swap?outputCurrency=${LPTokenAddress}`
+        "
+        target="_blank"
+        v-on:click.stop
+        @mouseenter="pancakeButtonHovered = true"
+        @mouseleave="pancakeButtonHovered = false"
+      >
+        <UiButton
+          :disabled="!bPool"
+          :loading="buttonLoading"
+          class="button-primary"
+        >
+          {{ $t('buy') }}
+        </UiButton>
+      </a>
+      <a
+        v-else
+        :href="`${config.exchangeUrl}/${BNBAddress}/${LPTokenAddress}`"
+        target="_blank"
+        v-on:click.stop
+      >
+        <UiButton
+          :disabled="!bPool"
+          :loading="buttonLoading"
+          class="button-primary"
+        >
+          {{ $t('buy') }}
+        </UiButton>
+      </a>
+    </div>
   </UiTableTr>
 </template>
 
 <script>
 import { getPoolLiquidity } from '@/helpers/price';
+import chainParams from '@/helpers/chainParams.json';
+import Pool from '@/_balancer/pool';
 
 export default {
+  data() {
+    return {
+      bPool: undefined,
+      buttonLoading: true
+    };
+  },
   props: ['pool'],
   computed: {
     poolLiquidity() {
       return getPoolLiquidity(this.pool, this.price.values);
+    },
+    isBSCNetwork() {
+      return (
+        `0x${this.web3.injectedChainId?.toString(16)}` ==
+        chainParams['bsc'].chainId
+      );
+    },
+    BNBAddress() {
+      // TODO: add real BNB address
+      return '0x266A9AAc60B0211D7269dd8b0e792D645d2923e6';
+    },
+    LPTokenAddress() {
+      return this.bPool?.getBptAddress();
+    }
+  },
+  async mounted() {
+    try {
+      const bPool = new Pool(this.pool.id);
+      await bPool.getMetadata();
+      this.bPool = bPool;
+      this.buttonLoading = false;
+    } catch {
+      this.buttonLoading = false;
     }
   }
 };
@@ -42,4 +107,5 @@ export default {
 .poolToken {
   flex-basis: 100px;
 }
+
 </style>
