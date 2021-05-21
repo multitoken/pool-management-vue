@@ -27,14 +27,15 @@
       </div>
       <div class="header-middle hide-sm hide-md">
         <div class="chain-buttons-container">
-          <a v-for="(chain, i) in chains" :key="i" :href="getNetworkURL(chain)">
-            <UiButton
-              class="mx-1"
-              :class="{ 'button-primary': chain === currentNetwork }"
-            >
-              {{ chainParams[chain].chainName }}
-            </UiButton>
-          </a>
+          <UiButton
+            v-for="(chain, i) in chains"
+            :key="i"
+            class="mx-1"
+            :class="{ 'button-primary': chain === currentNetwork }"
+            @click="changeNetwork(chain)"
+          >
+            {{ chainParams[chain].chainName }}
+          </UiButton>
         </div>
       </div>
       <div :key="web3.account">
@@ -117,6 +118,7 @@ import { mapGetters, mapActions } from 'vuex';
 import { formatUnits } from '@ethersproject/units';
 
 import chainParams from '../helpers/chainParams.json';
+import i18n from '@/i18n';
 
 export default {
   data() {
@@ -194,6 +196,25 @@ export default {
     },
     getNetworkURL(chainName) {
       return this?.config?.urls[chainName];
+    },
+    async changeNetwork(chainName) {
+      if (
+        chainParams[chainName].chainName === chainParams['mainnet'].chainName
+      ) {
+        return this.$store.dispatch('notify', ['gray', i18n.tc('comingSoon')]);
+      }
+      if (this.currentNetwork == chainName) {
+        this.$store.dispatch('notify', [
+          'green',
+          `Already on ${chainParams[chainName].chainName}.`
+        ]);
+        return;
+      }
+      window.location.href = this.getNetworkURL(chainName);
+      this.$store.dispatch('notify', [
+        'green',
+        `${i18n.tc('changedNetwork')} ${chainParams[chainName].chainName}.`
+      ]);
     }
   }
 };
