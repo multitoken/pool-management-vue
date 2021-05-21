@@ -22,6 +22,13 @@
         >
           {{ $t('redeem') }}
         </UiButton>
+        <UiButton
+          v-if="enableAddLiquidity && pool.tokens.length > 0"
+          class="ml-2"
+          @click="addToWallet"
+        >
+          {{ 'Add to wallet' }}
+        </UiButton>
         <a
           v-if="
             bPool &&
@@ -154,6 +161,18 @@ export default {
     },
     openRemoveLiquidityModal() {
       this.modalRemoveLiquidityOpen = true;
+    },
+    ...mapActions(['approve']),
+    async addToWallet() {
+      // TODO: Set decimals dynamically
+      this.$auth.web3.send('wallet_watchAsset', {
+        type: 'ERC20',
+        options: {
+          address: this.bPool.getBptAddress(), // The address of the token contract
+          symbol: this.pool.symbol, // A ticker symbol or shorthand, up to 5 characters
+          decimals: 18 // The number of token decimals
+        }
+      });
     },
     async loadPool() {
       const bPool = new Pool(this.id);
