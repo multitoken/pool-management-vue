@@ -140,8 +140,7 @@ export default {
     },
     isBSCNetwork() {
       return (
-        `0x${this.web3.injectedChainId?.toString(16)}` ==
-        chainParams['bsc'].chainId
+        `0x${this.config.chainId?.toString(16)}` == chainParams['bsc'].chainId
       );
     },
     BNBAddress() {
