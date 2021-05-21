@@ -27,7 +27,6 @@
       format="currency"
       class="column hide-sm hide-md hide-lg flex-shrink-0"
     />
-    <div class="column flex-shrink-0">
     <div v-if="isBSCNetwork" class="column flex-shrink-0">
       <a
         :href="
