@@ -22,9 +22,8 @@
       </div>
     </div>
     <div v-text="_num(poolLiquidity, 'usd')" class="column flex-shrink-0" />
-    <div class="column flex-shrink-0">
+    <div v-if="isBSCNetwork" class="column flex-shrink-0">
       <a
-        v-if="isBSCNetwork"
         :href="
           `https://exchange.pancakeswap.finance/#/swap?outputCurrency=${LPTokenAddress}`
         "
@@ -32,20 +31,6 @@
         v-on:click.stop
         @mouseenter="pancakeButtonHovered = true"
         @mouseleave="pancakeButtonHovered = false"
-      >
-        <UiButton
-          :disabled="!bPool"
-          :loading="buttonLoading"
-          class="button-primary"
-        >
-          {{ $t('buy') }}
-        </UiButton>
-      </a>
-      <a
-        v-else
-        :href="`${config.exchangeUrl}/${BNBAddress}/${LPTokenAddress}`"
-        target="_blank"
-        v-on:click.stop
       >
         <UiButton
           :disabled="!bPool"
@@ -106,4 +91,5 @@ export default {
 .poolToken {
   flex-basis: 100px;
 }
+
 </style>
