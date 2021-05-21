@@ -204,17 +204,9 @@ export default {
         return this.$store.dispatch('notify', ['gray', i18n.tc('comingSoon')]);
       }
       if (this.currentNetwork == chainName) {
-        this.$store.dispatch('notify', [
-          'green',
-          `${i18n.tc('alreadyOn')} ${chainParams[chainName].chainName}.`
-        ]);
         return;
       }
       window.location.href = this.getNetworkURL(chainName);
-      this.$store.dispatch('notify', [
-        'green',
-        `${i18n.tc('changedNetwork')} ${chainParams[chainName].chainName}.`
-      ]);
     }
   }
 };
