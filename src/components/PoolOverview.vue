@@ -6,13 +6,6 @@
     <div class="text-white">
       {{ _shortenAddress(pool.id) }}
     </div>
-    <div class="text-white">
-      {{ $t('myShare') }}: {{ _num(userShare.current, 'percent') }}
-      <span
-        v-if="userShare.future"
-        v-text="`→ ${_num(userShare.future, 'percent')}`"
-      />
-    </div>
     <div class="text-center">
       <Pie :tokens="pool.tokens" size="100" class="mt-3 mb-2" />
     </div>
