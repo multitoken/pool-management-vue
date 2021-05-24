@@ -3,12 +3,19 @@
     class="position-fixed left-0 right-0 bottom-0 text-center"
     style="z-index: 99999;"
   >
-    <div class="m-5">
-      <div v-for="(item, key) in items" :key="key" class="mb-2">
+    <div v-for="(item, key) in items" :key="key">
+      <div
+        :class="
+          `mb-2 px-1 ${item.type === 'gray' && 'd-flex flex-justify-center'}`
+        "
+        v-if="now < item.timestamp + duration && !item.hide"
+      >
         <UiButton
           class="d-inline-block anim-scale-in"
-          :class="`notification-${item.type}`"
-          v-if="now < item.timestamp + duration && !item.hide"
+          :class="
+            `notification-${item.type} ${item.type === 'gray' &&
+              'position-fixed top-3'}`
+          "
           @click="item.hide = true"
         >
           {{ item.message }}
