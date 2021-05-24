@@ -27,11 +27,9 @@
       format="currency"
       class="column hide-sm hide-md hide-lg flex-shrink-0"
     />
-    <div v-if="isBSCNetwork" class="column flex-shrink-0">
+    <div class="column flex-shrink-0">
       <a
-        :href="
-          `https://exchange.pancakeswap.finance/#/swap?outputCurrency=${LPTokenAddress}`
-        "
+        :href="exchangeLink"
         target="_blank"
         v-on:click.stop
         @mouseenter="pancakeButtonHovered = true"
@@ -53,6 +51,7 @@
 import { getPoolLiquidity } from '@/helpers/price';
 import chainParams from '@/helpers/chainParams.json';
 import Pool from '@/_balancer/pool';
+import { getExchangeLink } from '@/helpers/buyETF';
 
 export default {
   data() {
@@ -71,17 +70,14 @@ export default {
       if (!poolShares) return 0;
       return (this.poolLiquidity / this.pool.totalShares) * poolShares;
     },
-    isBSCNetwork() {
-      return (
-        `0x${this.config.chainId?.toString(16)}` == chainParams['bsc'].chainId
-      );
-    },
-    BNBAddress() {
-      // TODO: add real BNB address
-      return '0x266A9AAc60B0211D7269dd8b0e792D645d2923e6';
+    wethAddress() {
+      return '0xd0a1e359811322d97991e03f863a0c30c2cf029c';
     },
     LPTokenAddress() {
       return this.bPool?.getBptAddress();
+    },
+    exchangeLink() {
+      return getExchangeLink(this.LPTokenAddress, this.wethAddress);
     }
   },
   async mounted() {

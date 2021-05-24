@@ -34,7 +34,7 @@ const config: Config = {
   wsUrl: 'wss://kovan.infura.io/ws/v3/c85c3269b9c9414bb8f35b3bf68c1412',
   subgraphUrl: 'https://api.thegraph.com/subgraphs/name/cron-md/multitoken',
   explorer: 'https://kovan.etherscan.io',
-  exchangeUrl: 'https://swap.multitoken.com',
+  exchangeUrl: 'https://swap.multitoken.com/#/swap',
   addresses: {
     bFactory: '0xfdFb567fe7634FCca702Cd6a83c3a733AFbd944e',
     bActions: '0x4e913Bb6fEedCA8500cC4F70628b61219DC5C02a',
@@ -90,7 +90,7 @@ const config: Config = {
     '0x1e7967bfab4c2050d15707136fbb2812476f0cfb',
     '0x03544dc2d0900bcef3bc09969e3ed5044ab2c802',
     '0xbc3b9572eb9065d9f53d93c2d2c612626a07a4a0',
-    '0x755130d13d6846f9fae864d004c56e633c88b9e4',
+    '0x755130d13d6846f9fae864d004c56e633c88b9e4'
   ],
   untrusted: [],
   env: process.env.VUE_APP_ENV || 'production',
