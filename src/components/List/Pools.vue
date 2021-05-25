@@ -27,7 +27,7 @@
           v-if="loading"
           :classes="[
             'column-sm text-left hide-sm hide-md hide-lg',
-            'flex-auto text-left',
+            'flex-auto text-center',
             'column',
             'column hide-sm hide-md hide-lg',
             'column'
