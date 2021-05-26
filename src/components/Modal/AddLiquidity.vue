@@ -262,7 +262,8 @@ import {
   denormalizeBalance,
   isTxReverted,
   getTokenBySymbol,
-  liquidityToggleOptions
+  liquidityToggleOptions,
+  toWei
 } from '@/helpers/utils';
 import { calcPoolOutGivenSingleIn } from '@/helpers/math';
 import { validateNumberInput, formatError } from '@/helpers/validation';
@@ -719,7 +720,7 @@ export default {
         await this.joinswapExternAmountIn(params);
       } else {
         const contract = new Contract(
-          '0x0817231265e914454735787495C28A666AbEA79b',
+          '0x57E7891BbF80A0563eE89Fce936d76dc0344993a',
           singleAssetBuyer['abi'],
           getInstance().web3?.getSigner()
         );
@@ -778,16 +779,19 @@ export default {
             poolAddress,
             this.bPool.isCrp()
           ); */
-          console.log('1200000', 1200000);
-          console.log('bnum(1200000)', bnum(1200000));
 
-          const tx = await contract.joinPool(
+          const tx = await contract.calcMinPoolAmountOut(
             poolAddress,
-            this.bPool.isCrp(),
+            true,
+            tokenInAddress,
+            toWei(amount)
+          );
+          /* const tx = await contract.joinPool(
+            poolAddress,
             tokenInAddress,
             minPoolAmountOut,
             bnum(1200000)
-          );
+          ); */
           console.log(tx);
           const title = `joinPool`;
           store.commit('watchTransaction', { ...tx, title });
