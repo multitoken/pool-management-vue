@@ -1,11 +1,15 @@
 @import './assets/fonts/iconfont.css';
 @import './vars';
-@import "~@primer/css/index.scss";
+@import '~@primer/css/index.scss';
 
-html, body, #app {
-  background-color: $black;
+html,
+body,
+#app {
   color: $gray;
+  background-color: $black;
+
   font-family: $font-weight-normal;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -14,8 +18,12 @@ html, body, #app {
   outline: none !important;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   color: $white;
+
   font-family: $font-weight-bold;
 }
 
@@ -53,9 +61,9 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
+  border-radius: 0;
   background-color: $panel-border;
   background-clip: padding-box;
-  border-radius: 0;
 
   &:hover {
     background-color: $input-hover-border;
@@ -64,12 +72,14 @@ a {
 
 .modal {
   .shell {
+    max-width: 810px;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+
+    background-color: $panel-background;
+
     @extend .border-0;
     @extend .border-md;
-    background-color: $panel-background;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    max-width: 810px;
   }
 
   .modal-body {
@@ -78,8 +88,9 @@ a {
 }
 
 .eyebrow {
-  text-transform: uppercase;
   letter-spacing: 1px;
+  text-transform: uppercase;
+
   font-size: 13px;
   font-weight: 500;
 }
@@ -136,9 +147,10 @@ a {
 
   .loading-xl {
     .animation {
-      border-width: 6px;
       width: 64px;
       height: 64px;
+
+      border-width: 6px;
     }
   }
 }
@@ -147,16 +159,18 @@ a {
   border-radius: 21px;
 
   .wrapper {
-    margin-left: 0 !important;
-    height: 24px !important;
     width: 42px !important;
+    height: 24px !important;
+    margin-left: 0 !important;
+
     border-radius: 12px !important;
     background-color: $panel-border !important;
 
     .bullet {
-      margin: 2px;
       width: 18px !important;
       height: 18px !important;
+      margin: 2px;
+
       background-color: $white !important;
     }
   }
@@ -165,6 +179,7 @@ a {
     .wrapper {
       .bullet {
         margin-left: 20px !important;
+
         background-color: $blue !important;
       }
     }
@@ -192,32 +207,85 @@ a {
 }
 
 input {
-  background-color: transparent;
   border: none;
+  background-color: transparent;
 }
 
 .warning-box {
+  color: $warning;
   border: 1px solid $warning;
   border-radius: 4px;
-  color: $warning;
 }
 
 .tooltipped {
-  &::before {
-    border-top-color: $input-hover-border !important;
-    margin-bottom: 14px;
+  &.tooltipped-n::before,
+  &.tooltipped-ne::before,
+  &.tooltipped-nw::before {
     top: -14px !important;
+
+    margin-bottom: 14px;
+
+    border-top-color: $bg-green !important;
   }
 
-  &::after {
+  &.tooltipped-s::before,
+  &.tooltipped-se::before,
+  &.tooltipped-sw::before {
+    bottom: -7px !important;
+
+    margin-top: 14px;
+
+    border-bottom-color: $bg-green !important;
+  }
+
+  &.tooltipped-w::before {
+    border-left-color: $bg-green !important;
+  }
+
+  &.tooltipped-e::before {
+    border-right-color: $bg-green !important;
+  }
+
+  &.tooltipped-n::after,
+  &.tooltipped-ne::after,
+  &.tooltipped-nw::after,
+  &.tooltipped-s::after,
+  &.tooltipped-se::after,
+  &.tooltipped-sw::after {
     overflow: hidden;
-    text-overflow: ellipsis;
+
     max-width: 320px;
     margin-bottom: 14px;
-    border-radius: 20px;
     padding: 4px 16px;
+
+    text-overflow: ellipsis;
+
+    color: $primary-button-text;
+    border-radius: 20px;
+    background-color: $bg-green;
+
     font-size: 14px;
-    background-color: $input-hover-border;
-    color: white;
+  }
+
+  &.tooltipped-w::after,
+  &.tooltipped-e::after {
+    overflow: hidden;
+
+    max-width: 320px;
+    padding: 4px 16px;
+
+    text-overflow: ellipsis;
+
+    color: $primary-button-text;
+    border-color: $bg-green;
+    border-radius: 20px;
+    background-color: $bg-green;
+
+    font-size: 14px;
+  }
+
+  &:focus::before,
+  &:focus::after {
+    display: none;
   }
 }
