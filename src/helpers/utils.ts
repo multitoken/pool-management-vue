@@ -28,7 +28,8 @@ export const capInputOptions = {
 
 export const liquidityToggleOptions = {
   MULTI_ASSET: i18n.tc('multiAsset'),
-  SINGLE_ASSET: i18n.tc('singleAsset')
+  SINGLE_ASSET: i18n.tc('singleAsset'),
+  BUY_FOR_ETH: i18n.tc('buyForEth')
 };
 
 export const poolTypes = {

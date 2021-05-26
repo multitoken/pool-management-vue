@@ -38,6 +38,8 @@
     "buyETF": "Buy ETF",
     "buyOnPancake": "Buy on Pancake",
     "buyOnMultitoken": "Buy on Multitoken",
+    "buyForEth": "Buy for ETH",
+    "buyForWeth": "Buy for WETH",
     "calculateDeposits": "Calculate deposits using Multitoken price (recommended)",
     "canAddRemoveTokens": "Can change tokens",
     "cancel": "Cancel",

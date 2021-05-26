@@ -14,23 +14,36 @@
     >
       {{ $t('singleAsset') }}
     </div>
+    <div
+      v-if="buyAvailable"
+      class="d-flex flex-justify-center py-2 text-white rounded-right-1 option"
+      :class="{ selected: selected === buyForEth }"
+      @click="onSelect(buyForEth)"
+    >
+      {{ $('buyForEth') }}
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 export enum LiquidityType {
   MULTI_ASSET,
-  SINGLE_ASSET
+  SINGLE_ASSET,
+  BUY_FOR_ETH
 }
 
 export default {
-  props: ['selected', 'onSelect'],
+  props: ['selected', 'onSelect', 'buyAvailable'],
   computed: {
     multiAsset() {
       return LiquidityType.MULTI_ASSET;
     },
     singleAsset() {
       return LiquidityType.SINGLE_ASSET;
+    },
+    buyForEth() {
+      console.log('test1');
+      return LiquidityType.BUY_FOR_ETH;
     }
   }
 };

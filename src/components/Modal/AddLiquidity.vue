@@ -8,6 +8,7 @@
         <Toggle
           :value="type"
           :options="liquidityToggleOptions"
+          :buyAvailable="true"
           @select="handleSelectType"
           class="mt-4"
         />
@@ -18,7 +19,10 @@
           :userShare="userLiquidity.relative"
           class="hide-sm hide-md col-3 float-left"
         />
-        <div class="col-12 col-md-9 float-left pl-0 pl-md-4">
+        <div
+          v-if="type === 'MULTI_ASSET' || type === 'SINGLE_ASSET'"
+          class="col-12 col-md-9 float-left pl-0 pl-md-4"
+        >
           <UiTable>
             <UiTableTh>
               <div v-text="$t('asset')" class="column-lg flex-auto text-left" />
@@ -102,6 +106,78 @@
             </UiTableTh>
           </UiTable>
         </div>
+        <div v-else class="col-12 col-md-9 float-left pl-0 pl-md-4">
+          <UiTable>
+            <UiTableTh>
+              <div v-text="$t('asset')" class="column-lg flex-auto text-left" />
+              <div v-text="$t('walletBalance')" class="column" />
+              <div v-text="$t('depositAmount')" class="column-sm" />
+            </UiTableTh>
+            <UiTableTr
+              v-for="token in pool.tokens"
+              :key="token.checksum"
+              class="asset"
+              :class="{
+                active: isMultiAsset || activeToken === token.checksum
+              }"
+            >
+              <div>
+                <div
+                  :class="
+                    token.symbol.length > 14 && 'tooltipped tooltipped-ne'
+                  "
+                  :aria-label="token.symbol"
+                  class="text-white d-flex flex-items-center"
+                >
+                  <Token :address="token.address" class="mr-2" size="20" />
+                  {{ _shorten(token.symbol, 14) }}
+                </div>
+              </div>
+              <div class="column">
+                {{
+                  _trunc(
+                    formatBalance(
+                      web3.balances[token.checksum] || '0',
+                      token.decimals
+                    ),
+                    2
+                  )
+                }}
+                <a @click="handleMax(token)" class="ml-1">
+                  <UiLabel v-text="$t('max')" />
+                </a>
+              </div>
+              <div class="column-sm">
+                <div
+                  class="flex-auto ml-3 text-left d-flex flex-items-center position-relative"
+                >
+                  <input
+                    v-model="amounts[token.checksum]"
+                    v-if="isMultiAsset || activeToken === token.checksum"
+                    class="input flex-auto text-right"
+                    :class="isInputValid(token) ? 'text-white' : 'text-red'"
+                    placeholder="0.0"
+                    @input="handleChange(amounts[token.checksum], token)"
+                  />
+                </div>
+              </div>
+            </UiTableTr>
+          </UiTable>
+          <UiTable class="mt-4">
+            <UiTableTh class="text-left flex-items-center text-white">
+              <div class="flex-auto">
+                {{ _shorten(pool.symbol, 12) }} {{ $t('amount') }}
+              </div>
+              <div class="flex-auto text-right">
+                {{ _num(userLiquidity.absolute.current) }}
+                <span v-if="userLiquidity.absolute.future">
+                  → {{ _num(userLiquidity.absolute.future) }}
+                </span>
+                {{ _shorten(pool.symbol, 12) }}
+              </div>
+            </UiTableTh>
+          </UiTable>
+        </div>
       </div>
       <div class="mx-4">
         <MessageError v-if="tokenError" :text="tokenError" class="mb-4" />
@@ -136,6 +212,7 @@
       </div>
       <template slot="footer">
         <Button
+          v-if="type !== 'BUY_FOR_ETH'"
           :requireLogin="true"
           :requireProxy="true"
           :requireApprovals="validationError ? undefined : requiredApprovals"
@@ -152,6 +229,21 @@
         >
           {{ $t('issue') }}
         </Button>
+        <Button
+          v-else
+          :requireLogin="true"
+          @submit="handleSubmit"
+          :disabled="
+            tokenError ||
+              validationError ||
+              !warningAccepted ||
+              transactionReverted
+          "
+          :loading="loading"
+          class="button-primary"
+        >
+          {{ $t('buyForEth') }}
+        </Button>
       </template>
     </UiModalForm>
   </UiModal>
@@ -160,6 +252,7 @@
 <script>
 import { mapActions } from 'vuex';
 import { getAddress } from '@ethersproject/address';
+import { Contract } from '@ethersproject/contracts';
 import BigNumber from '@/helpers/bignumber';
 import {
   calcPoolTokensByRatio,
@@ -174,6 +267,10 @@ import {
 import { calcPoolOutGivenSingleIn } from '@/helpers/math';
 import { validateNumberInput, formatError } from '@/helpers/validation';
 import { canProvideLiquidity } from '@/helpers/whitelist';
+import store from '@/store';
+import provider from '@/helpers/provider';
+import singleAssetBuyer from '../../helpers/abi/SingleAssetBuyer.json';
+import { getInstance } from '@snapshot-labs/lock/plugins/vue';
 
 const BALANCE_BUFFER = 0.01;
 
@@ -276,7 +373,7 @@ export default {
       return undefined;
     },
     validationError() {
-      if (this.tokenError) {
+      if (this.tokenError || this.type === 'BUY_FOR_ETH') {
         return undefined;
       }
       for (const token of this.pool.tokensList) {
@@ -471,6 +568,10 @@ export default {
     },
     isMultiAsset() {
       return this.type === 'MULTI_ASSET';
+    },
+    weth() {
+      const weth = this.pool.tokens.find(t => t.symbol === 'WETH');
+      return weth || null;
     }
   },
   methods: {
@@ -556,6 +657,10 @@ export default {
       this.handleChange(normalizedAmount, token);
     },
     handleSelectType(type) {
+      if (type === 'BUY_FOR_ETH' && this.weth) {
+        this.token = this.weth;
+        this.handleTokenSelect(this.weth.checksum);
+      }
       this.type = type;
       this.poolTokens = null;
       this.amounts = Object.fromEntries(
@@ -591,7 +696,7 @@ export default {
         console.log(`Adding multi-asset liquidity: ${params}`);
         const txResult = await this.joinPool(params);
         if (isTxReverted(txResult)) this.transactionReverted = true;
-      } else {
+      } else if (this.type === 'SINGLE_ASSET') {
         const tokenIn = this.pool.tokens.find(
           token => token.checksum === this.activeToken
         );
@@ -612,6 +717,99 @@ export default {
           minPoolAmountOut
         };
         await this.joinswapExternAmountIn(params);
+      } else {
+        const contract = new Contract(
+          '0x0817231265e914454735787495C28A666AbEA79b',
+          singleAssetBuyer['abi'],
+          getInstance().web3?.getSigner()
+        );
+        const token = this.pool.tokens.find(
+          token => token.checksum === this.activeToken
+        );
+        // const amount = denormalizeBalance(
+        //   this.amounts[token.checksum],
+        //   token.decimals
+        // )
+        //   .integerValue(BigNumber.ROUND_UP)
+        //   .toString();
+
+        // const poolTokens = this.poolTokens ? bnum(this.poolTokens) : 0;
+        const poolTokensFormatted = this.poolTokens
+          ? bnum(this.poolTokens).div('1e18')
+          : 0;
+
+        const tokenInAddress = this.activeToken;
+        if (!this.amounts[tokenInAddress]) {
+          return undefined;
+        }
+        const tokenIn = this.pool.tokens.find(
+          token => token.checksum === tokenInAddress
+        );
+        const amount = bnum(this.amounts[tokenInAddress]);
+
+        const tokenBalanceIn = denormalizeBalance(
+          tokenIn.balance,
+          tokenIn.decimals
+        );
+        const tokenWeightIn = bnum(tokenIn.denormWeight).times('1e18');
+        const poolSupply = denormalizeBalance(this.totalShares, 18);
+        const totalWeight = bnum(this.pool.totalWeight).times('1e18');
+        const tokenAmountIn = denormalizeBalance(
+          amount,
+          tokenIn.decimals
+        ).integerValue(BigNumber.ROUND_UP);
+        const swapFee = bnum(this.pool.swapFee).times('1e18');
+
+        const minPoolAmountOut = calcPoolOutGivenSingleIn(
+          tokenBalanceIn,
+          tokenWeightIn,
+          poolSupply,
+          totalWeight,
+          tokenAmountIn,
+          swapFee
+        );
+        try {
+          /* const tx = await contract.calcJoinPoolEther(
+            contract.address,
+            this.poolTokens,
+            1
+          ); */
+          /* const tx = await contract.chooseUnderlyingToken(
+            poolAddress,
+            this.bPool.isCrp()
+          ); */
+          console.log('1200000', 1200000);
+          console.log('bnum(1200000)', bnum(1200000));
+
+          const tx = await contract.joinPool(
+            poolAddress,
+            this.bPool.isCrp(),
+            tokenInAddress,
+            minPoolAmountOut,
+            bnum(1200000)
+          );
+          console.log(tx);
+          const title = `joinPool`;
+          store.commit('watchTransaction', { ...tx, title });
+
+          const receipt = await provider.waitForTransaction(tx.hash, 1);
+          store.commit('confirmTransaction', receipt);
+
+          await store.dispatch('getBalances');
+
+          console.log(
+            `${poolTokensFormatted} ${this.pool.symbol} were purchased for ${
+              this.amounts[token.checksum]
+            } ${token.symbol}.`
+          );
+        } catch (err) {
+          console.log(err.message);
+          console.log(
+            `${poolTokensFormatted} ${this.pool.symbol} weren't purchased for ${
+              this.amounts[token.checksum]
+            } ${token.symbol}.`
+          );
+        }
       }
       this.$emit('close');
       this.$emit('reload');
