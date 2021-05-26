@@ -25,7 +25,7 @@
         <UiButton
           v-if="enableAddLiquidity && pool.tokens.length > 0"
           class="ml-2"
-          @click="addToWallet"
+          @click="addToWallet(bPool.getBptAddress(), pool.symbol)"
         >
           {{ 'Add to wallet' }}
         </UiButton>
@@ -82,7 +82,7 @@ import { mapActions } from 'vuex';
 import { getAddress } from '@ethersproject/address';
 import Pool from '@/_balancer/pool';
 import { bnum, scale } from '@/helpers/utils';
-import { getExchangeLink, isBSCNetwork } from '@/helpers/buyETF';
+import { addToWallet, getExchangeLink, isBSCNetwork } from '@/helpers/buyETF';
 
 export default {
   data() {
@@ -94,7 +94,8 @@ export default {
       modalAddLiquidityOpen: false,
       modalRemoveLiquidityOpen: false,
       modalCustomTokenOpen: false,
-      isBSCNetwork: isBSCNetwork()
+      isBSCNetwork: isBSCNetwork(),
+      addToWallet: addToWallet
     };
   },
   watch: {
@@ -154,7 +155,7 @@ export default {
     openRemoveLiquidityModal() {
       this.modalRemoveLiquidityOpen = true;
     },
-    async addToWallet() {
+    /* async addToWallet() {
       // TODO: Set decimals dynamically
       this.$auth.web3.send('wallet_watchAsset', {
         type: 'ERC20',
@@ -164,7 +165,7 @@ export default {
           decimals: 18 // The number of token decimals
         }
       });
-    },
+    }, */
     async loadPool() {
       const bPool = new Pool(this.id);
       try {
