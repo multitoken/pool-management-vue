@@ -12,7 +12,7 @@
         <div v-text="$t('assets')" class="flex-auto text-left" />
         <div v-text="$t('tvl')" class="column" />
         <div v-text="$t('myShares')" class="column hide-sm hide-md hide-lg" />
-        <div v-if="isBSCNetwork" class="column">
+        <div class="column">
           {{ $t('buyETF') }} <Icon name="external-link" />
         </div>
       </UiTableTh>
@@ -27,7 +27,7 @@
           v-if="loading"
           :classes="[
             'column-sm text-left hide-sm hide-md hide-lg',
-            'flex-auto text-left',
+            'flex-auto text-center',
             'column',
             'column hide-sm hide-md hide-lg',
             'column'
@@ -42,7 +42,6 @@
 <script>
 import { mapActions } from 'vuex';
 import { formatFilters, ITEMS_PER_PAGE } from '@/helpers/utils';
-import chainParams from '@/helpers/chainParams';
 
 export default {
   props: ['query', 'title'],
@@ -84,13 +83,6 @@ export default {
       const pools = await this.getPools(query);
       this.pools = this.pools.concat(pools);
       this.loading = false;
-    }
-  },
-  computed: {
-    isBSCNetwork() {
-      return (
-        `0x${this.config.chainId?.toString(16)}` == chainParams['bsc'].chainId
-      );
     }
   }
 };

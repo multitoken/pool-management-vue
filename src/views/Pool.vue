@@ -23,22 +23,16 @@
           {{ $t('redeem') }}
         </UiButton>
         <a
-          v-if="
-            bPool &&
-              enableAddLiquidity &&
-              pool.tokens.length > 0 &&
-              isBSCNetwork
-          "
-          :href="
-            `https://exchange.pancakeswap.finance/#/swap?outputCurrency=${LPTokenAddress}`
-          "
+          v-if="bPool && enableAddLiquidity && pool.tokens.length > 0"
+          :href="exchangeLink"
           target="_blank"
           v-on:click.stop
           @mouseenter="pancakeButtonHovered = true"
           @mouseleave="pancakeButtonHovered = false"
         >
           <UiButton class="ml-2">
-            {{ $t('buyOnPancake') }} <Icon name="external-link" />
+            {{ isBSCNetwork ? $t('buyOnPancake') : $t('buyOnMultitoken') }}
+            <Icon name="external-link" />
           </UiButton>
         </a>
       </div>
@@ -81,7 +75,7 @@ import { mapActions } from 'vuex';
 import { getAddress } from '@ethersproject/address';
 import Pool from '@/_balancer/pool';
 import { bnum, scale } from '@/helpers/utils';
-import chainParams from '@/helpers/chainParams';
+import { getExchangeLink, isBSCNetwork } from '@/helpers/buyETF';
 
 export default {
   data() {
@@ -92,7 +86,8 @@ export default {
       loading: false,
       modalAddLiquidityOpen: false,
       modalRemoveLiquidityOpen: false,
-      modalCustomTokenOpen: false
+      modalCustomTokenOpen: false,
+      isBSCNetwork: isBSCNetwork()
     };
   },
   watch: {
@@ -128,17 +123,14 @@ export default {
           this.web3.balances[getAddress(this.id)])
       );
     },
-    isBSCNetwork() {
-      return (
-        `0x${this.config.chainId?.toString(16)}` == chainParams['bsc'].chainId
-      );
-    },
-    BNBAddress() {
-      // TODO: add real BNB address
-      return '0x266A9AAc60B0211D7269dd8b0e792D645d2923e6';
+    wethAddress() {
+      return '0xd0a1e359811322d97991e03f863a0c30c2cf029c';
     },
     LPTokenAddress() {
       return this.bPool?.getBptAddress();
+    },
+    exchangeLink() {
+      return getExchangeLink(this.LPTokenAddress, this.wethAddress);
     }
   },
   methods: {

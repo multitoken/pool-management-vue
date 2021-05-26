@@ -34,7 +34,7 @@ const config: Config = {
   wsUrl: 'wss://kovan.infura.io/ws/v3/c85c3269b9c9414bb8f35b3bf68c1412',
   subgraphUrl: 'https://api.thegraph.com/subgraphs/name/cron-md/multitoken',
   explorer: 'https://kovan.etherscan.io',
-  exchangeUrl: 'https://swap.multitoken.com',
+  exchangeUrl: 'https://swap.multitoken.com/#/swap',
   addresses: {
     bFactory: '0xfdFb567fe7634FCca702Cd6a83c3a733AFbd944e',
     bActions: '0x4e913Bb6fEedCA8500cC4F70628b61219DC5C02a',
