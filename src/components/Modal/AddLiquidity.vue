@@ -828,7 +828,7 @@ export default {
           console.log(
             `${poolTokensFormatted} ${this.pool.symbol} weren't purchased for ${
               this.amounts[token.checksum]
-            } ${token.symbol}.`
+            } ETH.`
           );
         }
       }
