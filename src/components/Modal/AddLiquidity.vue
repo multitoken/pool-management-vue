@@ -263,7 +263,8 @@ import {
   isTxReverted,
   getTokenBySymbol,
   liquidityToggleOptions,
-  toWei
+  toWei,
+  blockNumberToTimestamp
 } from '@/helpers/utils';
 import { calcPoolOutGivenSingleIn } from '@/helpers/math';
 import { validateNumberInput, formatError } from '@/helpers/validation';
@@ -743,12 +744,12 @@ export default {
         if (!this.amounts[tokenInAddress]) {
           return undefined;
         }
-        const tokenIn = this.pool.tokens.find(
+        /* const tokenIn = this.pool.tokens.find(
           token => token.checksum === tokenInAddress
-        );
-        const amount = bnum(this.amounts[tokenInAddress]);
+        ); */
+        const amount = this.amounts[tokenInAddress];
 
-        const tokenBalanceIn = denormalizeBalance(
+        /* const tokenBalanceIn = denormalizeBalance(
           tokenIn.balance,
           tokenIn.decimals
         );
@@ -759,39 +760,50 @@ export default {
           amount,
           tokenIn.decimals
         ).integerValue(BigNumber.ROUND_UP);
-        const swapFee = bnum(this.pool.swapFee).times('1e18');
+        const swapFee = bnum(this.pool.swapFee).times('1e18'); */
 
-        const minPoolAmountOut = calcPoolOutGivenSingleIn(
+        /* const minPoolAmountOut = calcPoolOutGivenSingleIn(
           tokenBalanceIn,
           tokenWeightIn,
           poolSupply,
           totalWeight,
           tokenAmountIn,
           swapFee
-        );
+        ); */
         try {
           /* const tx = await contract.calcJoinPoolEther(
             contract.address,
             this.poolTokens,
             1
           ); */
+
           /* const tx = await contract.chooseUnderlyingToken(
             poolAddress,
             this.bPool.isCrp()
           ); */
 
-          const tx = await contract.calcMinPoolAmountOut(
+          const amountWei = `0x${toWei(amount).toString(16)}`;
+
+          const minPoolAmountOut = await contract.calcMinPoolAmountOut(
             poolAddress,
             true,
             tokenInAddress,
-            toWei(amount)
+            amountWei
           );
-          /* const tx = await contract.joinPool(
+
+          const deadLine = blockNumberToTimestamp(
+            Date.now(),
+            this.web3.blockNumber,
+            this.bPool.metadata.endBlock
+          );
+
+          const tx = await contract.joinPool(
             poolAddress,
             tokenInAddress,
             minPoolAmountOut,
-            bnum(1200000)
-          ); */
+            `0x${bnum(deadLine).toString(16)}`
+          );
+
           console.log(tx);
           const title = `joinPool`;
           store.commit('watchTransaction', { ...tx, title });
@@ -808,6 +820,11 @@ export default {
           );
         } catch (err) {
           console.log(err.message);
+          /* console.log(
+            `${poolTokensFormatted} ${this.pool.symbol} weren't purchased for ${
+              this.amounts[token.checksum]
+            } ${token.symbol}.`
+          ); */
           console.log(
             `${poolTokensFormatted} ${this.pool.symbol} weren't purchased for ${
               this.amounts[token.checksum]
