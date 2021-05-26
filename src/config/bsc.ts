@@ -35,7 +35,7 @@ const config: Config = {
     'wss://apis.ankr.com/wss/4fa98a79a40945b699190f251f603c58/7d08a3f1129434a5e9e124af13cb8f44/binance/full/main',
   subgraphUrl: 'https://etfs-backend.herokuapp.com/v1/pools/56',
   explorer: 'https://bscscan.com',
-  exchangeUrl: 'https://swap.multitoken.com/#/swap',
+  exchangeUrl: 'https://exchange.pancakeswap.finance/#/swap',
   addresses: {
     bFactory: '0x776EdBbFba114c3F3b34b0154ECE803e74993436',
     bActions: '0xd631704FD9582edF70eC5f0dD13013Afe8a7D0e8',
