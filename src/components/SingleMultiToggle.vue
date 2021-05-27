@@ -42,7 +42,6 @@ export default {
       return LiquidityType.SINGLE_ASSET;
     },
     buyForEth() {
-      console.log('test1');
       return LiquidityType.BUY_FOR_ETH;
     }
   }

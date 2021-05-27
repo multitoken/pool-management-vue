@@ -19,10 +19,7 @@
           :userShare="userLiquidity.relative"
           class="hide-sm hide-md col-3 float-left"
         />
-        <div
-          v-if="type === 'MULTI_ASSET' || type === 'SINGLE_ASSET'"
-          class="col-12 col-md-9 float-left pl-0 pl-md-4"
-        >
+        <div class="col-12 col-md-9 float-left pl-0 pl-md-4">
           <UiTable>
             <UiTableTh>
               <div v-text="$t('asset')" class="column-lg flex-auto text-left" />
@@ -69,78 +66,6 @@
                       token.decimals
                     ),
                     4
-                  )
-                }}
-                <a @click="handleMax(token)" class="ml-1">
-                  <UiLabel v-text="$t('max')" />
-                </a>
-              </div>
-              <div class="column-sm">
-                <div
-                  class="flex-auto ml-3 text-left d-flex flex-items-center position-relative"
-                >
-                  <input
-                    v-model="amounts[token.checksum]"
-                    v-if="isMultiAsset || activeToken === token.checksum"
-                    class="input flex-auto text-right"
-                    :class="isInputValid(token) ? 'text-white' : 'text-red'"
-                    placeholder="0.0"
-                    @input="handleChange(amounts[token.checksum], token)"
-                  />
-                </div>
-              </div>
-            </UiTableTr>
-          </UiTable>
-          <UiTable class="mt-4">
-            <UiTableTh class="text-left flex-items-center text-white">
-              <div class="flex-auto">
-                {{ _shorten(pool.symbol, 12) }} {{ $t('amount') }}
-              </div>
-              <div class="flex-auto text-right">
-                {{ _num(userLiquidity.absolute.current) }}
-                <span v-if="userLiquidity.absolute.future">
-                  → {{ _num(userLiquidity.absolute.future) }}
-                </span>
-                {{ _shorten(pool.symbol, 12) }}
-              </div>
-            </UiTableTh>
-          </UiTable>
-        </div>
-        <div v-else class="col-12 col-md-9 float-left pl-0 pl-md-4">
-          <UiTable>
-            <UiTableTh>
-              <div v-text="$t('asset')" class="column-lg flex-auto text-left" />
-              <div v-text="$t('walletBalance')" class="column" />
-              <div v-text="$t('depositAmount')" class="column-sm" />
-            </UiTableTh>
-            <UiTableTr
-              v-for="token in pool.tokens"
-              :key="token.checksum"
-              class="asset"
-              :class="{
-                active: isMultiAsset || activeToken === token.checksum
-              }"
-            >
-              <div>
-                <div
-                  :class="
-                    token.symbol.length > 14 && 'tooltipped tooltipped-ne'
-                  "
-                  :aria-label="token.symbol"
-                  class="text-white d-flex flex-items-center"
-                >
-                  <Token :address="token.address" class="mr-2" size="20" />
-                  {{ _shorten(token.symbol, 14) }}
-                </div>
-              </div>
-              <div class="column">
-                {{
-                  _trunc(
-                    formatBalance(
-                      web3.balances[token.checksum] || '0',
-                      token.decimals
-                    ),
-                    2
                   )
                 }}
                 <a @click="handleMax(token)" class="ml-1">
@@ -568,6 +493,9 @@ export default {
       }
       return maxRatioToken;
     },
+    isSingleAsset() {
+      return this.type === 'SINGLE_ASSET';
+    },
     isMultiAsset() {
       return this.type === 'MULTI_ASSET';
     },
@@ -578,7 +506,7 @@ export default {
   },
   methods: {
     ...mapActions(['joinPool', 'joinswapExternAmountIn']),
-    handleChange(changedAmount, changedToken) {
+    async handleChange(changedAmount, changedToken) {
       const ratio = bnum(changedAmount).div(changedToken.balance);
       if (this.isMultiAsset) {
         this.poolTokens = calcPoolTokensByRatio(ratio, this.totalShares);
@@ -593,7 +521,7 @@ export default {
           this.totalShares
         );
         */
-      } else {
+      } else if (this.isSingleAsset) {
         const tokenIn = this.pool.tokens.find(
           token => token.checksum === this.activeToken
         );
@@ -625,6 +553,27 @@ export default {
           tokenAmountIn,
           swapFee
         ).toString();
+      } else if (this.amounts[this.activeToken] > 0) {
+        const contract = new Contract(
+          '0x57E7891BbF80A0563eE89Fce936d76dc0344993a',
+          singleAssetBuyer['abi'],
+          getInstance().web3?.getSigner()
+        );
+
+        const poolAddress = this.bPool.getBptAddress();
+        const isSmart = this.bPool.isCrp();
+        const tokenInAddress = this.activeToken;
+        const amount = this.amounts[tokenInAddress];
+        const amountWei = `0x${toWei(amount).toString(16)}`;
+
+        const minPoolAmountOut = await contract.calcMinPoolAmountOut(
+          poolAddress,
+          isSmart,
+          tokenInAddress,
+          amountWei
+        );
+
+        this.poolTokens = minPoolAmountOut;
       }
 
       this.pool.tokens.forEach(token => {
@@ -698,7 +647,7 @@ export default {
         console.log(`Adding multi-asset liquidity: ${params}`);
         const txResult = await this.joinPool(params);
         if (isTxReverted(txResult)) this.transactionReverted = true;
-      } else if (this.type === 'SINGLE_ASSET') {
+      } else if (this.isSingleAsset) {
         const tokenIn = this.pool.tokens.find(
           token => token.checksum === this.activeToken
         );
@@ -726,17 +675,12 @@ export default {
           getInstance().web3?.getSigner()
         );
 
+        const isSmart = this.bPool.isCrp();
+
         const token = this.pool.tokens.find(
           token => token.checksum === this.activeToken
         );
-        // const amount = denormalizeBalance(
-        //   this.amounts[token.checksum],
-        //   token.decimals
-        // )
-        //   .integerValue(BigNumber.ROUND_UP)
-        //   .toString();
 
-        // const poolTokens = this.poolTokens ? bnum(this.poolTokens) : 0;
         const poolTokensFormatted = this.poolTokens
           ? bnum(this.poolTokens).div('1e18')
           : 0;
@@ -745,53 +689,22 @@ export default {
         if (!this.amounts[tokenInAddress]) {
           return undefined;
         }
-        /* const tokenIn = this.pool.tokens.find(
-          token => token.checksum === tokenInAddress
-        ); */
+
         const amount = this.amounts[tokenInAddress];
 
-        /* const tokenBalanceIn = denormalizeBalance(
-          tokenIn.balance,
-          tokenIn.decimals
-        );
-        const tokenWeightIn = bnum(tokenIn.denormWeight).times('1e18');
-        const poolSupply = denormalizeBalance(this.totalShares, 18);
-        const totalWeight = bnum(this.pool.totalWeight).times('1e18');
-        const tokenAmountIn = denormalizeBalance(
-          amount,
-          tokenIn.decimals
-        ).integerValue(BigNumber.ROUND_UP);
-        const swapFee = bnum(this.pool.swapFee).times('1e18'); */
-
-        /* const minPoolAmountOut = calcPoolOutGivenSingleIn(
-          tokenBalanceIn,
-          tokenWeightIn,
-          poolSupply,
-          totalWeight,
-          tokenAmountIn,
-          swapFee
-        ); */
+        const amountWei = `0x${toWei(amount).toString(16)}`;
         try {
-          /* const tx = await contract.calcJoinPoolEther(
-            contract.address,
-            this.poolTokens,
-            1
-          ); */
-
-          /* const tx = await contract.chooseUnderlyingToken(
+          const underlyingToken = await contract.chooseUnderlyingToken(
             poolAddress,
-            this.bPool.isCrp()
-          ); */
-
-          const amountWei = `0x${toWei(amount).toString(16)}`;
+            isSmart
+          );
 
           const minPoolAmountOut = await contract.calcMinPoolAmountOut(
             poolAddress,
-            true,
-            tokenInAddress,
+            isSmart,
+            underlyingToken,
             amountWei
           );
-          console.log('minPoolAmountOut', minPoolAmountOut);
 
           const deadLine = blockNumberToTimestamp(
             Date.now(),
@@ -801,17 +714,14 @@ export default {
 
           const tx = await contract.joinPool(
             poolAddress,
-            tokenInAddress,
+            underlyingToken,
             minPoolAmountOut,
-            `0x${bnum(deadLine).toString(16)}`
+            `0x${bnum(deadLine).toString(16)}`,
+            {
+              from: this.web3.account,
+              value: amountWei
+            }
           );
-
-          /* const tx = await contract.joinPool(
-            '0xB33db87d55393EE9CF71E92954B9b9bD977F5401',
-            '0x266A9AAc60B0211D7269dd8b0e792D645d2923e6',
-            '389940951729',
-            '99999999999999'
-          ); */
 
           console.log(tx);
           const title = `joinPool`;
@@ -823,24 +733,24 @@ export default {
           await store.dispatch('getBalances');
 
           /* console.log(
-            `${poolTokensFormatted} ${this.pool.symbol} were purchased for ${
+            `${poolTokensFormatted} ${this.pool.symbol} was purchased for ${
               this.amounts[token.checksum]
             } ${token.symbol}.`
           ); */
           console.log(
-            `${poolTokensFormatted} ${this.pool.symbol} were purchased for ${
+            `${poolTokensFormatted} ${this.pool.symbol} was purchased for ${
               this.amounts[token.checksum]
             } ETH.`
           );
         } catch (err) {
           console.log(err.message);
           /* console.log(
-            `${poolTokensFormatted} ${this.pool.symbol} weren't purchased for ${
+            `${poolTokensFormatted} ${this.pool.symbol} wasn't purchased for ${
               this.amounts[token.checksum]
             } ${token.symbol}.`
           ); */
           console.log(
-            `${poolTokensFormatted} ${this.pool.symbol} weren't purchased for ${
+            `${poolTokensFormatted} ${this.pool.symbol} wasn't purchased for ${
               this.amounts[token.checksum]
             } ETH.`
           );
