@@ -725,6 +725,7 @@ export default {
           singleAssetBuyer['abi'],
           getInstance().web3?.getSigner()
         );
+
         const token = this.pool.tokens.find(
           token => token.checksum === this.activeToken
         );
@@ -790,6 +791,7 @@ export default {
             tokenInAddress,
             amountWei
           );
+          console.log('minPoolAmountOut', minPoolAmountOut);
 
           const deadLine = blockNumberToTimestamp(
             Date.now(),
@@ -804,6 +806,13 @@ export default {
             `0x${bnum(deadLine).toString(16)}`
           );
 
+          /* const tx = await contract.joinPool(
+            '0xB33db87d55393EE9CF71E92954B9b9bD977F5401',
+            '0x266A9AAc60B0211D7269dd8b0e792D645d2923e6',
+            '389940951729',
+            '99999999999999'
+          ); */
+
           console.log(tx);
           const title = `joinPool`;
           store.commit('watchTransaction', { ...tx, title });
@@ -813,10 +822,15 @@ export default {
 
           await store.dispatch('getBalances');
 
-          console.log(
+          /* console.log(
             `${poolTokensFormatted} ${this.pool.symbol} were purchased for ${
               this.amounts[token.checksum]
             } ${token.symbol}.`
+          ); */
+          console.log(
+            `${poolTokensFormatted} ${this.pool.symbol} were purchased for ${
+              this.amounts[token.checksum]
+            } ETH.`
           );
         } catch (err) {
           console.log(err.message);
