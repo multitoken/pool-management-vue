@@ -555,7 +555,7 @@ export default {
         ).toString();
       } else if (this.amounts[this.activeToken] > 0) {
         const contract = new Contract(
-          '0x57E7891BbF80A0563eE89Fce936d76dc0344993a',
+          '0xEe6D4c3D690c97F7c85Af90c30a6372f27b93ce0',
           singleAssetBuyer['abi'],
           getInstance().web3?.getSigner()
         );
