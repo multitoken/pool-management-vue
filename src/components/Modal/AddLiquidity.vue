@@ -714,6 +714,7 @@ export default {
 
           const tx = await contract.joinPool(
             poolAddress,
+            isSmart,
             underlyingToken,
             minPoolAmountOut,
             `0x${bnum(deadLine).toString(16)}`,
