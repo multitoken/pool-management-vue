@@ -29,6 +29,7 @@
               v-for="token in tokens"
               :key="token.address"
               class="text-white asset"
+              :slim="true"
               :class="{
                 active: isMultiAsset || activeToken === token.address
               }"
@@ -37,7 +38,7 @@
                 class="column-lg flex-auto flex-items-center d-flex text-left"
               >
                 <UiRadio
-                  class="mr-1"
+                  class="mr-2"
                   v-if="!isMultiAsset"
                   :checked="activeToken === token.address"
                   :onChange="
@@ -53,7 +54,7 @@
                   :aria-label="token.symbol"
                   class="text-white d-flex flex-items-center"
                 >
-                  <Token :address="token.address" class="mr-3" size="20" />
+                  <Token :address="token.address" class="mr-2" size="30" />
                   {{ _shorten(token.symbol, 14) }}
                 </div>
               </div>

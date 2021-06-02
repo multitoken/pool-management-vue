@@ -1,6 +1,6 @@
 <template>
   <div
-    class="d-flex flex-items-center p-4"
+    class="d-flex flex-items-center px-4 py-2"
     :class="{ 'info-box': !isWarning, 'warning-box': isWarning }"
   >
     <Icon v-if="isWarning" name="warning" size="22" class="mr-4" />

@@ -1,5 +1,5 @@
 <template>
-  <div id="error" class="d-flex flex-items-center p-4 text-left">
+  <div id="error" class="d-flex flex-items-center px-4 py-2 text-left">
     <Icon name="warning" size="22" class="mr-4" />
     {{ text }}
   </div>
@@ -15,8 +15,8 @@ export default {
 @import '../../vars';
 
 #error {
+  color: $error;
   border: 1px solid $error;
   border-radius: 4px;
-  color: $error;
 }
 </style>

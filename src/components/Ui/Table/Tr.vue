@@ -7,7 +7,10 @@
     >
       <slot />
     </router-link>
-    <div v-else class="line px-4 py-3 d-flex">
+    <div v-else-if="slim" class="line px-4 py-1 d-flex">
+      <slot />
+    </div>
+    <div v-else class="line px-4 py-2 d-flex">
       <slot />
     </div>
   </span>
@@ -15,7 +18,7 @@
 
 <script>
 export default {
-  props: ['to']
+  props: ['to', 'slim']
 };
 </script>
 
@@ -24,13 +27,11 @@ export default {
 
 .line {
   display: flex;
+  align-items: center;
 
   text-align: right;
 
   color: $white;
   border-top: $border;
-
-  align-items: center;
 }
-
 </style>

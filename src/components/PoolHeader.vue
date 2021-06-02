@@ -16,7 +16,12 @@
       />
     </div>
     <div>
-      <a :href="_explorerLink(pool.getBptAddress(), 'token')" target="_blank">
+      <a
+        :href="_explorerLink(pool.getBptAddress(), 'token')"
+        target="_blank"
+        class="tooltipped tooltipped-se"
+        :aria-label="'Checkout token on ' + scannerName"
+      >
         <span
           v-if="pool.config.name || pool.metadata.name"
           v-text="_shorten(pool.config.name || pool.metadata.name, 24)"
@@ -38,7 +43,18 @@
 </template>
 
 <script>
+import { isBSCNetwork } from '@/helpers/buyETF';
 export default {
+  data() {
+    return {
+      isBSCNetwork: isBSCNetwork()
+    };
+  },
+  computed: {
+    scannerName() {
+      return this.isBSCNetwork ? 'BSCscan' : 'Etherscan';
+    }
+  },
   props: ['pool']
 };
 </script>

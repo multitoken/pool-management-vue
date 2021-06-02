@@ -1,9 +1,9 @@
 <template>
   <div
-    class="p-4 border-left-0 border-right-0 border-md border rounded-0 rounded-md-1 panel-background"
+    class="p-2 border-left-0 border-right-0 border-md border rounded-0 rounded-md-1 panel-background"
   >
-    <div v-text="$t('etfOverview')" class="eyebrow mb-4" />
-    <div class="text-white">
+    <div v-text="$t('etfOverview')" class="eyebrow text-center" />
+    <div class="text-white text-center">
       {{ _shortenAddress(pool.id) }}
     </div>
     <div class="text-center">
