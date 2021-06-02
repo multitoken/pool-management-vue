@@ -27,7 +27,7 @@
               <div v-text="$t('depositAmount')" class="column-sm" />
             </UiTableTh>
             <UiTableTr
-              v-for="token in pool.tokens"
+              v-for="token in renderedTokens"
               :key="token.checksum"
               class="asset"
               :class="{
@@ -176,7 +176,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { getAddress } from '@ethersproject/address';
+import { getAddress, isAddress } from '@ethersproject/address';
 import { Contract } from '@ethersproject/contracts';
 import BigNumber from '@/helpers/bignumber';
 import {
@@ -196,7 +196,7 @@ import { validateNumberInput, formatError } from '@/helpers/validation';
 import { canProvideLiquidity } from '@/helpers/whitelist';
 import store from '@/store';
 import provider from '@/helpers/provider';
-import singleAssetBuyer from '../../helpers/abi/SingleAssetBuyer.json';
+import SingleAssetBuyerEther from '../../helpers/abi/SingleAssetBuyerEther.json';
 import { getInstance } from '@snapshot-labs/lock/plugins/vue';
 
 const BALANCE_BUFFER = 0.01;
@@ -222,7 +222,8 @@ export default {
       activeToken: null,
       warningAccepted: false,
       transactionReverted: false,
-      addLiquidityEnabled: true
+      addLiquidityEnabled: true,
+      userTokens: []
     };
   },
   watch: {
@@ -246,6 +247,17 @@ export default {
     }
   },
   async created() {
+    const userTokens = Object.entries(this.web3.balances)
+      .filter(t => t[1] != 0)
+      .filter(t => isAddress(t[0]));
+    const userTokenIds = userTokens.map(t => t[0]);
+    await this.loadTokenMetadata(userTokenIds);
+    this.userTokens = userTokens.map(t => ({
+      address: t[0],
+      checksum: t[0],
+      symbol: this.web3.tokenMetadata[t[0]].symbol,
+      decimals: this.web3.tokenMetadata[t[0]].decimals
+    }));
     this.addLiquidityEnabled = await this.canAddLiquidity();
   },
   computed: {
@@ -502,10 +514,15 @@ export default {
     weth() {
       const weth = this.pool.tokens.find(t => t.symbol === 'WETH');
       return weth || null;
+    },
+    renderedTokens() {
+      return this.isSingleAsset || this.isMultiAsset
+        ? this.pool.tokens
+        : this.userTokens;
     }
   },
   methods: {
-    ...mapActions(['joinPool', 'joinswapExternAmountIn']),
+    ...mapActions(['joinPool', 'joinswapExternAmountIn', 'loadTokenMetadata']),
     async handleChange(changedAmount, changedToken) {
       const ratio = bnum(changedAmount).div(changedToken.balance);
       if (this.isMultiAsset) {
@@ -555,8 +572,8 @@ export default {
         ).toString();
       } else if (this.amounts[this.activeToken] > 0) {
         const contract = new Contract(
-          '0xEe6D4c3D690c97F7c85Af90c30a6372f27b93ce0',
-          singleAssetBuyer['abi'],
+          SingleAssetBuyerEther.networks[this.config.chainId],
+          SingleAssetBuyerEther['abi'],
           getInstance().web3?.getSigner()
         );
 
@@ -608,11 +625,8 @@ export default {
       this.handleChange(normalizedAmount, token);
     },
     handleSelectType(type) {
-      if (type === 'BUY_FOR_ETH' && this.weth) {
-        this.token = this.weth;
-        this.handleTokenSelect(this.weth.checksum);
-      }
       this.type = type;
+      this.handleTokenSelect(this.renderedTokens[0].checksum);
       this.poolTokens = null;
       this.amounts = Object.fromEntries(
         this.pool.tokens.map(token => {
@@ -670,8 +684,8 @@ export default {
         await this.joinswapExternAmountIn(params);
       } else {
         const contract = new Contract(
-          '0x57E7891BbF80A0563eE89Fce936d76dc0344993a',
-          singleAssetBuyer['abi'],
+          SingleAssetBuyerEther.networks[this.config.chainId],
+          SingleAssetBuyerEther['abi'],
           getInstance().web3?.getSigner()
         );
 
