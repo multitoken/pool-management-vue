@@ -10,14 +10,16 @@
       <div class="pb-3">
         <UiButton
           v-if="enableAddLiquidity && pool.tokens.length > 0"
-          class="button-primary ml-2"
+          class="button-primary ml-2 tooltipped tooltipped-s"
+          :aria-label="$t('tooltipIssue')"
           @click="openAddLiquidityModal"
         >
           {{ $t('issue') }}
         </UiButton>
         <UiButton
           v-if="enableAddLiquidity && pool.tokens.length > 0"
-          class="ml-2"
+          class="ml-2 tooltipped tooltipped-s"
+          :aria-label="$t('tooltipRedeem')"
           @click="openRemoveLiquidityModal"
         >
           {{ $t('redeem') }}
@@ -30,7 +32,10 @@
           @mouseenter="pancakeButtonHovered = true"
           @mouseleave="pancakeButtonHovered = false"
         >
-          <UiButton class="ml-2">
+          <UiButton
+            class="ml-2 tooltipped tooltipped-sw"
+            :aria-label="$t('tooltipRedirectToSwap')"
+          >
             {{ isBSCNetwork ? $t('buyOnPancake') : $t('buyOnMultitoken') }}
             <Icon name="external-link" />
           </UiButton>

@@ -1,11 +1,19 @@
 <template>
   <UiTableTr>
-    <div class="flex-auto text-left">
+    <div
+      class="flex-auto text-left tooltipped tooltipped-n"
+      :aria-label="$t('tooltipFilterByToken')"
+    >
       <router-link
         :to="{ name: 'explore', query: { token: [checksum], filter: 1 } }"
         class="text-white d-flex flex-items-center"
       >
-        <Token :address="token.address" :symbol="token.symbol" class="mr-1" />
+        <Token
+          :address="token.address"
+          :symbol="token.symbol"
+          class="mr-1"
+          :size="30"
+        />
         <span
           :class="token.symbol.length > 28 && 'tooltipped tooltipped-n'"
           :aria-label="token.symbol"

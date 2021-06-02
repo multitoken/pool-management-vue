@@ -30,6 +30,8 @@
     <div class="column flex-shrink-0">
       <a
         :href="exchangeLink"
+        class="tooltipped tooltipped-w"
+        :aria-label="$t('tooltipRedirectToSwap')"
         target="_blank"
         v-on:click.stop
         @mouseenter="pancakeButtonHovered = true"
@@ -97,5 +99,4 @@ export default {
 .poolToken {
   flex-basis: 100px;
 }
-
 </style>

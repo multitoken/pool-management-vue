@@ -30,7 +30,10 @@
           <UiButton
             v-for="(chain, i) in chains"
             :key="i"
-            class="mx-1"
+            class="mx-1 tooltipped tooltipped-s"
+            :aria-label="
+              `${$t('tooltipSwitchNetwork')} ${chainParams[chain].chainName}`
+            "
             :class="{ 'button-primary': chain === currentNetwork }"
             @click="changeNetwork(chain)"
           >
@@ -84,7 +87,10 @@
           :to="{ name: 'wallet' }"
           class="ml-2"
         >
-          <UiButton class="v-align-bottom p-0">
+          <UiButton
+            class="v-align-bottom p-0 tooltipped tooltipped-sw"
+            :aria-label="$t('tooltipWallet')"
+          >
             <Icon name="wallet" size="20" class="mx-3" />
           </UiButton>
         </router-link>
@@ -222,12 +228,12 @@ export default {
 }
 
 .alphaWarning {
-  font-size: 12px;
-
   position: relative;
   top: -10px;
 
   color: #f00;
+
+  font-size: 12px;
 }
 
 .header-middle {
@@ -235,14 +241,13 @@ export default {
   left: calc(50% - 150px);
 
   display: flex;
+  align-items: center;
   flex-direction: column;
+  justify-content: center;
 
   width: 300px;
 
   color: #fff;
-
-  align-items: center;
-  justify-content: center;
 }
 
 .chain-buttons-container {
@@ -277,5 +282,4 @@ export default {
     display: none !important;
   }
 }
-
 </style>
