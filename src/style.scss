@@ -37,15 +37,17 @@ a {
 }
 
 .input {
+  max-width: 100%;
+  min-height: 30px;
   padding: 0 14px;
-  outline: none;
+
   color: $white;
-  min-height: 38px;
-  line-height: 28px;
-  background-color: transparent;
   border: $border;
   border-radius: 22px;
-  max-width: 100%;
+  outline: none;
+  background-color: transparent;
+
+  line-height: 28px;
 }
 
 ::-webkit-scrollbar {

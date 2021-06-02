@@ -28,6 +28,7 @@
             <UiTableTr
               v-for="token in pool.tokens"
               :key="token.checksum"
+              :slim="true"
               class="asset"
               :class="{
                 active: isMultiAsset || activeToken === token.checksum
@@ -37,7 +38,7 @@
                 class="column-lg flex-auto d-flex flex-items-center text-left d-flex"
               >
                 <UiRadio
-                  class="mr-1"
+                  class="mr-2"
                   v-if="!isMultiAsset"
                   :checked="activeToken === token.checksum"
                   :onChange="
@@ -53,11 +54,11 @@
                   :aria-label="token.symbol"
                   class="text-white d-flex flex-items-center"
                 >
-                  <Token :address="token.address" class="mr-2" size="20" />
+                  <Token :address="token.address" class="mr-2" size="30" />
                   {{ _shorten(token.symbol, 14) }}
                 </div>
               </div>
-              <div class="column">
+              <div class="column-lg">
                 {{
                   _trunc(
                     formatBalance(
@@ -103,38 +104,42 @@
           </UiTable>
         </div>
       </div>
-      <div class="mx-4">
-        <MessageError v-if="tokenError" :text="tokenError" class="mb-4" />
-        <MessageError
-          v-if="validationError"
-          :text="validationError"
-          class="mb-4"
-        />
-        <MessageError v-if="transferError" :text="transferError" class="mb-4" />
-        <MessageWarningToken
-          v-if="!tokenError && !validationError && !warningAccepted"
-          :custom="hasCustomToken"
-          @accept="warningAccepted = true"
-          class="mb-4 text-left"
-        />
-        <MessageWarningRateChange
-          v-if="rateChangeWarning"
-          @lower="lowerAmounts"
-          class="mb-4"
-        />
-        <MessageSlippage
-          v-if="slippage"
-          :value="slippage"
-          :isDeposit="true"
-          class="mb-4"
-        />
-        <MessageWarning
-          v-if="!addLiquidityEnabled"
-          :text="$t('cannotAddLiquidity')"
-          class="mb-4"
-        />
-      </div>
       <template slot="footer">
+        <div class="mx-4">
+          <MessageError v-if="tokenError" :text="tokenError" class="mb-2" />
+          <MessageError
+            v-if="validationError"
+            :text="validationError"
+            class="mb-2"
+          />
+          <MessageError
+            v-if="transferError"
+            :text="transferError"
+            class="mb-2"
+          />
+          <MessageWarningToken
+            v-if="!tokenError && !validationError && !warningAccepted"
+            :custom="hasCustomToken"
+            @accept="warningAccepted = true"
+            class="mb-2 text-left"
+          />
+          <MessageWarningRateChange
+            v-if="rateChangeWarning"
+            @lower="lowerAmounts"
+            class="mb-2"
+          />
+          <MessageSlippage
+            v-if="slippage"
+            :value="slippage"
+            :isDeposit="true"
+            class="mb-2"
+          />
+          <MessageWarning
+            v-if="!addLiquidityEnabled"
+            :text="$t('cannotAddLiquidity')"
+            class="mb-2"
+          />
+        </div>
         <Button
           :requireLogin="true"
           :requireProxy="true"
