@@ -7,7 +7,7 @@
       <div class="text-center m-4 mt-0">
         <Toggle
           :value="type"
-          :options="liquidityToggleOptions"
+          :options="redeemToggleOptions"
           @select="handleSelectType"
           class="mt-4"
         />
@@ -126,7 +126,7 @@ import {
   bnum,
   normalizeBalance,
   denormalizeBalance,
-  liquidityToggleOptions
+  redeemToggleOptions
 } from '@/helpers/utils';
 import { calcSingleOutGivenPoolIn } from '@/helpers/math';
 import { validateNumberInput, formatError } from '@/helpers/validation';
@@ -138,7 +138,7 @@ export default {
   props: ['open', 'pool', 'bPool'],
   data() {
     return {
-      liquidityToggleOptions,
+      redeemToggleOptions,
       loading: false,
       poolAmountIn: '',
       type: 'MULTI_ASSET',

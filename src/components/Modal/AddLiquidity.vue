@@ -172,7 +172,7 @@
           :loading="loading"
           class="button-primary"
         >
-          {{ $t('buyForEth') }}
+          {{ `${$t('buyFor')} ${web3.tokenMetadata[activeToken].symbol}` }}
         </Button>
       </template>
     </UiModalForm>
@@ -202,6 +202,7 @@ import { canProvideLiquidity } from '@/helpers/whitelist';
 import store from '@/store';
 import provider from '@/helpers/provider';
 import SingleAssetBuyerEther from '../../helpers/abi/SingleAssetBuyerEther.json';
+import SingleAssetBuyerToken from '../../helpers/abi/SingleAssetBuyerToken.json';
 import { getInstance } from '@snapshot-labs/lock/plugins/vue';
 
 const BALANCE_BUFFER = 0.01;
@@ -576,24 +577,41 @@ export default {
           swapFee
         ).toString();
       } else if (this.amounts[this.activeToken] > 0) {
+        const isBaseToken =
+          this.web3.tokenMetadata[this.activeToken].symbol ===
+          this.config.baseToken.symbol;
+        const buyerContract = isBaseToken
+          ? SingleAssetBuyerEther
+          : SingleAssetBuyerToken;
         const contract = new Contract(
-          SingleAssetBuyerEther.networks[this.config.chainId],
-          SingleAssetBuyerEther['abi'],
+          buyerContract.networks[this.config.chainId].address,
+          buyerContract['abi'],
           getInstance().web3?.getSigner()
         );
 
         const poolAddress = this.bPool.getBptAddress();
         const isSmart = this.bPool.isCrp();
-        const tokenInAddress = this.activeToken;
-        const amount = this.amounts[tokenInAddress];
+        const underlyingToken = await contract.chooseUnderlyingToken(
+          poolAddress,
+          isSmart
+        );
+        const amount = this.amounts[this.activeToken];
         const amountWei = `0x${toWei(amount).toString(16)}`;
 
-        const minPoolAmountOut = await contract.calcMinPoolAmountOut(
-          poolAddress,
-          isSmart,
-          tokenInAddress,
-          amountWei
-        );
+        const minPoolAmountOut = isBaseToken
+          ? await contract.calcMinPoolAmountOut(
+              poolAddress,
+              isSmart,
+              underlyingToken,
+              amountWei
+            )
+          : await contract.calcMinPoolAmountOut(
+              poolAddress,
+              isSmart,
+              underlyingToken,
+              this.activeToken,
+              amountWei
+            );
 
         this.poolTokens = minPoolAmountOut;
       }
@@ -688,9 +706,14 @@ export default {
         };
         await this.joinswapExternAmountIn(params);
       } else {
+        const buyerContract =
+          this.web3.tokenMetadata[this.activeToken].symbol ===
+          this.config.baseToken.symbol
+            ? SingleAssetBuyerEther
+            : SingleAssetBuyerToken;
         const contract = new Contract(
-          SingleAssetBuyerEther.networks[this.config.chainId],
-          SingleAssetBuyerEther['abi'],
+          buyerContract.networks[this.config.chainId].address,
+          buyerContract['abi'],
           getInstance().web3?.getSigner()
         );
 
@@ -727,7 +750,7 @@ export default {
 
           const deadLine = blockNumberToTimestamp(
             Date.now(),
-            this.web3.blockNumber,
+            this.web3.blockNumber + 1,
             this.bPool.metadata.endBlock
           );
 
