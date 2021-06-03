@@ -3,7 +3,8 @@
     <div
       v-for="i in 3"
       :key="i"
-      class="px-3 py-3 border-top d-flex text-right v-align-middle"
+      class="px-3 border-top d-flex text-right v-align-middle"
+      :class="thin ? 'py-1' : 'py-3'"
       style="line-height: 0;"
     >
       <div
@@ -25,7 +26,8 @@
 export default {
   props: {
     classes: Array,
-    height: Number
+    height: Number,
+    thin: Boolean
   },
   computed: {
     style() {

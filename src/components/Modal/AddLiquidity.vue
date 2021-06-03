@@ -26,68 +26,80 @@
               <div v-text="$t('walletBalance')" class="column" />
               <div v-text="$t('depositAmount')" class="column-sm" />
             </UiTableTh>
-            <UiTableTr
-              v-for="token in renderedTokens"
-              :key="token.checksum"
-              :slim="true"
-              class="asset"
-              :class="{
-                active: isMultiAsset || activeToken === token.checksum
-              }"
-            >
-              <div
-                class="column-lg flex-auto d-flex flex-items-center text-left d-flex"
+            <div v-if="!listLoading || isSingleAsset || isMultiAsset">
+              <UiTableTr
+                v-for="token in renderedTokens"
+                :key="token.checksum"
+                :slim="true"
+                class="asset"
+                :class="{
+                  active: isMultiAsset || activeToken === token.checksum
+                }"
               >
-                <UiRadio
-                  class="mr-2"
-                  v-if="!isMultiAsset"
-                  :checked="activeToken === token.checksum"
-                  :onChange="
-                    e => {
-                      handleTokenSelect(token.checksum);
-                    }
-                  "
-                />
                 <div
-                  :class="
-                    token.symbol.length > 14 && 'tooltipped tooltipped-ne'
-                  "
-                  :aria-label="token.symbol"
-                  class="text-white d-flex flex-items-center"
+                  class="column-lg flex-auto d-flex flex-items-center text-left d-flex"
                 >
-                  <Token :address="token.address" class="mr-2" size="30" />
-                  {{ _shorten(token.symbol, 14) }}
-                </div>
-              </div>
-              <div class="column-lg">
-                {{
-                  _trunc(
-                    formatBalance(
-                      web3.balances[token.checksum] || '0',
-                      token.decimals
-                    ),
-                    4
-                  )
-                }}
-                <a @click="handleMax(token)" class="ml-1">
-                  <UiLabel v-text="$t('max')" />
-                </a>
-              </div>
-              <div class="column-sm">
-                <div
-                  class="flex-auto ml-3 text-left d-flex flex-items-center position-relative"
-                >
-                  <input
-                    v-model="amounts[token.checksum]"
-                    v-if="isMultiAsset || activeToken === token.checksum"
-                    class="input flex-auto text-right"
-                    :class="isInputValid(token) ? 'text-white' : 'text-red'"
-                    placeholder="0.0"
-                    @input="handleChange(amounts[token.checksum], token)"
+                  <UiRadio
+                    class="mr-2"
+                    v-if="!isMultiAsset"
+                    :checked="activeToken === token.checksum"
+                    :onChange="
+                      e => {
+                        handleTokenSelect(token.checksum);
+                      }
+                    "
                   />
+                  <div
+                    :class="
+                      token.symbol.length > 14 && 'tooltipped tooltipped-ne'
+                    "
+                    :aria-label="token.symbol"
+                    class="text-white d-flex flex-items-center"
+                  >
+                    <Token :address="token.address" class="mr-2" size="30" />
+                    {{ _shorten(token.symbol, 14) }}
+                  </div>
                 </div>
-              </div>
-            </UiTableTr>
+                <div class="column-lg">
+                  {{
+                    _trunc(
+                      formatBalance(
+                        web3.balances[token.checksum] || '0',
+                        token.decimals
+                      ),
+                      4
+                    )
+                  }}
+                  <a @click="handleMax(token)" class="ml-1">
+                    <UiLabel v-text="$t('max')" />
+                  </a>
+                </div>
+                <div class="column-sm">
+                  <div
+                    class="flex-auto ml-3 text-left d-flex flex-items-center position-relative"
+                  >
+                    <input
+                      v-model="amounts[token.checksum]"
+                      v-if="isMultiAsset || activeToken === token.checksum"
+                      class="input flex-auto text-right"
+                      :class="isInputValid(token) ? 'text-white' : 'text-red'"
+                      placeholder="0.0"
+                      @input="handleChange(amounts[token.checksum], token)"
+                    />
+                  </div>
+                </div>
+              </UiTableTr>
+            </div>
+            <ListLoading
+              v-else
+              :classes="[
+                'column-lg flex-auto d-flex flex-items-center text-left d-flex',
+                'column-lg',
+                'column-sm'
+              ]"
+              :height="22"
+              :thin="true"
+            />
           </UiTable>
           <UiTable class="mt-4">
             <UiTableTh class="text-left flex-items-center text-white">
@@ -222,6 +234,7 @@ export default {
     return {
       liquidityToggleOptions,
       loading: false,
+      listLoading: false,
       poolTokens: null,
       amounts: {},
       type: 'MULTI_ASSET',
@@ -253,9 +266,11 @@ export default {
     }
   },
   async created() {
+    this.listLoading = true;
     const userTokens = Object.entries(this.web3.balances)
       .filter(t => t[1] != 0)
-      .filter(t => isAddress(t[0]));
+      .filter(t => isAddress(t[0]))
+      .filter(t => t[0] !== getAddress(this.bPool.getBptAddress()));
     const userTokenIds = userTokens.map(t => t[0]);
     await this.loadTokenMetadata(userTokenIds);
     this.userTokens = userTokens.map(t => ({
@@ -265,6 +280,7 @@ export default {
       decimals: this.web3.tokenMetadata[t[0]].decimals
     }));
     this.addLiquidityEnabled = await this.canAddLiquidity();
+    this.listLoading = false;
   },
   computed: {
     poolTokenBalance() {
