@@ -20,6 +20,7 @@ export interface Config {
     bufferWarning: number;
   };
   baseToken: {
+    address: string;
     name: string;
     symbol: string;
     wrappedSymbol: string;

@@ -184,7 +184,13 @@
           :loading="loading"
           class="button-primary"
         >
-          {{ `${$t('buyFor')} ${web3.tokenMetadata[activeToken].symbol}` }}
+          {{
+            `${$t('buyFor')} ${
+              web3.tokenMetadata[activeToken]
+                ? web3.tokenMetadata[activeToken].symbol
+                : config.baseToken.symbol
+            }`
+          }}
         </Button>
       </template>
     </UiModalForm>
@@ -279,6 +285,12 @@ export default {
       symbol: this.web3.tokenMetadata[t[0]].symbol,
       decimals: this.web3.tokenMetadata[t[0]].decimals
     }));
+    this.userTokens.push({
+      address: this.config.baseToken.address,
+      checksum: this.config.baseToken.address,
+      symbol: this.config.baseToken.symbol,
+      decimals: 18
+    });
     this.addLiquidityEnabled = await this.canAddLiquidity();
     this.listLoading = false;
   },
@@ -465,6 +477,9 @@ export default {
       );
     },
     slippage() {
+      if (!this.isSingleAsset && !this.isMultiAsset) {
+        return 0;
+      }
       if (this.validationError || this.tokenError) {
         return undefined;
       }
@@ -533,10 +548,6 @@ export default {
     isMultiAsset() {
       return this.type === 'MULTI_ASSET';
     },
-    weth() {
-      const weth = this.pool.tokens.find(t => t.symbol === 'WETH');
-      return weth || null;
-    },
     renderedTokens() {
       return this.isSingleAsset || this.isMultiAsset
         ? this.pool.tokens
@@ -594,8 +605,9 @@ export default {
         ).toString();
       } else if (this.amounts[this.activeToken] > 0) {
         const isBaseToken =
+          !this.web3.tokenMetadata[this.activeToken] ||
           this.web3.tokenMetadata[this.activeToken].symbol ===
-          this.config.baseToken.symbol;
+            this.config.baseToken.symbol;
         const buyerContract = isBaseToken
           ? SingleAssetBuyerEther
           : SingleAssetBuyerToken;
@@ -723,8 +735,9 @@ export default {
         await this.joinswapExternAmountIn(params);
       } else {
         const buyerContract =
-          this.web3.tokenMetadata[this.activeToken].symbol ===
-          this.config.baseToken.symbol
+          !this.web3.tokenMetadata[this.activeToken] ||
+          this.web3.tokenMetadata[this.activeToken]?.symbol ===
+            this.config.baseToken.symbol
             ? SingleAssetBuyerEther
             : SingleAssetBuyerToken;
         const contract = new Contract(
@@ -735,9 +748,9 @@ export default {
 
         const isSmart = this.bPool.isCrp();
 
-        const token = this.pool.tokens.find(
+        /* const token = this.pool.tokens.find(
           token => token.checksum === this.activeToken
-        );
+        ); */
 
         const poolTokensFormatted = this.poolTokens
           ? bnum(this.poolTokens).div('1e18')
@@ -798,7 +811,7 @@ export default {
           ); */
           console.log(
             `${poolTokensFormatted} ${this.pool.symbol} was purchased for ${
-              this.amounts[token.checksum]
+              this.amounts[this.activeToken]
             } ETH.`
           );
         } catch (err) {
@@ -810,7 +823,7 @@ export default {
           ); */
           console.log(
             `${poolTokensFormatted} ${this.pool.symbol} wasn't purchased for ${
-              this.amounts[token.checksum]
+              this.amounts[this.activeToken]
             } ETH.`
           );
         }
