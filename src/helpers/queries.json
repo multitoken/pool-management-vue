@@ -112,6 +112,7 @@
         }
       },
       "id": true,
+      "controller": true,
       "name": true,
       "symbol": true,
       "publicSwap": true,

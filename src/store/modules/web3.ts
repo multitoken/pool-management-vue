@@ -253,7 +253,6 @@ const actions = {
           if (state.active) await dispatch('loadWeb3');
         });
         auth.provider.on('chainChanged', async chainId => {
-          console.log('chainChanged to', chainId);
           await dispatch('clearUser');
           auth.web3 = new Web3Provider(auth.provider);
           await store.dispatch(

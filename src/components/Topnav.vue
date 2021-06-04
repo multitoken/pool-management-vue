@@ -140,16 +140,19 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['myPendingTransactions']),
+    ...mapGetters(['myPendingTransactions', 'getConfig']),
+    currentNetwork() {
+      return this.getConfig().network;
+    },
     wrongNetwork() {
       return (
-        this.$store.getters.getConfig().chainId !== this.web3.injectedChainId &&
+        this.getConfig().chainId !== this.web3.injectedChainId &&
         !this.ui.authLoading &&
         !this.loading
       );
     },
     baseTokenBalance() {
-      const config = this.$store.getters.getConfig();
+      const config = this.getConfig();
       const baseToken = config.baseToken;
 
       const price = this.price.values[config.addresses.wrapped];

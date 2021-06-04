@@ -16,7 +16,10 @@
           {{ $t('buyETF') }} <Icon name="external-link" />
         </div>
       </UiTableTh>
-      <div v-infinite-scroll="loadMore" infinite-scroll-distance="10">
+      <div
+        v-infinite-scroll="() => loadMore('infinite scroll')"
+        infinite-scroll-distance="10"
+      >
         <div v-if="pools.length > 0">
           <ListPool v-for="(pool, i) in pools" :key="i" :pool="pool" />
         </div>
@@ -61,7 +64,7 @@ export default {
     query() {
       this.page = 0;
       this.loading = true;
-      this.loadMore();
+      this.loadMore('query');
     },
     filters() {
       if (!this.withFilters) return;
@@ -72,12 +75,13 @@ export default {
       if (query.token && query.token.length === 0) query = {};
       query.filter = 1;
       this.$router.push({ query });
-      this.loadMore();
+      this.loadMore('filters');
     }
   },
   methods: {
     ...mapActions(['getPools', 'clearPools']),
-    async loadMore() {
+    async loadMore(initiator) {
+      console.log(initiator, 'loadMore');
       if (this.pools.length < this.page * ITEMS_PER_PAGE) return;
       this.loading = true;
       this.page++;
@@ -90,7 +94,6 @@ export default {
   },
   mounted() {
     this.clearPools();
-    this.loadMore();
   }
 };
 </script>

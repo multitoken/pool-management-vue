@@ -6,6 +6,7 @@ import { setGoal } from '@/helpers/fathom';
 import store from '@/store';
 
 export async function request(key: string | null, jsonQuery: any = {}) {
+  console.log(key);
   jsonQuery = key
     ? merge(cloneDeep(queries[key]), cloneDeep(jsonQuery))
     : jsonQuery;

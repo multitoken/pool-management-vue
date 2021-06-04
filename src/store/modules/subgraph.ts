@@ -7,6 +7,7 @@ import store from '@/store';
 
 const state = {
   pools: [],
+  poolsPage: 0,
   balancer: {},
   poolShares: {},
   myPools: [],
@@ -19,20 +20,21 @@ const mutations = {
     Vue.set(_state, 'myPools', []);
     console.debug('CLEAR_USER');
   },
+  CLEAR_POOLS(_state) {
+    Vue.set(_state, 'pools', []);
+    console.debug('CLEAR_POOLS');
+  },
   GET_POOLS_REQUEST() {
     console.debug('GET_POOLS_REQUEST');
   },
-  GET_POOLS_SUCCESS(_state, payload) {
-    const newPools = _state.pools.concat(payload);
+  GET_POOLS_SUCCESS(_state, { pools, page }) {
+    const newPools = _state.pools.concat(pools);
+    Vue.set(_state, 'poolsPage', page);
     Vue.set(_state, 'pools', newPools);
     console.debug('GET_POOLS_SUCCESS');
   },
   GET_POOLS_FAILURE(_state, payload) {
     console.debug('GET_POOLS_FAILURE', payload);
-  },
-  CLEAR_POOLS(_state) {
-    Vue.set(_state, 'pools', []);
-    console.debug('CLEAR_POOLS');
   },
   GET_MY_POOLS_SHARES_REQUEST() {
     console.debug('GET_MY_POOLS_SHARES_REQUEST');
@@ -96,6 +98,9 @@ const actions = {
   clearUser: async ({ commit }) => {
     commit('CLEAR_USER');
   },
+  clearPools: async ({ commit }) => {
+    commit('CLEAR_POOLS');
+  },
   getPools: async ({ commit }, payload) => {
     const {
       first = ITEMS_PER_PAGE,
@@ -135,13 +140,10 @@ const actions = {
     try {
       let { pools } = await request('getPools', query);
       pools = pools.map(pool => formatPool(pool));
-      commit('GET_POOLS_SUCCESS', pools);
+      commit('GET_POOLS_SUCCESS', { pools, page });
     } catch (e) {
       commit('GET_POOLS_FAILURE', e);
     }
-  },
-  clearPools: ({ commit }) => {
-    commit('CLEAR_POOLS');
   },
   getUserPoolShares: async ({ commit, rootState }) => {
     const address = rootState.web3.account;
