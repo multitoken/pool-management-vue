@@ -110,11 +110,11 @@ export function isLocked(
 
 export function getColorByAddress(address: string): string {
   const rColor =
-    parseInt(`0x${address[3]}${address[4]}${address[5]}`, 16) % 255;
+    (parseInt(`0x${address[3]}${address[4]}${address[5]}`, 16) % 255) + 16;
   const gColor =
-    parseInt(`0x${address[6]}${address[7]}${address[8]}`, 16) % 255;
+    (parseInt(`0x${address[6]}${address[7]}${address[8]}`, 16) % 255) + 16;
   const bColor =
-    parseInt(`0x${address[9]}${address[10]}${address[11]}`, 16) % 255;
+    (parseInt(`0x${address[9]}${address[10]}${address[11]}`, 16) % 255) + 16;
   return `#${rColor.toString(16)}${gColor.toString(16)}${bColor.toString(16)}`;
 }
 

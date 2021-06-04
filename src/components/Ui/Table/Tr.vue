@@ -3,11 +3,14 @@
     <router-link
       v-if="to"
       :to="to"
-      class="line v-align-middle px-4 py-3 highlight d-flex"
+      class="line v-align-middle px-3 py-2 highlight d-flex"
     >
       <slot />
     </router-link>
-    <div v-else class="line px-4 py-3 d-flex">
+    <div v-else-if="slim" class="line px-4 py-1 d-flex">
+      <slot />
+    </div>
+    <div v-else class="line px-4 py-2 d-flex">
       <slot />
     </div>
   </span>
@@ -15,7 +18,7 @@
 
 <script>
 export default {
-  props: ['to']
+  props: ['to', 'slim']
 };
 </script>
 
@@ -25,8 +28,10 @@ export default {
 .line {
   display: flex;
   align-items: center;
-  border-top: $border;
-  color: $white;
+
   text-align: right;
+
+  color: $white;
+  border-top: $border;
 }
 </style>

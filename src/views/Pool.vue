@@ -10,18 +10,36 @@
       <div class="pb-3">
         <UiButton
           v-if="enableAddLiquidity && pool.tokens.length > 0"
-          class="button-primary ml-2"
+          class="button-primary ml-2 tooltipped tooltipped-s"
+          :aria-label="$t('tooltipIssue')"
           @click="openAddLiquidityModal"
         >
           {{ $t('issue') }}
         </UiButton>
         <UiButton
           v-if="enableAddLiquidity && pool.tokens.length > 0"
-          class="ml-2"
+          class="ml-2 tooltipped tooltipped-s"
+          :aria-label="$t('tooltipRedeem')"
           @click="openRemoveLiquidityModal"
         >
           {{ $t('redeem') }}
         </UiButton>
+        <a
+          v-if="bPool && enableAddLiquidity && pool.tokens.length > 0"
+          :href="exchangeLink"
+          target="_blank"
+          v-on:click.stop
+          @mouseenter="pancakeButtonHovered = true"
+          @mouseleave="pancakeButtonHovered = false"
+        >
+          <UiButton
+            class="ml-2 tooltipped tooltipped-sw"
+            :aria-label="$t('tooltipRedirectToSwap')"
+          >
+            {{ isBSCNetwork ? $t('buyOnPancake') : $t('buyOnMultitoken') }}
+            <Icon name="external-link" />
+          </UiButton>
+        </a>
       </div>
     </div>
     <Tabs :pool="pool" />
@@ -62,6 +80,7 @@ import { mapActions } from 'vuex';
 import { getAddress } from '@ethersproject/address';
 import Pool from '@/_balancer/pool';
 import { bnum, scale } from '@/helpers/utils';
+import { getExchangeLink, isBSCNetwork } from '@/helpers/buyETF';
 
 export default {
   data() {
@@ -72,7 +91,8 @@ export default {
       loading: false,
       modalAddLiquidityOpen: false,
       modalRemoveLiquidityOpen: false,
-      modalCustomTokenOpen: false
+      modalCustomTokenOpen: false,
+      isBSCNetwork: isBSCNetwork()
     };
   },
   watch: {
@@ -107,6 +127,15 @@ export default {
         (Object.keys(this.subgraph.poolShares).includes(this.id) ||
           this.web3.balances[getAddress(this.id)])
       );
+    },
+    wethAddress() {
+      return '0xd0a1e359811322d97991e03f863a0c30c2cf029c';
+    },
+    LPTokenAddress() {
+      return this.bPool?.getBptAddress();
+    },
+    exchangeLink() {
+      return getExchangeLink(this.LPTokenAddress, this.wethAddress);
     }
   },
   methods: {

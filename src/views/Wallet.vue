@@ -254,7 +254,7 @@ export default {
       const symbol = await contract.symbol();
 
       const decimals = await contract.decimals();
-      const parsedUnits = parseUnits(amount.toString(), decimals);
+      const parsedUnits = parseUnits(amount.toFixed(decimals), decimals);
 
       try {
         const tx = await contract.mint(this.web3.account, parsedUnits);
@@ -296,4 +296,5 @@ export default {
 .minter-button {
   margin-left: auto;
 }
+
 </style>

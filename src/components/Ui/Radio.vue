@@ -18,35 +18,43 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/vars';
+
 #wrapper {
-  padding: 6px;
-  display: inline-block;
   position: relative;
+
+  display: inline-block;
   flex: 0 0 auto;
+
   box-sizing: content-box;
   width: 18px;
   height: 18px;
+  padding: 1px;
+
   cursor: pointer;
 }
 
 input {
   position: absolute;
-  margin: 0;
-  padding: 0;
-  opacity: 0;
-  cursor: inherit;
   z-index: 1;
   top: 0px;
   right: 0px;
   left: 0px;
+
   width: 30px;
   height: 30px;
+  margin: 0;
+  padding: 0;
+
+  cursor: inherit;
+
+  opacity: 0;
 }
 
 input:enabled:checked + div div {
+  border: 4px solid $blue;
   background: #ffffff;
-  border: 4px solid #8c9eff;
 }
 
 input:enabled:not(:checked) + div div {
@@ -54,8 +62,10 @@ input:enabled:not(:checked) + div div {
 }
 
 #background {
-  display: inline-block;
   position: relative;
+
+  display: inline-block;
+
   box-sizing: border-box;
   width: 18px;
   height: 18px;
@@ -63,20 +73,24 @@ input:enabled:not(:checked) + div div {
 
 #background:before {
   position: absolute;
-  transform: scale(0, 0);
-  border-radius: 50%;
-  opacity: 0;
-  pointer-events: none;
+
   content: '';
+  transform: scale(0, 0);
+  pointer-events: none;
+
+  opacity: 0;
+  border-radius: 50%;
 }
 
 #circle {
   position: absolute;
   top: 0;
   left: 0;
+
   box-sizing: border-box;
   width: 100%;
   height: 100%;
+
   border-style: solid;
   border-radius: 50%;
 }

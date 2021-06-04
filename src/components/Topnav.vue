@@ -28,17 +28,15 @@
       <div class="header-middle hide-sm hide-md">
         <div class="chain-buttons-container">
           <UiButton
-            class="mx-1"
+            class="mx-1 tooltipped tooltipped-s"
+            :aria-label="
+              `${$t('tooltipSwitchNetwork')} ${chainParams[chain].chainName}`
+            "
             v-for="(chain, i) in chains"
             @click="changeNetwork(chain)"
             :key="i"
-            :class="{
-              'button-highlight':
-                web3.injectedChainId == parseInt(chainParams[chain].chainId, 16)
-            }"
-            :disabled="
-              web3.injectedChainId == parseInt(chainParams[chain].chainId, 16)
-            "
+            :class="{ 'button-primary': chain === currentNetwork }"
+            :disabled="chain === currentNetwork"
           >
             {{ chainParams[chain].chainName }}
           </UiButton>
@@ -46,7 +44,12 @@
       </div>
       <div :key="web3.account">
         <UiButton
-          v-if="$auth.isAuthenticated && !wrongNetwork && !ui.authLoading"
+          v-if="
+            $auth.isAuthenticated &&
+              !wrongNetwork &&
+              !loading &&
+              !ui.authLoading
+          "
           class="buttton-non-clickable balance hide-sm hide-md"
         >
           <span v-text="_num(balancesTotalValue, 'usd')" />
@@ -62,7 +65,7 @@
           <span
             v-else
             v-text="_shortenAddress(web3.account)"
-            class="hide-sm hide-md hide-lg  ml-2 pl-1"
+            class="hide-sm hide-md hide-lg ml-2 pl-1"
           />
         </UiButton>
         <UiButton
@@ -85,7 +88,10 @@
           :to="{ name: 'wallet' }"
           class="ml-2"
         >
-          <UiButton class="v-align-bottom p-0">
+          <UiButton
+            class="v-align-bottom p-0 tooltipped tooltipped-sw"
+            :aria-label="$t('tooltipWallet')"
+          >
             <Icon name="wallet" size="20" class="mx-3" />
           </UiButton>
         </router-link>
@@ -118,7 +124,6 @@
 import { mapGetters, mapActions } from 'vuex';
 import { formatUnits } from '@ethersproject/units';
 import i18n from '@/i18n';
-
 import chainParams from '../helpers/chainParams.json';
 
 export default {
@@ -239,12 +244,12 @@ export default {
 }
 
 .alphaWarning {
-  font-size: 12px;
-
   position: relative;
   top: -10px;
 
   color: #f00;
+
+  font-size: 12px;
 }
 
 .header-middle {
@@ -252,14 +257,13 @@ export default {
   left: calc(50% - 150px);
 
   display: flex;
+  align-items: center;
   flex-direction: column;
+  justify-content: center;
 
   width: 300px;
 
   color: #fff;
-
-  align-items: center;
-  justify-content: center;
 }
 
 .chain-buttons-container {

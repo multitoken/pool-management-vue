@@ -130,13 +130,17 @@ export default {
   }
 
   ul > li > a {
-    font-size: 16px;
-
     display: block;
 
     padding: 10px 22px 12px;
 
     color: $white;
+
+    font-size: 16px;
+
+    &:hover {
+      color: $link-text;
+    }
 
     &.active {
       padding-left: 19px;
@@ -152,9 +156,9 @@ export default {
 }
 
 .connect {
-  font-size: $font-size-bigger;
-
   margin-top: auto;
+
+  font-size: $font-size-bigger;
 }
 
 .protocol-link {
@@ -162,8 +166,8 @@ export default {
 }
 
 .risk-warning {
-  font-size: 20px;
-
   color: #f00;
+
+  font-size: 20px;
 }
 </style>
