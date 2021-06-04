@@ -3,9 +3,10 @@ import { getAddress } from '@ethersproject/address';
 import { request } from '@/helpers/subgraph';
 import { formatPool, ITEMS_PER_PAGE } from '@/helpers/utils';
 
-import config from '@/config';
+import store from '@/store';
 
 const state = {
+  pools: [],
   balancer: {},
   poolShares: {},
   myPools: [],
@@ -21,11 +22,17 @@ const mutations = {
   GET_POOLS_REQUEST() {
     console.debug('GET_POOLS_REQUEST');
   },
-  GET_POOLS_SUCCESS() {
+  GET_POOLS_SUCCESS(_state, payload) {
+    const newPools = _state.pools.concat(payload);
+    Vue.set(_state, 'pools', newPools);
     console.debug('GET_POOLS_SUCCESS');
   },
   GET_POOLS_FAILURE(_state, payload) {
     console.debug('GET_POOLS_FAILURE', payload);
+  },
+  CLEAR_POOLS(_state) {
+    Vue.set(_state, 'pools', []);
+    console.debug('CLEAR_POOLS');
   },
   GET_MY_POOLS_SHARES_REQUEST() {
     console.debug('GET_MY_POOLS_SHARES_REQUEST');
@@ -105,7 +112,7 @@ const actions = {
     const tsYesterdayRounded = Math.round(tsYesterday / 3600) * 3600; // Round timestamp by hour to leverage subgraph cache
 
     where.tokensList_not = [];
-    where.id_not_in = config.excludedPoolsIds;
+    where.id_not_in = store.getters.getConfig().excludedPoolsIds;
     const query = {
       pools: {
         __args: {
@@ -128,11 +135,13 @@ const actions = {
     try {
       let { pools } = await request('getPools', query);
       pools = pools.map(pool => formatPool(pool));
-      commit('GET_POOLS_SUCCESS');
-      return pools;
+      commit('GET_POOLS_SUCCESS', pools);
     } catch (e) {
       commit('GET_POOLS_FAILURE', e);
     }
+  },
+  clearPools: ({ commit }) => {
+    commit('CLEAR_POOLS');
   },
   getUserPoolShares: async ({ commit, rootState }) => {
     const address = rootState.web3.account;
@@ -143,7 +152,7 @@ const actions = {
           __args: {
             where: {
               userAddress: address.toLowerCase(),
-              poolId_not_in: config.excludedPoolsIds
+              poolId_not_in: store.getters.getConfig().excludedPoolsIds
             }
           }
         }

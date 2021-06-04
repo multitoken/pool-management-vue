@@ -49,9 +49,13 @@ export default {
     return {
       loading: false,
       page: 0,
-      pools: [],
       filters: formatFilters(this.$route.query)
     };
+  },
+  computed: {
+    pools() {
+      return this.subgraph.pools;
+    }
   },
   watch: {
     query() {
@@ -72,7 +76,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getPools']),
+    ...mapActions(['getPools', 'clearPools']),
     async loadMore() {
       if (this.pools.length < this.page * ITEMS_PER_PAGE) return;
       this.loading = true;
@@ -80,10 +84,13 @@ export default {
       const page = this.page;
       let query = this.query || {};
       query = { ...query, page };
-      const pools = await this.getPools(query);
-      this.pools = this.pools.concat(pools);
+      await this.getPools(query);
       this.loading = false;
     }
+  },
+  mounted() {
+    this.clearPools();
+    this.loadMore();
   }
 };
 </script>
