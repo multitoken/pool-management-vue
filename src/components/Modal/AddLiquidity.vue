@@ -174,6 +174,7 @@
         <Button
           v-else
           :requireLogin="true"
+          :requireApprovals="validationError ? undefined : requiredApprovals"
           @submit="handleSubmit"
           :disabled="
             tokenError ||
@@ -734,12 +735,13 @@ export default {
         };
         await this.joinswapExternAmountIn(params);
       } else {
-        const buyerContract =
+        const isBaseToken =
           !this.web3.tokenMetadata[this.activeToken] ||
-          this.web3.tokenMetadata[this.activeToken]?.symbol ===
-            this.config.baseToken.symbol
-            ? SingleAssetBuyerEther
-            : SingleAssetBuyerToken;
+          this.web3.tokenMetadata[this.activeToken].symbol ===
+            this.config.baseToken.symbol;
+        const buyerContract = isBaseToken
+          ? SingleAssetBuyerEther
+          : SingleAssetBuyerToken;
         const contract = new Contract(
           buyerContract.networks[this.config.chainId].address,
           buyerContract['abi'],
@@ -770,30 +772,48 @@ export default {
             isSmart
           );
 
-          const minPoolAmountOut = await contract.calcMinPoolAmountOut(
-            poolAddress,
-            isSmart,
-            underlyingToken,
-            amountWei
-          );
+          const minPoolAmountOut = isBaseToken
+            ? await contract.calcMinPoolAmountOut(
+                poolAddress,
+                isSmart,
+                underlyingToken,
+                amountWei
+              )
+            : await contract.calcMinPoolAmountOut(
+                poolAddress,
+                isSmart,
+                underlyingToken,
+                this.activeToken,
+                amountWei
+              );
 
-          const deadLine = blockNumberToTimestamp(
+          const deadline = blockNumberToTimestamp(
             Date.now(),
             this.web3.blockNumber + 1,
             this.bPool.metadata.endBlock
           );
 
-          const tx = await contract.joinPool(
-            poolAddress,
-            isSmart,
-            underlyingToken,
-            minPoolAmountOut,
-            `0x${bnum(deadLine).toString(16)}`,
-            {
-              from: this.web3.account,
-              value: amountWei
-            }
-          );
+          const tx = isBaseToken
+            ? await contract.joinPool(
+                poolAddress,
+                isSmart,
+                underlyingToken,
+                minPoolAmountOut,
+                `0x${bnum(deadline).toString(16)}`,
+                {
+                  from: this.web3.account,
+                  value: amountWei
+                }
+              )
+            : await contract.joinPool(
+                poolAddress,
+                isSmart,
+                underlyingToken,
+                minPoolAmountOut,
+                `0x${bnum(deadline).toString(16)}`,
+                this.activeToken,
+                amountWei
+              );
 
           console.log(tx);
           const title = `joinPool`;
@@ -804,27 +824,17 @@ export default {
 
           await store.dispatch('getBalances');
 
-          /* console.log(
-            `${poolTokensFormatted} ${this.pool.symbol} was purchased for ${
-              this.amounts[token.checksum]
-            } ${token.symbol}.`
-          ); */
           console.log(
             `${poolTokensFormatted} ${this.pool.symbol} was purchased for ${
               this.amounts[this.activeToken]
-            } ETH.`
+            } ${this.web3.tokenMetadata[this.activeToken].symbol}.`
           );
         } catch (err) {
           console.log(err.message);
-          /* console.log(
-            `${poolTokensFormatted} ${this.pool.symbol} wasn't purchased for ${
-              this.amounts[token.checksum]
-            } ${token.symbol}.`
-          ); */
           console.log(
             `${poolTokensFormatted} ${this.pool.symbol} wasn't purchased for ${
               this.amounts[this.activeToken]
-            } ETH.`
+            } ${this.web3.tokenMetadata[this.activeToken].symbol}.`
           );
         }
       }
