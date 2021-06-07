@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :requireLogin="true">
     <ListPools />
   </Page>
 </template>

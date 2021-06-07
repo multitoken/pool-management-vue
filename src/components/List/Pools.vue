@@ -16,18 +16,15 @@
           {{ $t('buyETF') }} <Icon name="external-link" />
         </div>
       </UiTableTh>
-      <div
-        v-infinite-scroll="() => loadMore('infinite scroll')"
-        infinite-scroll-distance="10"
-      >
+      <div v-infinite-scroll="loadMore" infinite-scroll-distance="10">
         <div v-if="pools.length > 0">
           <ListPool v-for="(pool, i) in pools" :key="i" :pool="pool" />
         </div>
-        <UiTableTr v-else-if="!loading">
+        <UiTableTr v-else-if="!loading && !this.subgraph.poolsLoading">
           <div v-text="$t('emptyState')" />
         </UiTableTr>
         <ListLoading
-          v-if="loading"
+          v-if="loading || this.subgraph.poolsLoading"
           :classes="[
             'column-sm text-left hide-sm hide-md hide-lg',
             'flex-auto text-center',
@@ -75,13 +72,13 @@ export default {
       if (query.token && query.token.length === 0) query = {};
       query.filter = 1;
       this.$router.push({ query });
-      this.loadMore('filters');
+      this.loadMore();
     }
   },
   methods: {
     ...mapActions(['getPools', 'clearPools']),
-    async loadMore(initiator) {
-      console.log(initiator, 'loadMore');
+    async loadMore() {
+      if (!window.ethereum) return;
       if (this.pools.length < this.page * ITEMS_PER_PAGE) return;
       this.loading = true;
       this.page++;

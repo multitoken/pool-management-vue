@@ -35,15 +35,13 @@ const mutations = {
     if (!newConfig) {
       newConfig = configs[defaultConfig];
     }
-    Vue.set(_state, 'config', newConfig);
-    await store.dispatch('clearPools');
-    store.dispatch('getPools', {});
+    await Vue.set(_state, 'config', newConfig);
   }
 };
 
 const actions = {
-  updateConfig({ commit }, chainId: number): void {
-    commit('setNetwork', chainId);
+  async updateConfig({ commit }, chainId: number): Promise<void> {
+    await commit('setNetwork', chainId);
   }
 };
 

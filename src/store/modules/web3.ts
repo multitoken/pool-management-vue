@@ -288,8 +288,6 @@ const actions = {
         auth.web3.listAccounts()
       ]);
 
-      await store.dispatch('updateConfig', network.chainId);
-
       const account = accounts.length > 0 ? accounts[0] : null;
 
       const provider = getProvider(store.getters.getConfig().chainId);

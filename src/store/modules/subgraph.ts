@@ -8,6 +8,7 @@ import store from '@/store';
 const state = {
   pools: [],
   poolsPage: 0,
+  poolsLoading: true,
   balancer: {},
   poolShares: {},
   myPools: [],
@@ -24,16 +25,21 @@ const mutations = {
     Vue.set(_state, 'pools', []);
     console.debug('CLEAR_POOLS');
   },
-  GET_POOLS_REQUEST() {
+  GET_POOLS_REQUEST(_state) {
+    if (_state.pools?.length <= 0) {
+      Vue.set(_state, 'poolsLoading', true);
+    }
     console.debug('GET_POOLS_REQUEST');
   },
   GET_POOLS_SUCCESS(_state, { pools, page }) {
     const newPools = _state.pools.concat(pools);
+    Vue.set(_state, 'poolsLoading', false);
     Vue.set(_state, 'poolsPage', page);
     Vue.set(_state, 'pools', newPools);
     console.debug('GET_POOLS_SUCCESS');
   },
   GET_POOLS_FAILURE(_state, payload) {
+    Vue.set(_state, 'poolsLoading', false);
     console.debug('GET_POOLS_FAILURE', payload);
   },
   GET_MY_POOLS_SHARES_REQUEST() {
