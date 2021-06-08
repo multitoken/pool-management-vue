@@ -211,7 +211,7 @@ import { mapActions } from 'vuex';
 import { getAddress, isAddress } from '@ethersproject/address';
 import { Contract } from '@ethersproject/contracts';
 import BigNumber from '@/helpers/bignumber';
-import { isBSCNetwork } from '@/helpers/buyEtf';
+import { isBSCNetwork } from '@/helpers/buyETF';
 import {
   calcPoolTokensByRatio,
   // calcPoolTokensFromAmount

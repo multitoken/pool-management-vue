@@ -52,7 +52,7 @@
 <script>
 import { getPoolLiquidity } from '@/helpers/price';
 import Pool from '@/_balancer/pool';
-import { getExchangeLink } from '@/helpers/buyEtf';
+import { getExchangeLink } from '@/helpers/buyETF';
 
 export default {
   data() {

@@ -80,7 +80,7 @@ import { mapActions } from 'vuex';
 import { getAddress } from '@ethersproject/address';
 import Pool from '@/_balancer/pool';
 import { bnum, scale } from '@/helpers/utils';
-import { getExchangeLink, isBSCNetwork } from '@/helpers/buyEtf';
+import { getExchangeLink, isBSCNetwork } from '@/helpers/buyETF';
 
 export default {
   data() {
