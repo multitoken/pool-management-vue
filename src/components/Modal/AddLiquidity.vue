@@ -7,7 +7,7 @@
       <div class="text-center m-4 mt-0">
         <Toggle
           :value="type"
-          :options="liquidityToggleOptions"
+          :options="toggleOptions"
           :buyAvailable="true"
           @select="handleSelectType"
           class="mt-4"
@@ -20,13 +20,21 @@
           class="hide-sm hide-md col-3 float-left"
         />
         <div class="col-12 col-md-9 float-left pl-0 pl-md-4">
+          <div v-if="type === 'BUY_FOR_ETH'" class="d-flex flex-justify-center">
+            <Toggle
+              :value="ethType"
+              :options="ethToggleOptions"
+              @select="handleSelectEthType"
+              class="mb-4"
+            />
+          </div>
           <UiTable>
             <UiTableTh>
               <div v-text="$t('asset')" class="column-lg flex-auto text-left" />
               <div v-text="$t('walletBalance')" class="column" />
               <div v-text="$t('depositAmount')" class="column-sm" />
             </UiTableTh>
-            <div v-if="!listLoading || isSingleAsset || isMultiAsset">
+            <div v-if="!listLoading">
               <UiTableTr
                 v-for="token in renderedTokens"
                 :key="token.checksum"
@@ -154,7 +162,7 @@
           />
         </div>
         <Button
-          v-if="type !== 'BUY_FOR_ETH'"
+          v-if="isSingleAsset || isMultiAsset"
           :requireLogin="true"
           :requireProxy="true"
           :requireApprovals="validationError ? undefined : requiredApprovals"
@@ -203,6 +211,7 @@ import { mapActions } from 'vuex';
 import { getAddress, isAddress } from '@ethersproject/address';
 import { Contract } from '@ethersproject/contracts';
 import BigNumber from '@/helpers/bignumber';
+import { isBSCNetwork } from '@/helpers/buyEtf';
 import {
   calcPoolTokensByRatio,
   // calcPoolTokensFromAmount
@@ -222,7 +231,9 @@ import store from '@/store';
 import provider from '@/helpers/provider';
 import SingleAssetBuyerEther from '../../helpers/abi/SingleAssetBuyerEther.json';
 import SingleAssetBuyerToken from '../../helpers/abi/SingleAssetBuyerToken.json';
+import MultiAssetBuyerEther from '../../helpers/abi/MultiAssetBuyerEther.json';
 import { getInstance } from '@snapshot-labs/lock/plugins/vue';
+import i18n from '@/i18n';
 
 const BALANCE_BUFFER = 0.01;
 
@@ -239,12 +250,16 @@ export default {
   props: ['open', 'pool', 'bPool'],
   data() {
     return {
-      liquidityToggleOptions,
       loading: false,
       listLoading: false,
       poolTokens: null,
       amounts: {},
       type: 'MULTI_ASSET',
+      ethType: 'MULTI_ASSET',
+      ethToggleOptions: {
+        MULTI_ASSET: i18n.tc('multiAsset'),
+        SINGLE_ASSET: i18n.tc('singleAsset')
+      },
       activeToken: null,
       warningAccepted: false,
       transactionReverted: false,
@@ -279,23 +294,36 @@ export default {
       .filter(t => isAddress(t[0]))
       .filter(t => t[0] !== getAddress(this.bPool.getBptAddress()));
     const userTokenIds = userTokens.map(t => t[0]);
-    await this.loadTokenMetadata(userTokenIds);
-    this.userTokens = userTokens.map(t => ({
-      address: t[0],
-      checksum: t[0],
-      symbol: this.web3.tokenMetadata[t[0]].symbol,
-      decimals: this.web3.tokenMetadata[t[0]].decimals
-    }));
-    this.userTokens.push({
-      address: this.config.baseToken.address,
-      checksum: this.config.baseToken.address,
-      symbol: this.config.baseToken.symbol,
-      decimals: 18
-    });
+    if (userTokenIds.length > 0) {
+      await this.loadTokenMetadata(userTokenIds);
+      this.userTokens = userTokens.map(t => ({
+        address: t[0],
+        checksum: t[0],
+        symbol: this.web3.tokenMetadata[t[0]].symbol,
+        decimals: this.web3.tokenMetadata[t[0]].decimals
+      }));
+    }
     this.addLiquidityEnabled = await this.canAddLiquidity();
     this.listLoading = false;
   },
   computed: {
+    toggleOptions() {
+      if (this.userTokens.length > 0) {
+        if (isBSCNetwork()) {
+          return {
+            MULTI_ASSET: i18n.tc('multiAsset'),
+            SINGLE_ASSET: i18n.tc('singleAsset'),
+            BUY_FOR_ERC20: i18n.tc('buyForERC20')
+          };
+        }
+        return liquidityToggleOptions;
+      } else {
+        return {
+          MULTI_ASSET: i18n.tc('multiAsset'),
+          SINGLE_ASSET: i18n.tc('singleAsset')
+        };
+      }
+    },
     poolTokenBalance() {
       const bptAddress = this.bPool.getBptAddress();
       const balance = this.web3.balances[getAddress(bptAddress)];
@@ -347,33 +375,35 @@ export default {
       return undefined;
     },
     validationError() {
-      if (this.tokenError || this.type === 'BUY_FOR_ETH') {
+      if (this.tokenError) {
         return undefined;
       }
-      for (const token of this.pool.tokensList) {
-        if (!this.isMultiAsset && this.activeToken !== token) {
-          continue;
+      if (this.isSingleAsset || this.isMultiAsset) {
+        for (const token of this.pool.tokensList) {
+          if (!this.isMultiAsset && this.activeToken !== token) {
+            continue;
+          }
+          const amountError = validateNumberInput(this.amounts[token]);
+          const amountErrorText = formatError(amountError, this.$t('amount'));
+          if (amountErrorText) return amountErrorText;
         }
-        const amountError = validateNumberInput(this.amounts[token]);
-        const amountErrorText = formatError(amountError, this.$t('amount'));
-        if (amountErrorText) return amountErrorText;
-      }
-      // Amount validation
-      for (const token of this.pool.tokensList) {
-        if (!this.isMultiAsset && this.activeToken !== token) {
-          continue;
-        }
-        const amount = bnum(this.amounts[token]);
-        const balance = normalizeBalance(
-          this.web3.balances[token],
-          this.web3.tokenMetadata[token].decimals
-        );
-        if (amount.gt(balance)) {
-          return this.$t('amountExceedsBalance');
+        // Amount validation
+        for (const token of this.pool.tokensList) {
+          if (!this.isMultiAsset && this.activeToken !== token) {
+            continue;
+          }
+          const amount = bnum(this.amounts[token]);
+          const balance = normalizeBalance(
+            this.web3.balances[token],
+            this.web3.tokenMetadata[token].decimals
+          );
+          if (amount.gt(balance)) {
+            return this.$t('amountExceedsBalance');
+          }
         }
       }
       // Max in ratio validation
-      if (!this.isMultiAsset) {
+      if (this.isSingleAsset) {
         const maxInRatio = 1 / 2;
         const amount = bnum(this.amounts[this.activeToken]);
         const tokenIn = this.pool.tokens.find(
@@ -549,10 +579,24 @@ export default {
     isMultiAsset() {
       return this.type === 'MULTI_ASSET';
     },
+    isBuyForEth() {
+      return this.type === 'BUY_FOR_ETH';
+    },
     renderedTokens() {
-      return this.isSingleAsset || this.isMultiAsset
-        ? this.pool.tokens
-        : this.userTokens;
+      if (this.isSingleAsset || this.isMultiAsset) {
+        return this.pool.tokens;
+      }
+      if (this.isBuyForEth) {
+        return [
+          {
+            address: this.config.baseToken.address,
+            checksum: this.config.baseToken.address,
+            symbol: this.config.baseToken.symbol,
+            decimals: 18
+          }
+        ];
+      }
+      return this.userTokens;
     }
   },
   methods: {
@@ -604,14 +648,51 @@ export default {
           tokenAmountIn,
           swapFee
         ).toString();
+      } else if (this.amounts[this.activeToken] > 0 && this.isBuyForEth) {
+        const poolAddress = this.bPool.getBptAddress();
+        const isSmart = this.bPool.isCrp();
+        const amount = this.amounts[this.activeToken];
+        const amountWei = `0x${toWei(amount).toString(16)}`;
+
+        if (this.ethType == 'MULTI_ASSET') {
+          const buyerContract = MultiAssetBuyerEther;
+
+          const contract = new Contract(
+            buyerContract.networks[this.config.chainId].address,
+            buyerContract['abi'],
+            getInstance().web3?.getSigner()
+          );
+
+          const joinAmounts = await contract.calcJoinPool(
+            poolAddress,
+            isSmart,
+            amountWei
+          );
+          this.poolTokens = joinAmounts[1];
+        } else {
+          const buyerContract = SingleAssetBuyerEther;
+
+          const contract = new Contract(
+            buyerContract.networks[this.config.chainId].address,
+            buyerContract['abi'],
+            getInstance().web3?.getSigner()
+          );
+
+          const underlyingToken = await contract.chooseUnderlyingToken(
+            poolAddress,
+            isSmart
+          );
+
+          const minPoolAmountOut = await contract.calcMinPoolAmountOut(
+            poolAddress,
+            isSmart,
+            underlyingToken,
+            amountWei
+          );
+          this.poolTokens = minPoolAmountOut;
+        }
       } else if (this.amounts[this.activeToken] > 0) {
-        const isBaseToken =
-          !this.web3.tokenMetadata[this.activeToken] ||
-          this.web3.tokenMetadata[this.activeToken].symbol ===
-            this.config.baseToken.symbol;
-        const buyerContract = isBaseToken
-          ? SingleAssetBuyerEther
-          : SingleAssetBuyerToken;
+        const buyerContract = SingleAssetBuyerToken;
         const contract = new Contract(
           buyerContract.networks[this.config.chainId].address,
           buyerContract['abi'],
@@ -627,20 +708,13 @@ export default {
         const amount = this.amounts[this.activeToken];
         const amountWei = `0x${toWei(amount).toString(16)}`;
 
-        const minPoolAmountOut = isBaseToken
-          ? await contract.calcMinPoolAmountOut(
-              poolAddress,
-              isSmart,
-              underlyingToken,
-              amountWei
-            )
-          : await contract.calcMinPoolAmountOut(
-              poolAddress,
-              isSmart,
-              underlyingToken,
-              this.activeToken,
-              amountWei
-            );
+        const minPoolAmountOut = await contract.calcMinPoolAmountOut(
+          poolAddress,
+          isSmart,
+          underlyingToken,
+          this.activeToken,
+          amountWei
+        );
 
         this.poolTokens = minPoolAmountOut;
       }
@@ -678,6 +752,16 @@ export default {
     },
     handleSelectType(type) {
       this.type = type;
+      this.handleTokenSelect(this.renderedTokens[0].checksum);
+      this.poolTokens = null;
+      this.amounts = Object.fromEntries(
+        this.pool.tokens.map(token => {
+          return [token.checksum, ''];
+        })
+      );
+    },
+    handleSelectEthType(type) {
+      this.ethType = type;
       this.handleTokenSelect(this.renderedTokens[0].checksum);
       this.poolTokens = null;
       this.amounts = Object.fromEntries(
@@ -734,7 +818,7 @@ export default {
           minPoolAmountOut
         };
         await this.joinswapExternAmountIn(params);
-      } else {
+      } else if (this.ethType == 'SINGLE_ASSET') {
         const isBaseToken =
           !this.web3.tokenMetadata[this.activeToken] ||
           this.web3.tokenMetadata[this.activeToken].symbol ===
@@ -749,10 +833,6 @@ export default {
         );
 
         const isSmart = this.bPool.isCrp();
-
-        /* const token = this.pool.tokens.find(
-          token => token.checksum === this.activeToken
-        ); */
 
         const poolTokensFormatted = this.poolTokens
           ? bnum(this.poolTokens).div('1e18')
@@ -814,6 +894,67 @@ export default {
                 this.activeToken,
                 amountWei
               );
+
+          console.log(tx);
+          const title = `joinPool`;
+          store.commit('watchTransaction', { ...tx, title });
+
+          const receipt = await provider.waitForTransaction(tx.hash, 1);
+          store.commit('confirmTransaction', receipt);
+
+          await store.dispatch('getBalances');
+
+          console.log(
+            `${poolTokensFormatted} ${this.pool.symbol} was purchased for ${
+              this.amounts[this.activeToken]
+            } ${this.web3.tokenMetadata[this.activeToken].symbol}.`
+          );
+        } catch (err) {
+          console.log(err.message);
+          console.log(
+            `${poolTokensFormatted} ${this.pool.symbol} wasn't purchased for ${
+              this.amounts[this.activeToken]
+            } ${this.web3.tokenMetadata[this.activeToken].symbol}.`
+          );
+        }
+      } else {
+        const buyerContract = MultiAssetBuyerEther;
+        const contract = new Contract(
+          buyerContract.networks[this.config.chainId].address,
+          buyerContract['abi'],
+          getInstance().web3?.getSigner()
+        );
+
+        const isSmart = this.bPool.isCrp();
+
+        const poolTokensFormatted = this.poolTokens
+          ? bnum(this.poolTokens).div('1e18')
+          : 0;
+
+        const tokenInAddress = this.activeToken;
+        if (!this.amounts[tokenInAddress]) {
+          return undefined;
+        }
+
+        const amount = this.amounts[tokenInAddress];
+
+        const amountWei = `0x${toWei(amount).toString(16)}`;
+        try {
+          const deadline = blockNumberToTimestamp(
+            Date.now(),
+            this.web3.blockNumber + 1,
+            this.bPool.metadata.endBlock
+          );
+
+          const tx = await contract.joinPool(
+            poolAddress,
+            isSmart,
+            `0x${bnum(deadline).toString(16)}`,
+            {
+              from: this.web3.account,
+              value: amountWei
+            }
+          );
 
           console.log(tx);
           const title = `joinPool`;

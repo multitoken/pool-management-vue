@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { isBSCNetwork } from '@/helpers/buyETF';
+import { isBSCNetwork } from '@/helpers/buyEtf';
 export default {
   data() {
     return {

@@ -22,6 +22,14 @@
     >
       {{ $('buyForEth') }}
     </div>
+    <div
+      v-if="buyAvailable"
+      class="d-flex flex-justify-center py-2 text-white rounded-right-1 option"
+      :class="{ selected: selected === buyForErc20 }"
+      @click="onSelect(buyForErc20)"
+    >
+      {{ $('buyForErc20') }}
+    </div>
   </div>
 </template>
 
@@ -29,7 +37,8 @@
 export enum LiquidityType {
   MULTI_ASSET,
   SINGLE_ASSET,
-  BUY_FOR_ETH
+  BUY_FOR_ETH,
+  BUY_FOR_ERC20
 }
 
 export default {
@@ -43,6 +52,9 @@ export default {
     },
     buyForEth() {
       return LiquidityType.BUY_FOR_ETH;
+    },
+    buyForErc20() {
+      return LiquidityType.BUY_FOR_ERC20;
     }
   }
 };
@@ -53,7 +65,10 @@ export default {
 
 .option {
   width: 140px;
-  border: 1px solid $panel-border;
+
   cursor: pointer;
+
+  border: 1px solid $panel-border;
 }
+
 </style>

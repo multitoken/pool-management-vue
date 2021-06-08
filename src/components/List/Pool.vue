@@ -51,9 +51,8 @@
 
 <script>
 import { getPoolLiquidity } from '@/helpers/price';
-import chainParams from '@/helpers/chainParams.json';
 import Pool from '@/_balancer/pool';
-import { getExchangeLink } from '@/helpers/buyETF';
+import { getExchangeLink } from '@/helpers/buyEtf';
 
 export default {
   data() {
