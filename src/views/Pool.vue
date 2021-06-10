@@ -24,19 +24,26 @@
         >
           {{ $t('redeem') }}
         </UiButton>
+        <UiButton
+          v-if="isBSCNetwork"
+          v-text="$t('buy')"
+          class="ml-2 tooltipped tooltipped-sw"
+          :aria-label="$t('tooltipClickToSwap')"
+          @click="openSwapModal"
+        />
         <a
-          v-if="bPool && enableAddLiquidity && pool.tokens.length > 0"
+          v-else-if="bPool && enableAddLiquidity && pool.tokens.length > 0"
           :href="exchangeLink"
           target="_blank"
           v-on:click.stop
-          @mouseenter="pancakeButtonHovered = true"
-          @mouseleave="pancakeButtonHovered = false"
+          @mouseenter="buyButtonHovered = true"
+          @mouseleave="buyButtonHovered = false"
         >
           <UiButton
             class="ml-2 tooltipped tooltipped-sw"
             :aria-label="$t('tooltipRedirectToSwap')"
           >
-            {{ isBSCNetwork ? $t('buyOnPancake') : $t('buyOnMultitoken') }}
+            {{ $t('buyOnMultitoken') }}
             <Icon name="external-link" />
           </UiButton>
         </a>
@@ -70,6 +77,12 @@
         :open="modalCustomTokenOpen"
         @close="modalCustomTokenOpen = false"
       />
+      <ModalSwap
+        :pool="pool"
+        :bPool="bPool"
+        :open="modalSwapOpen"
+        @close="modalSwapOpen = false"
+      />
     </portal>
   </Page>
 </template>
@@ -92,6 +105,7 @@ export default {
       modalAddLiquidityOpen: false,
       modalRemoveLiquidityOpen: false,
       modalCustomTokenOpen: false,
+      modalSwapOpen: false,
       isBSCNetwork: isBSCNetwork()
     };
   },
@@ -151,6 +165,9 @@ export default {
     },
     openRemoveLiquidityModal() {
       this.modalRemoveLiquidityOpen = true;
+    },
+    openSwapModal() {
+      this.modalSwapOpen = true;
     },
     async loadPool() {
       const bPool = new Pool(this.id);

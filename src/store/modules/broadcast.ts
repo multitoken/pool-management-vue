@@ -11,6 +11,8 @@ import {
 import BigNumber from '@/helpers/bignumber';
 import { makeProxyTransaction } from '@/helpers/web3';
 import { setGoal } from '@/helpers/fathom';
+import { getInstance } from '@snapshot-labs/lock/plugins/vue';
+import provider from '@/helpers/provider';
 
 const mutations = {
   CREATE_PROXY_REQUEST() {
@@ -219,6 +221,15 @@ const mutations = {
   },
   UNWRAP_ETH_FAILURE(_state, payload) {
     console.debug('UNWRAP_ETH_FAILURE', payload);
+  },
+  LP_TOKEN_EXCHANGE_REQUEST() {
+    console.debug('LP_TOKEN_EXCHANGE_REQUEST');
+  },
+  LP_TOKEN_EXCHANGE_SUCCESS() {
+    console.debug('LP_TOKEN_EXCHANGE_SUCCESS');
+  },
+  LP_TOKEN_EXCHANGE_FAILURE(_state, payload) {
+    console.debug('LP_TOKEN_EXCHANGE_FAILURE', payload);
   }
 };
 
@@ -894,6 +905,49 @@ const actions = {
       if (!e || isTxReverted(e)) return e;
       dispatch('notify', ['red', i18n.tc('failureOops')]);
       commit('UNWRAP_ETH_FAILURE', e);
+    }
+  },
+  exchangeLPtoken: async (
+    { commit, dispatch },
+    { accountAddress, amount, tokenOut, title }
+  ) => {
+    commit('LP_TOKEN_EXCHANGE_REQUEST');
+
+    const paramsReqLink = `https://api.1inch.exchange/v3.0/56/swap?fromTokenAddress=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee&toTokenAddress=${tokenOut}&amount=${denormalizeBalance(
+      amount,
+      18
+    )}&fromAddress=${accountAddress}&slippage=1`;
+    const params = await fetch(paramsReqLink)
+      .then(res => res.json())
+      .catch(e => {
+        console.log(e);
+      });
+    const txParams = {
+      from: params.tx.from,
+      to: params.tx.to,
+      gasPrice: `0x${parseInt(params.tx.gasPrice).toString(16)}`,
+      data: params.tx.data,
+      value: `0x${parseInt(params.tx.value).toString(16)}`
+    };
+    const signer = getInstance().web3?.getSigner();
+    try {
+      const tx = await signer.sendTransaction(txParams);
+      console.log('Watch transaction', tx);
+      commit('watchTransaction', { ...tx, title });
+      console.log(tx);
+      const receipt = await provider.waitForTransaction(tx.hash, 1);
+      console.log('Confirm transaction', receipt);
+      commit('confirmTransaction', receipt);
+      commit('LP_TOKEN_EXCHANGE_SUCCESS');
+      dispatch('notify', [
+        'green',
+        `You've successfully aquired ${amount} ${config.baseToken.symbol}`
+      ]);
+      return tx;
+    } catch (e) {
+      if (!e || isTxReverted(e)) return e;
+      dispatch('notify', ['red', e.message]);
+      commit('LP_TOKEN_EXCHANGE_FAILURE', e);
     }
   }
 };
