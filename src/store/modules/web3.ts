@@ -41,6 +41,9 @@ const mutations = {
   LOAD_TOKEN_METADATA_REQUEST() {
     console.debug('LOAD_TOKEN_METADATA_REQUEST');
   },
+  CLEAR_TOKEN_META_DATA(_state) {
+    Vue.set(_state, 'tokenMetadata', {});
+  },
   LOAD_TOKEN_METADATA_SUCCESS(_state, payload) {
     for (const address in payload) {
       Vue.set(_state.tokenMetadata, address, payload[address]);
@@ -188,6 +191,7 @@ const actions = {
         ];
       })
     );
+    commit('CLEAR_TOKEN_META_DATA');
     commit('LOAD_TOKEN_METADATA_SUCCESS', metadata);
   },
 
@@ -259,6 +263,7 @@ const actions = {
             'updateConfig',
             parseInt(formatUnits(chainId, 0))
           );
+          store.dispatch('init');
 
           const accounts = await auth.web3.listAccounts();
           const account = accounts.length > 0 ? accounts[0] : null;

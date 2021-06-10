@@ -42,6 +42,8 @@ const mutations = {
 const actions = {
   async updateConfig({ commit }, chainId: number): Promise<void> {
     await commit('setNetwork', chainId);
+    await store.dispatch('clearPools');
+    store.dispatch('getPools', {});
   }
 };
 
