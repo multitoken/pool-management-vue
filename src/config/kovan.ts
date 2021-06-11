@@ -26,6 +26,7 @@ const config: Config = {
     bufferWarning: 0.02
   },
   baseToken: {
+    address: 'ether',
     name: 'Ethereum',
     symbol: 'ETH',
     wrappedSymbol: 'WETH'
@@ -99,7 +100,7 @@ const config: Config = {
     '0xd236eb3cd2be4284c71dbf86a5804e9e97af93c1',
     '0x19f3d186d89addc92cc000f8994a89b428a230e6',
     '0x0099c6f24f77c0ab440a59357d5bb24753d992c3',
-    '0x720ea1e156642c7f39e14d86ef4b0d5acb1895b3',
+    '0x720ea1e156642c7f39e14d86ef4b0d5acb1895b3'
   ],
   untrusted: [],
   env: process.env.VUE_APP_ENV || 'production',

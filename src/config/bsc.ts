@@ -26,6 +26,7 @@ const config: Config = {
     bufferWarning: 0.0002
   },
   baseToken: {
+    address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
     name: 'Binance',
     symbol: 'BNB',
     wrappedSymbol: 'WBNB'

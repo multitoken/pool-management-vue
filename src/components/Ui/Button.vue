@@ -18,11 +18,9 @@ export default {
 @import '../../vars';
 
 .button {
-  line-height: 40px;
-
   height: 44px;
   margin: 0;
-  padding: 0 22px 3px;
+  padding: 0 22px;
 
   transition: 0.3s;
 
@@ -31,6 +29,8 @@ export default {
   border-radius: 22px;
   outline: none;
   background-color: $secondary-button-background;
+
+  line-height: 40px;
 
   &:hover {
     color: $link-text;
@@ -46,13 +46,13 @@ export default {
   }
 
   &.button-sm {
-    font-size: 12px;
-    line-height: 34px;
-
     height: 36px;
     padding: 0 14px;
 
     border-radius: 19px;
+
+    font-size: 12px;
+    line-height: 34px;
   }
 
   &.button-primary {
@@ -76,12 +76,12 @@ export default {
   }
 
   &.button-lp-tokens {
-    // font-size: 16px;
-    line-height: 18px;
-
     width: 110px;
     margin: 3px 0;
     padding: 0 5px;
+    // font-size: 16px;
+
+    line-height: 18px;
   }
 
   &.buttton-non-clickable {
@@ -110,5 +110,4 @@ export default {
     background-color: $bg-gray-light;
   }
 }
-
 </style>

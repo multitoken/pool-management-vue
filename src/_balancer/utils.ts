@@ -40,7 +40,7 @@ export async function subgraphRequest(url, query) {
 }
 
 export function getTokenLogoUrl(address: string): string | null {
-  if (address === 'ether') {
+  if (address === config.baseToken.address) {
     address = config.addresses.wrapped;
   }
   address = getAddress(address);
