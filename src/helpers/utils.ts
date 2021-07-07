@@ -28,6 +28,13 @@ export const capInputOptions = {
 
 export const liquidityToggleOptions = {
   MULTI_ASSET: i18n.tc('multiAsset'),
+  SINGLE_ASSET: i18n.tc('singleAsset'),
+  BUY_FOR_ETH: i18n.tc('buyForEth'),
+  BUY_FOR_ERC20: i18n.tc('buyForERC20')
+};
+
+export const redeemToggleOptions = {
+  MULTI_ASSET: i18n.tc('multiAsset'),
   SINGLE_ASSET: i18n.tc('singleAsset')
 };
 

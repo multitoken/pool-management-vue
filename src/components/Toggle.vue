@@ -22,16 +22,20 @@ export default {
 
 .toggle {
   display: inline-block;
-  background-color: $secondary-button-background;
+
   border-radius: 22px;
+  background-color: $secondary-button-background;
 
   a {
     display: inline-block;
+
     height: 44px;
-    line-height: 40px;
-    border-radius: 22px;
-    color: $secondary-button-text;
     padding: 0 24px 3px;
+
+    color: $secondary-button-text;
+    border-radius: 22px;
+
+    line-height: 40px;
   }
 
   .active {

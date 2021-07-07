@@ -13,7 +13,7 @@
         <div v-text="$t('tvl')" class="column" />
         <div v-text="$t('myShares')" class="column hide-sm hide-md hide-lg" />
         <div class="column">
-          {{ $t('buyETF') }} <Icon name="external-link" />
+          {{ $t('buyEtf') }} <Icon name="external-link" />
         </div>
       </UiTableTh>
       <div v-infinite-scroll="loadMore" infinite-scroll-distance="10">

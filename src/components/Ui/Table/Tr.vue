@@ -7,10 +7,10 @@
     >
       <slot />
     </router-link>
-    <div v-else-if="slim" class="line px-4 py-1 d-flex">
+    <div v-else-if="slim" class="line px-3 py-1 d-flex">
       <slot />
     </div>
-    <div v-else class="line px-4 py-2 d-flex">
+    <div v-else class="line px-3 py-2 d-flex">
       <slot />
     </div>
   </span>
