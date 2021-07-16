@@ -104,7 +104,9 @@ const config: Config = {
     '0xdcbf887f1fb4bdead58d2ddb2531ef69e0a23f4e',
     '0xd28f6db2d7cdabfe674f1b48da7e03b41403ca20',
     '0x56216d36f3841ae75a9e6e5201f81bb032876f4a',
-    '0x154745003955f73aea058297c57b92c6d035ff30'
+    '0x154745003955f73aea058297c57b92c6d035ff30',
+    '0x770c9ae61e63b191dfc254d7665df5ad64397f52',
+    '0x03179a509af756520d25afcda4a305799a1a085c'
   ],
   untrusted: [],
   env: process.env.VUE_APP_ENV || 'production',
