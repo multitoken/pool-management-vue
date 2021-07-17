@@ -37,11 +37,7 @@
         @mouseenter="pancakeButtonHovered = true"
         @mouseleave="pancakeButtonHovered = false"
       >
-        <UiButton
-          :disabled="!bPool"
-          :loading="buttonLoading"
-          class="button-primary"
-        >
+        <UiButton :disabled="!pool.controller" class="button-primary">
           {{ $t('buy') }}
         </UiButton>
       </a>
@@ -51,17 +47,9 @@
 
 <script>
 import { getPoolLiquidity } from '@/helpers/price';
-import chainParams from '@/helpers/chainParams.json';
-import Pool from '@/_balancer/pool';
 import { getExchangeLink } from '@/helpers/buyETF';
 
 export default {
-  data() {
-    return {
-      bPool: undefined,
-      buttonLoading: true
-    };
-  },
   props: ['pool'],
   computed: {
     poolLiquidity() {
@@ -75,21 +63,8 @@ export default {
     wethAddress() {
       return '0xd0a1e359811322d97991e03f863a0c30c2cf029c';
     },
-    LPTokenAddress() {
-      return this.bPool?.getBptAddress();
-    },
     exchangeLink() {
-      return getExchangeLink(this.LPTokenAddress, this.wethAddress);
-    }
-  },
-  async mounted() {
-    try {
-      const bPool = new Pool(this.pool.id);
-      await bPool.getMetadata();
-      this.bPool = bPool;
-      this.buttonLoading = false;
-    } catch {
-      this.buttonLoading = false;
+      return getExchangeLink(this.pool.controller, this.wethAddress);
     }
   }
 };

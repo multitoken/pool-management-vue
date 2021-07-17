@@ -3,7 +3,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import { jsonToGraphQLQuery } from 'json-to-graphql-query';
 import queries from '@/helpers/queries.json';
 import { setGoal } from '@/helpers/fathom';
-import config from '@/config';
+import store from '@/store';
 
 export async function request(key: string | null, jsonQuery: any = {}) {
   jsonQuery = key
@@ -13,7 +13,7 @@ export async function request(key: string | null, jsonQuery: any = {}) {
     typeof jsonQuery === 'string'
       ? jsonQuery
       : jsonToGraphQLQuery({ query: jsonQuery });
-  const res = await fetch(config.subgraphUrl, {
+  const res = await fetch(store.getters.getConfig().subgraphUrl, {
     method: 'POST',
     headers: {
       Accept: 'application/json',

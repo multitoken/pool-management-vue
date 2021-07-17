@@ -122,7 +122,7 @@ export default {
     },
     enableRemoveLiquidity() {
       return (
-        this.config.chainId === this.web3.injectedChainId &&
+        this.$store.getters.getConfig().chainId === this.web3.injectedChainId &&
         this.web3.account &&
         (Object.keys(this.subgraph.poolShares).includes(this.id) ||
           this.web3.balances[getAddress(this.id)])

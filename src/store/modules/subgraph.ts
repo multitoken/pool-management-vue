@@ -3,9 +3,12 @@ import { getAddress } from '@ethersproject/address';
 import { request } from '@/helpers/subgraph';
 import { formatPool, ITEMS_PER_PAGE } from '@/helpers/utils';
 
-import config from '@/config';
+import store from '@/store';
 
 const state = {
+  pools: [],
+  poolsPage: 0,
+  poolsLoading: true,
   balancer: {},
   poolShares: {},
   myPools: [],
@@ -18,13 +21,25 @@ const mutations = {
     Vue.set(_state, 'myPools', []);
     console.debug('CLEAR_USER');
   },
-  GET_POOLS_REQUEST() {
+  CLEAR_POOLS(_state) {
+    Vue.set(_state, 'pools', []);
+    console.debug('CLEAR_POOLS');
+  },
+  GET_POOLS_REQUEST(_state) {
+    if (_state.pools?.length <= 0) {
+      Vue.set(_state, 'poolsLoading', true);
+    }
     console.debug('GET_POOLS_REQUEST');
   },
-  GET_POOLS_SUCCESS() {
+  GET_POOLS_SUCCESS(_state, { pools, page }) {
+    const newPools = _state.pools.concat(pools);
+    Vue.set(_state, 'poolsLoading', false);
+    Vue.set(_state, 'poolsPage', page);
+    Vue.set(_state, 'pools', newPools);
     console.debug('GET_POOLS_SUCCESS');
   },
   GET_POOLS_FAILURE(_state, payload) {
+    Vue.set(_state, 'poolsLoading', false);
     console.debug('GET_POOLS_FAILURE', payload);
   },
   GET_MY_POOLS_SHARES_REQUEST() {
@@ -89,6 +104,9 @@ const actions = {
   clearUser: async ({ commit }) => {
     commit('CLEAR_USER');
   },
+  clearPools: async ({ commit }) => {
+    commit('CLEAR_POOLS');
+  },
   getPools: async ({ commit }, payload) => {
     const {
       first = ITEMS_PER_PAGE,
@@ -105,7 +123,7 @@ const actions = {
     const tsYesterdayRounded = Math.round(tsYesterday / 3600) * 3600; // Round timestamp by hour to leverage subgraph cache
 
     where.tokensList_not = [];
-    where.id_not_in = config.excludedPoolsIds;
+    where.id_not_in = store.getters.getConfig().excludedPoolsIds;
     const query = {
       pools: {
         __args: {
@@ -128,8 +146,7 @@ const actions = {
     try {
       let { pools } = await request('getPools', query);
       pools = pools.map(pool => formatPool(pool));
-      commit('GET_POOLS_SUCCESS');
-      return pools;
+      commit('GET_POOLS_SUCCESS', { pools, page });
     } catch (e) {
       commit('GET_POOLS_FAILURE', e);
     }
@@ -143,7 +160,7 @@ const actions = {
           __args: {
             where: {
               userAddress: address.toLowerCase(),
-              poolId_not_in: config.excludedPoolsIds
+              poolId_not_in: store.getters.getConfig().excludedPoolsIds
             }
           }
         }

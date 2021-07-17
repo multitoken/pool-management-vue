@@ -1,5 +1,6 @@
 import Vue from 'vue';
-import config from '@/config';
+import store from '@/store';
+import { formatUnits } from '@ethersproject/units';
 
 const state = {
   init: false,
@@ -24,8 +25,13 @@ const mutations = {
 const actions = {
   init: async ({ commit, dispatch }) => {
     commit('SET', { loading: true });
-    const tokenIds = Object.keys(config.tokens)
-      .map(tokenAddress => config.tokens[tokenAddress].id)
+    await new Promise(r => setTimeout(r, 500));
+    await store.dispatch(
+      'updateConfig',
+      parseInt(formatUnits(window.ethereum!.chainId, 0))
+    );
+    const tokenIds = Object.keys(store.getters.getConfig().tokens)
+      .map(tokenAddress => store.getters.getConfig().tokens[tokenAddress].id)
       .filter(tokenId => !!tokenId);
     await Promise.all([
       dispatch('loadPricesById', tokenIds),

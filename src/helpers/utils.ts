@@ -5,8 +5,8 @@ import { Contract } from '@ethersproject/contracts';
 import { Provider } from '@ethersproject/providers';
 import { Wallet } from '@ethersproject/wallet';
 import BigNumber from '@/helpers/bignumber';
-import config from '@/config';
 import i18n from '@/i18n';
+import store from '@/store';
 
 export const ITEMS_PER_PAGE = 20;
 export const MAX_GAS = new BigNumber('0xffffffff');
@@ -122,8 +122,8 @@ export function formatPool(pool) {
   pool.tokens = pool.tokens.map(token => {
     token.checksum = getAddress(token.address);
     token.weightPercent = (100 / pool.totalWeight) * token.denormWeight;
-    token.color = config.tokens[token.checksum]?.color
-      ? config.tokens[token.checksum].color
+    token.color = store.getters.getConfig().tokens[token.checksum]?.color
+      ? store.getters.getConfig().tokens[token.checksum].color
       : getColorByAddress(token.checksum);
     return token;
   });
@@ -219,11 +219,12 @@ export function calcPoolTokensByRatio(ratio, totalShares) {
 }
 
 export function getTokenBySymbol(symbol) {
-  const tokenAddresses = Object.keys(config.tokens);
+  const tokenAddresses = Object.keys(store.getters.getConfig().tokens);
   const tokenAddress = tokenAddresses.find(
-    tokenAddress => config.tokens[tokenAddress].symbol === symbol
+    tokenAddress =>
+      store.getters.getConfig().tokens[tokenAddress].symbol === symbol
   );
-  return config.tokens[tokenAddress!];
+  return store.getters.getConfig().tokens[tokenAddress!];
 }
 
 export const isTxRejected = error => {
@@ -272,7 +273,7 @@ export function blockNumberToTimestamp(
     1: 13,
     42: 5
   };
-  const avgBlockTime = AVG_BLOCK_TIMES[config.chainId];
+  const avgBlockTime = AVG_BLOCK_TIMES[store.getters.getConfig().chainId];
   return currentTime + avgBlockTime * 1000 * (blockNumber - currentBlockNumber);
 }
 

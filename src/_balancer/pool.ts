@@ -2,12 +2,12 @@ import merge from 'lodash/merge';
 import pools from '@balancer-labs/assets/data/pools.json';
 import { getAddress, isAddress } from '@ethersproject/address';
 import { multicall, subgraphRequest } from './utils';
-import provider from '@/helpers/provider';
+import getProvider from '@/helpers/provider';
 import abi from '@/helpers/abi';
 import { poolRights, formatPool } from '@/helpers/utils';
 import { formatUnits } from '@ethersproject/units';
 import queries from '@/helpers/queries.json';
-import config from '@/config';
+import store from '@/store';
 
 export default class Pool {
   public readonly address: string;
@@ -71,6 +71,7 @@ export default class Pool {
 
   async getNodeMetadata() {
     const address = this.getBptAddress();
+    const provider = getProvider(store.getters.getConfig().chainId);
     if (this.isCrp()) {
       const [
         publicSwap,
@@ -168,7 +169,7 @@ export default class Pool {
     };
     try {
       const response = await subgraphRequest(
-        config.subgraphUrl,
+        store.getters.getConfig().subgraphUrl,
         merge(queries['getPool'], query)
       );
       return formatPool(response.pool);

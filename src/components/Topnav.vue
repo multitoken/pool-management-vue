@@ -28,14 +28,15 @@
       <div class="header-middle hide-sm hide-md">
         <div class="chain-buttons-container">
           <UiButton
-            v-for="(chain, i) in chains"
-            :key="i"
             class="mx-1 tooltipped tooltipped-s"
             :aria-label="
               `${$t('tooltipSwitchNetwork')} ${chainParams[chain].chainName}`
             "
-            :class="{ 'button-primary': chain === currentNetwork }"
+            v-for="(chain, i) in chains"
             @click="changeNetwork(chain)"
+            :key="i"
+            :class="{ 'button-primary': chain === currentNetwork }"
+            :disabled="chain === currentNetwork"
           >
             {{ chainParams[chain].chainName }}
           </UiButton>
@@ -122,9 +123,8 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import { formatUnits } from '@ethersproject/units';
-
-import chainParams from '../helpers/chainParams.json';
 import i18n from '@/i18n';
+import chainParams from '../helpers/chainParams.json';
 
 export default {
   data() {
@@ -140,21 +140,22 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['myPendingTransactions']),
+    ...mapGetters(['myPendingTransactions', 'getConfig']),
+    currentNetwork() {
+      return this.getConfig().network;
+    },
     wrongNetwork() {
       return (
-        this.config.chainId !== this.web3.injectedChainId &&
+        this.getConfig().chainId !== this.web3.injectedChainId &&
         !this.ui.authLoading &&
         !this.loading
       );
     },
-    currentNetwork() {
-      return this.config.network;
-    },
     baseTokenBalance() {
-      const baseToken = this.config?.baseToken;
+      const config = this.getConfig();
+      const baseToken = config.baseToken;
 
-      const price = this.price.values[this.config?.addresses.wrapped];
+      const price = this.price.values[config.addresses.wrapped];
       const balance = formatUnits(this.web3.balances['ether'] || 0, 18);
       return {
         address: baseToken?.address,
@@ -200,19 +201,37 @@ export default {
       await this.login(connector);
       this.loading = false;
     },
-    getNetworkURL(chainName) {
-      return this?.config?.urls[chainName];
-    },
     async changeNetwork(chainName) {
       if (
+        // Coming soon notification
         chainParams[chainName].chainName === chainParams['mainnet'].chainName
       ) {
         return this.$store.dispatch('notify', ['gray', i18n.tc('comingSoon')]);
       }
-      if (this.currentNetwork == chainName) {
-        return;
+
+      try {
+        await this.$auth.web3.send('wallet_addEthereumChain', [
+          chainParams[chainName],
+          this.web3.account
+        ]);
+        this.$store.dispatch('notify', [
+          'green',
+          `${i18n.tc('changedNetwork')} ${chainParams[chainName].chainName}.`
+        ]);
+      } catch (e) {
+        if (
+          chainParams[chainName].chainName === chainParams['kovan'].chainName
+        ) {
+          this.$store.dispatch('notify', [
+            'red',
+            `${i18n.tc('useMetamaskToSwitch')} ${
+              chainParams[chainName].chainName
+            } network.`
+          ]);
+        } else {
+          this.$store.dispatch('notify', ['red', e.message]);
+        }
       }
-      window.location.href = this.getNetworkURL(chainName);
     }
   }
 };
@@ -256,7 +275,7 @@ export default {
 
 @media (max-width: 1020px) {
   .header-middle {
-    left: 280px;
+    left: 260px;
   }
 }
 

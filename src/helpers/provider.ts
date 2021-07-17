@@ -1,6 +1,10 @@
 import { JsonRpcProvider } from '@ethersproject/providers';
-import config from '@/config';
+import configs from '@/config';
 
-const provider = new JsonRpcProvider(config.rpcUrl);
+const providers = {};
 
-export default provider;
+export default function getProvider(network: string) {
+  const url: string = configs[network].rpcUrl;
+  if (!providers[network]) providers[network] = new JsonRpcProvider(url);
+  return providers[network];
+}

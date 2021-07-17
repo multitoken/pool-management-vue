@@ -20,11 +20,11 @@
         <div v-if="pools.length > 0">
           <ListPool v-for="(pool, i) in pools" :key="i" :pool="pool" />
         </div>
-        <UiTableTr v-else-if="!loading">
+        <UiTableTr v-else-if="!loading && !this.subgraph.poolsLoading">
           <div v-text="$t('emptyState')" />
         </UiTableTr>
         <ListLoading
-          v-if="loading"
+          v-if="loading || this.subgraph.poolsLoading"
           :classes="[
             'column-sm text-left hide-sm hide-md hide-lg',
             'flex-auto text-center',
@@ -49,15 +49,19 @@ export default {
     return {
       loading: false,
       page: 0,
-      pools: [],
       filters: formatFilters(this.$route.query)
     };
+  },
+  computed: {
+    pools() {
+      return this.subgraph.pools;
+    }
   },
   watch: {
     query() {
       this.page = 0;
       this.loading = true;
-      this.loadMore();
+      this.loadMore('query');
     },
     filters() {
       if (!this.withFilters) return;
@@ -72,18 +76,21 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getPools']),
+    ...mapActions(['getPools', 'clearPools']),
     async loadMore() {
+      if (!window.ethereum) return;
       if (this.pools.length < this.page * ITEMS_PER_PAGE) return;
       this.loading = true;
       this.page++;
       const page = this.page;
       let query = this.query || {};
       query = { ...query, page };
-      const pools = await this.getPools(query);
-      this.pools = this.pools.concat(pools);
+      await this.getPools(query);
       this.loading = false;
     }
+  },
+  mounted() {
+    this.clearPools();
   }
 };
 </script>

@@ -99,41 +99,49 @@ export default {
   },
   computed: {
     title() {
-      const baseToken = this.config.baseToken;
+      const baseToken = this.$store.getters.getConfig().baseToken;
       return this.currentSide === 2
         ? `Wrap ${baseToken.wrappedSymbol} to ${baseToken.symbol}`
         : `Wrap ${baseToken.symbol} to ${baseToken.wrappedSymbol}`;
     },
     symbols() {
+      const config = this.$store.getters.getConfig();
       return {
         tokenIn:
           this.currentSide === 2
-            ? this.config.baseToken.wrappedSymbol
-            : this.config.baseToken.symbol,
+            ? config.baseToken.wrappedSymbol
+            : config.baseToken.symbol,
         tokenOut:
           this.currentSide === 2
-            ? this.config.baseToken.symbol
-            : this.config.baseToken.wrappedSymbol
+            ? config.baseToken.symbol
+            : config.baseToken.wrappedSymbol
       };
     },
     balance() {
       let balance = this.web3.balances['ether'] || '0';
       if (this.currentSide === 2)
-        balance = this.web3.balances[this.config.addresses.wrapped] || '0';
+        balance =
+          this.web3.balances[
+            this.$store.getters.getConfig().addresses.wrapped
+          ] || '0';
       return normalizeBalance(balance, 18);
     },
     isValid() {
       const error = validateNumberInput(this.amount);
       if (error !== ValidationError.NONE) return false;
       return this.currentSide === 1
-        ? !this.balance.minus(this.config.gas.bufferError).lt(this.amount)
+        ? !this.balance
+            .minus(this.$store.getters.getConfig().gas.bufferError)
+            .lt(this.amount)
         : !this.balance.lt(this.amount);
     },
     etherLeft() {
       return (
         this.currentSide === 2 ||
         this.balance.isZero() ||
-        !this.balance.minus(this.config.gas.bufferWarning).lt(this.amount)
+        !this.balance
+          .minus(this.$store.getters.getConfig().gas.bufferWarning)
+          .lt(this.amount)
       );
     }
   },
@@ -149,7 +157,9 @@ export default {
     handleMax() {
       const maxAllowedAmount =
         this.currentSide === 1
-          ? this.balance.minus(this.config.gas.bufferWarning)
+          ? this.balance.minus(
+              this.$store.getters.getConfig().gas.bufferWarning
+            )
           : this.balance;
       this.amount = maxAllowedAmount.isNegative()
         ? '0'
