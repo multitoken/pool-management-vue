@@ -13,7 +13,6 @@ export default {
     querySharedPools() {
       return {
         where: {
-          id_not_in: config.excludedPoolsIds,
           finalized: true
         }
       };
@@ -25,13 +24,11 @@ export default {
             id_in: Object.entries(pools)
               .filter(crp => crp[1].is_compatible)
               .map(crp => crp[0].toLowerCase()),
-            id_not_in: config.excludedPoolsIds,
           }
         };
       return {
         where: {
           crp: true,
-          id_not_in: config.excludedPoolsIds,
         }
       };
     },
@@ -40,7 +37,6 @@ export default {
         where: {
           finalized: false,
           crp: false,
-          id_not_in: config.excludedPoolsIds,
         }
       };
     }

@@ -28,6 +28,7 @@ const actions = {
       .map(tokenAddress => config.tokens[tokenAddress].id)
       .filter(tokenId => !!tokenId);
     await Promise.all([
+      dispatch('loadBlackListPoolIds'),
       dispatch('loadPricesById', tokenIds),
       dispatch('initTokenMetadata'),
       dispatch('getBlockNumber')

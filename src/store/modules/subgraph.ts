@@ -89,7 +89,7 @@ const actions = {
   clearUser: async ({ commit }) => {
     commit('CLEAR_USER');
   },
-  getPools: async ({ commit }, payload) => {
+  getPools: async ({ commit, rootState }, payload) => {
     const {
       first = ITEMS_PER_PAGE,
       page = 1,
@@ -105,7 +105,7 @@ const actions = {
     const tsYesterdayRounded = Math.round(tsYesterday / 3600) * 3600; // Round timestamp by hour to leverage subgraph cache
 
     where.tokensList_not = [];
-    where.id_not_in = config.excludedPoolsIds;
+    where.id_not_in = rootState.blacklist.blackListPoolIds;
     const query = {
       pools: {
         __args: {
@@ -143,7 +143,7 @@ const actions = {
           __args: {
             where: {
               userAddress: address.toLowerCase(),
-              poolId_not_in: config.excludedPoolsIds
+              poolId_not_in: rootState.blacklist.blackListPoolIds
             }
           }
         }

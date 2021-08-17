@@ -37,9 +37,9 @@ export interface Config {
     crpFactory: string;
     wrapped: string;
     multicall: string;
+    blackList?: string;
   };
   connectors: any;
-  excludedPoolsIds: string[];
   untrusted: string[];
   tokens: { [key: string]: ConfigToken };
   env: string;
