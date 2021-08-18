@@ -43,7 +43,7 @@ const config: Config = {
     crpFactory: '0x347DE12015cE231F7cd569c56DeD78a22273469D',
     wrapped: '0xd0A1E359811322d97991E03f863a0C30C2cF029C',
     multicall: '0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A',
-    blackList: '0xe21D7A294Fe6017D784e6Bd48FEe672A5a7A26D9'
+    blackList: '0x92F8f7cfeF6266C5fc92567D1dF0c297D5586F31'
   },
   connectors: {
     injected: {
