@@ -104,8 +104,10 @@ const actions = {
     const tsYesterday = ts - 24 * 3600;
     const tsYesterdayRounded = Math.round(tsYesterday / 3600) * 3600; // Round timestamp by hour to leverage subgraph cache
 
-    where.tokensList_not = [];
-    where.id_not_in = rootState.blacklist.blackListPoolIds;
+    if (rootState.blacklist.blackListPoolIds.length > 0) {
+      where.id_not_in = rootState.blacklist.blackListPoolIds;
+    }
+
     const query = {
       pools: {
         __args: {
@@ -138,16 +140,20 @@ const actions = {
     const address = rootState.web3.account;
     commit('GET_MY_POOLS_SHARES_REQUEST');
     try {
-      const query = {
+      const query :any = {
         poolShares: {
           __args: {
             where: {
               userAddress: address.toLowerCase(),
-              poolId_not_in: rootState.blacklist.blackListPoolIds
             }
           }
         }
       };
+
+      if (rootState.blacklist.blackListPoolIds.length > 0) {
+        query.poolShares.__args.where.poolId_not_in = rootState.blacklist.blackListPoolIds; 
+      }
+
       const { poolShares } = await request('getUserPoolShares', query);
       const balances: any = {};
       poolShares.forEach(share => (balances[share.poolId.id] = share.balance));
