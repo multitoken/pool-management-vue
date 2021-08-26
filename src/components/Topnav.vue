@@ -130,7 +130,7 @@ export default {
   data() {
     return {
       loading: false,
-      chains: ['mainnet', 'kovan', 'bsc'],
+      chains: ['mainnet', 'kovan', 'bsc', 'matic'],
       chainParams: chainParams,
       modalOpen: {
         account: false,
@@ -194,7 +194,7 @@ export default {
   },
   methods: {
     ...mapActions(['toggleSidebar', 'login']),
-    async handleLogin(connector) {
+    async handleLogin(connector) {      
       this.modalOpen.account = false;
       this.loading = true;
       await this.login(connector);

@@ -91,7 +91,8 @@ const config: Config = {
   urls: {
     mainnet: process.env.VUE_APP_MAINNET_URL || '/',
     kovan: process.env.VUE_APP_KOVAN_URL || '/',
-    bsc: process.env.VUE_APP_BSC_URL || '/'
+    bsc: process.env.VUE_APP_BSC_URL || '/',
+    matic: process.env.VUE_APP_MATIC_URL || '/'
   }
 };
 
