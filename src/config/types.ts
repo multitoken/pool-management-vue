@@ -47,5 +47,6 @@ export interface Config {
     mainnet: string;
     kovan: string;
     bsc: string;
+    matic: string;
   };
 }

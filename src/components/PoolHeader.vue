@@ -43,16 +43,25 @@
 </template>
 
 <script>
-import { isBSCNetwork } from '@/helpers/buyETF';
+import { isBSCNetwork, isMaticNetwork } from '@/helpers/buyETF';
 export default {
   data() {
     return {
-      isBSCNetwork: isBSCNetwork()
+      isBSCNetwork: isBSCNetwork(),
+      isMaticNetwork: isMaticNetwork()
     };
   },
   computed: {
     scannerName() {
-      return this.isBSCNetwork ? 'BSCscan' : 'Etherscan';
+      if (this.isBSCNetwork) {
+        return 'BSCscan';
+      }
+
+      if (this.isMaticNetwork) {
+        return 'Polygonscan';
+      }
+
+      return 'Etherscan';
     }
   },
   props: ['pool']
